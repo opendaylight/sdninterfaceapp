@@ -1,0 +1,6 @@
+# UUID                                  	Group Name
+#
+4fa5cacb8a259180e3de32f1fab6d2a180e8e1c1	Non-Interactive sdninterfaceapp users
+global:Anonymous-Users                  	Anonymous Users
+global:Registered-Users                 	Registered Users
+ldap:cn=gerrit-sdninterfaceapp-committers,ou=Groups,dc=opendaylight,dc=org	ldap/gerrit-sdninterfaceapp-committers
