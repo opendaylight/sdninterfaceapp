@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1400494214667
+Build-Jdk: 1.7.0_15
+Built-By: root
+Bundle-ManifestVersion: 2
+Bundle-Name: sdni.northbound
+Bundle-SymbolicName: org.opendaylight.controller.sdni.northbound
+Bundle-Version: 0.4.2.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.opendaylight.controller.sdnimanager.northbound;uses:
+ ="javax.ws.rs,org.opendaylight.controller.hosttracker,org.opendaylight.
+ controller.sdni,org.opendaylight.controller.northbound.commons,org.slf4
+ j,org.opendaylight.controller.sal.utils,org.opendaylight.controller.con
+ tainermanager,org.opendaylight.controller.sal.authorization,org.openday
+ light.controller.northbound.commons.utils,org.opendaylight.controller.s
+ witchmanager,org.opendaylight.controller.northbound.commons.exception,j
+ avax.ws.rs.core";version="0.4.2.SNAPSHOT"
+Ignore-Package: org.codehaus.enunciate.jaxrs
+Import-Package: com.sun.jersey.spi.container.servlet,javax.ws.rs;version
+ ="[1.1,2)",javax.ws.rs.core;version="[1.1,2)",org.apache.commons.loggin
+ g,org.opendaylight.controller.containermanager;version="[0.5,1)",org.op
+ endaylight.controller.hosttracker;version="[0.5,1)",org.opendaylight.co
+ ntroller.hosttracker.hostAware;version="[0.5,1)",org.opendaylight.contr
+ oller.northbound.commons;version="[0.4,1)",org.opendaylight.controller.
+ northbound.commons.exception;version="[0.4,1)",org.opendaylight.control
+ ler.northbound.commons.utils;version="[0.4,1)",org.opendaylight.control
+ ler.sal.authorization;version="[0.8,1)",org.opendaylight.controller.sal
+ .core;version="[0.8,1)",org.opendaylight.controller.sal.utils;version="
+ [0.8,1)",org.opendaylight.controller.sdni;version="[0.5,1)",org.openday
+ light.controller.switchmanager;version="[0.7,1)",org.opendaylight.contr
+ oller.usermanager;version="[0.4,1)",org.slf4j;version="[1.7,2)"
+Jaxrs-Resources: ,org.opendaylight.controller.sdnimanager.northbound.Sdn
+ iNorthbound
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0
+Web-ContextPath: /controller/nb/v2/sdni
