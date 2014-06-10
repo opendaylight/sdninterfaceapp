@@ -7,7 +7,7 @@
     <version>1.4.2-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.opendaylight.controller.sdninterfaceapp</groupId>
+  <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <artifactId>sdninterfaceapp.project</artifactId>
   <packaging>pom</packaging>
 
