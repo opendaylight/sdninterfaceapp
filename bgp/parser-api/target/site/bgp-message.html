@@ -1,0 +1,2888 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>bgp-message</title>
+  </head>
+  <body>
+    <h1>bgp-message</h1>
+    
+    <h2>Base Information</h2>
+    <table>
+        <tr>
+            <td><strong>prefix</strong></td>
+            <td>bgp-msg</td>
+        </tr>
+        <tr>
+            <td><strong>namespace</strong></td>
+            <td>urn:opendaylight:params:xml:ns:yang:bgp-message</td>
+        </tr>
+        <tr>
+            <td><strong>revision</strong></td>
+            <td>2013-09-19</td>
+        </tr>
+        <tr>
+            <td><strong>description</strong></td>
+            <td>This module contains the base data model of a BGP message.
+                    It rolls up the definitions contained in RFC4271 and RFC4893.
+            
+                    Copyright (c)2013 Cisco Systems, Inc. All rights reserved.
+            
+                    This program and the accompanying materials are made available
+                    under the terms of the Eclipse Public License v1.0 which
+                    accompanies this distribution, and is available at
+                    http://www.eclipse.org/legal/epl-v10.html</td>
+        </tr>
+        <tr>
+            <td><strong>yang-version</strong></td>
+            <td>1</td>
+        </tr>
+        <tr>
+    <td><strong>imports</strong></td><td>        bgp-t:bgp-types 2013-09-19;
+            inet:ietf-inet-types 2010-09-24;
+    </td>    </tr>
+    </table>
+    
+    <div>
+        <h3>Type Definitions Summary</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>
+                <a href="#protocol-version"><strong>protocol-version</strong></a>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <h3>Groupings Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#path-attributes"><strong>path-attributes</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <h3>Notifications Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#keepalive"><strong>keepalive</strong></a>
+            </td>
+            <td>
+            Keepalive Message
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#notify"><strong>notify</strong></a>
+            </td>
+            <td>
+            Notification Message
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#open"><strong>open</strong></a>
+            </td>
+            <td>
+            Open Message
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#update"><strong>update</strong></a>
+            </td>
+            <td>
+            Update Message
+            </td>
+        </tr>
+    </table>
+    
+    <h2>Type Definitions</h2>
+    <ul>
+    <li>
+        <h3 id="protocol-version">protocol-version</h3>
+        <ul>
+        <li>
+            Base type: uint8
+        </li>
+        <li>
+            Range restrictions:
+        </li>
+        <ul>
+        <li>
+        &lt;1, 7&gt;
+        </li>
+        </ul>
+        </ul>
+    </li>
+    </ul>
+    
+    
+    <h2>Groupings</h2>
+    <ul>
+    <li>
+        <h3 id="path-attributes">path-attributes</h3>
+        <ul>
+            <li>
+                Reference: http://tools.ietf.org/html/rfc4271#section-5
+            </li>
+            <ul>
+            <strong>
+            <li id="path-attributes/origin">
+                container: origin
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.1
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: value
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:bgp-origin
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path">
+                container: as-path
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.2
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments">
+                list: segments
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            <strong><li>
+                uses: bgp-t:as-path-segment
+            </li>
+            </strong>
+            <ul>
+            <li>refines:
+                <ul>
+                </ul>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments/c-segment">
+                choice: c-segment
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments/c-segment/a-list-case">
+                case: a-list-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments/c-segment/a-list-case/a-list">
+                container: a-list
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments/c-segment/a-list-case/a-list/as-sequence">
+                list: as-sequence
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: as
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:as-number
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments/c-segment/a-set-case">
+                case: a-set-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/as-path/segments/c-segment/a-set-case/a-set">
+                container: a-set
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf-list: as-set
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: as-number
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/c-next-hop">
+                choice: c-next-hop
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/c-next-hop/ipv4-next-hop-case">
+                case: ipv4-next-hop-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/c-next-hop/ipv4-next-hop-case/ipv4-next-hop">
+                container: ipv4-next-hop
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.3
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:ipv4-address
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/c-next-hop/ipv6-next-hop-case">
+                case: ipv6-next-hop-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/c-next-hop/ipv6-next-hop-case/ipv6-next-hop">
+                container: ipv6-next-hop
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4760#section-3
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:ipv6-address
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: link-local
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:ipv6-address
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/multi-exit-disc">
+                container: multi-exit-disc
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.4
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: med
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: uint32
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/local-pref">
+                container: local-pref
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.5
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: pref
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: uint32
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/atomic-aggregate">
+                container: atomic-aggregate
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.6
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/aggregator">
+                container: aggregator
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            <strong><li>
+                uses: bgp-t:bgp-aggregator
+            </li>
+            </strong>
+            <ul>
+            <li>refines:
+                <ul>
+                </ul>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: as-number
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: network-address
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:ipv4-address
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/communities">
+                list: communities
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            <strong><li>
+                uses: bgp-t:community
+            </li>
+            </strong>
+            <ul>
+            <li>refines:
+                <ul>
+                </ul>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: as-number
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: semantics
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: uint16
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities">
+                list: extended-communities
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            <strong><li>
+                uses: bgp-t:extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>refines:
+                <ul>
+                </ul>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: comm-type
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: uint8
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: comm-sub-type
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: uint8
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community">
+                choice: extended-community
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/as-specific-extended-community-case">
+                case: as-specific-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/as-specific-extended-community-case/as-specific-extended-community">
+                container: as-specific-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 0 and ../comm-sub-type = 0 or ../comm-type = 40 and ../comm-sub-type = 0
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: transitive
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: boolean
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:short-as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:binary
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/inet4-specific-extended-community-case">
+                case: inet4-specific-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/inet4-specific-extended-community-case/inet4-specific-extended-community">
+                container: inet4-specific-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 1 and ../comm-sub-type = 0 or ../comm-type = 41 and ../comm-sub-type = 0
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: transitive
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: boolean
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:ipv4-address
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:binary
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/opaque-extended-community-case">
+                case: opaque-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/opaque-extended-community-case/opaque-extended-community">
+                container: opaque-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 3 and ../comm-sub-type = 0 or ../comm-type = 43 and ../comm-sub-type = 0
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: transitive
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: boolean
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: value
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:binary
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/route-origin-extended-community-case">
+                case: route-origin-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/route-origin-extended-community-case/route-origin-extended-community">
+                container: route-origin-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 1 and ../comm-sub-type = 3 or ../comm-type = 2 and ../comm-sub-type = 3 or ../comm-type = 3 and ../comm-sub-type = 3
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:short-as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:binary
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/route-target-extended-community-case">
+                case: route-target-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/extended-communities/extended-community/route-target-extended-community-case/route-target-extended-community">
+                container: route-target-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 1 and ../comm-sub-type = 2 or ../comm-type = 2 and ../comm-sub-type = 2 or ../comm-type = 3 and ../comm-sub-type = 2
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:short-as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: bgp-t:binary
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: originator-id
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: inet:ipv4-address
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf-list: cluster-id
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: cluster-identifier
+            </li>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    </ul>
+    
+    
+    
+    <h2>Notifications</h2>
+    
+    <h3 id="keepalive">keepalive
+    </h3>
+        Keepalive Message
+        Reference http://tools.ietf.org/html/rfc4271#section-4.4
+    
+    <h3 id="notify">notify
+    </h3>
+        Notification Message
+        Reference http://tools.ietf.org/html/rfc4271#section-4.5
+        <ul>
+        <strong><li>
+            leaf: error-code
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint8
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: error-subcode
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint8
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: data
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: binary
+        </li>
+        </ul>
+        </ul>
+    
+    <h3 id="open">open
+    </h3>
+        Open Message
+        Reference http://tools.ietf.org/html/rfc4271#section-4.2
+        <ul>
+        <strong><li>
+            leaf: version
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: <a href="#protocol-version">protocol-version</a>
+        </li>
+        <li>
+            default: 4
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: my-as-number
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint16
+        </li>
+        <li>
+            default: 23456
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: hold-timer
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint16
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: bgp-identifier
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters">
+            list: bgp-parameters
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc3392#section-4
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters">
+            choice: c-parameters
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/as4-bytes-case">
+            case: as4-bytes-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/as4-bytes-case/as4-bytes-capability">
+            container: as4-bytes-capability
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc6793
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: as-number
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:as-number
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/graceful-restart-case">
+            case: graceful-restart-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/graceful-restart-case/graceful-restart-capability">
+            container: graceful-restart-capability
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4724#section-3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: restart-flags
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bits
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: restart-time
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint16
+        </li>
+        <li>
+            units: seconds
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/graceful-restart-case/graceful-restart-capability/tables">
+            list: tables
+        </li>
+        </strong>
+        <ul>
+        <li>
+            key definition: afi
+        </li>
+        <li>
+            key definition: safi
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-table-type
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: afi-flags
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bits
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/multiprotocol-case">
+            case: multiprotocol-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/multiprotocol-case/multiprotocol-capability">
+            container: multiprotocol-capability
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-8
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-table-type
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+    
+    <h3 id="update">update
+    </h3>
+        Update Message
+        Reference http://tools.ietf.org/html/rfc4271#section-4.3
+        <ul>
+        <strong>
+        <li id="update/path-attributes">
+            container: path-attributes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#path-attributes">path-attributes</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/origin">
+            container: origin
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.1
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: value
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:bgp-origin
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path">
+            container: as-path
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.2
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments">
+            list: segments
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-t:as-path-segment
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments/c-segment">
+            choice: c-segment
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments/c-segment/a-list-case">
+            case: a-list-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments/c-segment/a-list-case/a-list">
+            container: a-list
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments/c-segment/a-list-case/a-list/as-sequence">
+            list: as-sequence
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: as
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:as-number
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments/c-segment/a-set-case">
+            case: a-set-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/as-path/segments/c-segment/a-set-case/a-set">
+            container: a-set
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: as-set
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: as-number
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/c-next-hop">
+            choice: c-next-hop
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/c-next-hop/ipv4-next-hop-case">
+            case: ipv4-next-hop-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/c-next-hop/ipv4-next-hop-case/ipv4-next-hop">
+            container: ipv4-next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/c-next-hop/ipv6-next-hop-case">
+            case: ipv6-next-hop-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/c-next-hop/ipv6-next-hop-case/ipv6-next-hop">
+            container: ipv6-next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv6-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: link-local
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv6-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/multi-exit-disc">
+            container: multi-exit-disc
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.4
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: med
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint32
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/local-pref">
+            container: local-pref
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.5
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: pref
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint32
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/atomic-aggregate">
+            container: atomic-aggregate
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.6
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/aggregator">
+            container: aggregator
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-t:bgp-aggregator
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: as-number
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:as-number
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: network-address
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/communities">
+            list: communities
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-t:community
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: as-number
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:as-number
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: semantics
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint16
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities">
+            list: extended-communities
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-t:extended-community
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: comm-type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint8
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: comm-sub-type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: uint8
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community">
+            choice: extended-community
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/as-specific-extended-community-case">
+            case: as-specific-extended-community-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/as-specific-extended-community-case/as-specific-extended-community">
+            container: as-specific-extended-community
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../comm-type = 0 and ../comm-sub-type = 0 or ../comm-type = 40 and ../comm-sub-type = 0
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: transitive
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: boolean
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: global-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:short-as-number
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: local-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:binary
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/inet4-specific-extended-community-case">
+            case: inet4-specific-extended-community-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/inet4-specific-extended-community-case/inet4-specific-extended-community">
+            container: inet4-specific-extended-community
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../comm-type = 1 and ../comm-sub-type = 0 or ../comm-type = 41 and ../comm-sub-type = 0
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: transitive
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: boolean
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: global-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: local-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:binary
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/opaque-extended-community-case">
+            case: opaque-extended-community-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/opaque-extended-community-case/opaque-extended-community">
+            container: opaque-extended-community
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../comm-type = 3 and ../comm-sub-type = 0 or ../comm-type = 43 and ../comm-sub-type = 0
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: transitive
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: boolean
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: value
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:binary
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/route-origin-extended-community-case">
+            case: route-origin-extended-community-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/route-origin-extended-community-case/route-origin-extended-community">
+            container: route-origin-extended-community
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../comm-type = 1 and ../comm-sub-type = 3 or ../comm-type = 2 and ../comm-sub-type = 3 or ../comm-type = 3 and ../comm-sub-type = 3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:short-as-number
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: local-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:binary
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/route-target-extended-community-case">
+            case: route-target-extended-community-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/extended-communities/extended-community/route-target-extended-community-case/route-target-extended-community">
+            container: route-target-extended-community
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../comm-type = 1 and ../comm-sub-type = 2 or ../comm-type = 2 and ../comm-sub-type = 2 or ../comm-type = 3 and ../comm-sub-type = 2
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:short-as-number
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: local-administrator
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bgp-t:binary
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: originator-id
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf-list: cluster-id
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: cluster-identifier
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri">
+            container: mp-reach-nlri
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-3
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-table-type
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        <strong><li>
+            uses: bgp-t:next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop">
+            choice: c-next-hop
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv4-next-hop-case">
+            case: ipv4-next-hop-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv4-next-hop-case/ipv4-next-hop">
+            container: ipv4-next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv6-next-hop-case">
+            case: ipv6-next-hop-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv6-next-hop-case/ipv6-next-hop">
+            container: ipv6-next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv6-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: link-local
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv6-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes">
+            container: advertized-routes
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: destination
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type">
+            choice: destination-type
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv4-case">
+            case: destination-ipv4-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv4-case/destination-ipv4">
+            container: destination-ipv4
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv4
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv4-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv4-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv6-case">
+            case: destination-ipv6-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv6-case/destination-ipv6">
+            container: destination-ipv6
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv6
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv6-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv6-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri">
+            container: mp-unreach-nlri
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-4
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: bgp-table-type
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes">
+            container: withdrawn-routes
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: destination
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type">
+            choice: destination-type
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv4-case">
+            case: destination-ipv4-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv4-case/destination-ipv4">
+            container: destination-ipv4
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv4
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv4-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv4-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv6-case">
+            case: destination-ipv6-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv6-case/destination-ipv6">
+            container: destination-ipv6
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv6
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv6-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv6-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/withdrawn-routes">
+            container: withdrawn-routes
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: withdrawn-routes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv4-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/nlri">
+            container: nlri
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: nlri
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv4-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+    
+    
+    
+    
+    
+  </body>
+</html>

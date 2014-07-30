@@ -1,0 +1,4 @@
+org/opendaylight/yang/gen/v1/urn/opendaylight/params/xml/ns/yang/controller/bgp/rib/cfg/rev130701/$YangModelBindingProvider.class
+org/opendaylight/yang/gen/v1/urn/opendaylight/params/xml/ns/yang/controller/bgp/rib/cfg/rev130701/Rib.class
+org/opendaylight/controller/config/yang/bgp/rib/cfg/RibReferenceServiceInterface.class
+org/opendaylight/yang/gen/v1/urn/opendaylight/params/xml/ns/yang/controller/bgp/rib/cfg/rev130701/$YangModuleInfoImpl.class

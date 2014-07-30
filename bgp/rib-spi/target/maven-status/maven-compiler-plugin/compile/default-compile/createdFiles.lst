@@ -1,0 +1,14 @@
+org/opendaylight/protocol/bgp/rib/spi/Peer.class
+org/opendaylight/protocol/bgp/rib/spi/RIBExtensionConsumerActivator.class
+org/opendaylight/protocol/bgp/rib/spi/RIBExtensionConsumerContext.class
+org/opendaylight/protocol/bgp/rib/spi/AbstractAdjRIBsIn$RIBEntry.class
+org/opendaylight/protocol/bgp/rib/spi/SimpleRIBExtensionProviderContext$1.class
+org/opendaylight/protocol/bgp/rib/spi/AdjRIBsInFactory.class
+org/opendaylight/protocol/bgp/rib/spi/AbstractRIBExtensionProviderActivator.class
+org/opendaylight/protocol/bgp/rib/spi/ServiceLoaderRIBExtensionConsumerContext.class
+org/opendaylight/protocol/bgp/rib/spi/AbstractAdjRIBsIn.class
+org/opendaylight/protocol/bgp/rib/spi/SimpleRIBExtensionProviderContext.class
+org/opendaylight/protocol/bgp/rib/spi/RIBExtensionProviderContext.class
+org/opendaylight/protocol/bgp/rib/spi/AdjRIBsIn.class
+org/opendaylight/protocol/bgp/rib/spi/RIBExtensionProviderActivator.class
+org/opendaylight/protocol/bgp/rib/spi/AbstractAdjRIBsIn$RIBEntryData.class

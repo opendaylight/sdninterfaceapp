@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>config-bgp-linkstate</title>
+  </head>
+  <body>
+    <h1>config-bgp-linkstate</h1>
+    
+    <h2>Base Information</h2>
+    <table>
+        <tr>
+            <td><strong>prefix</strong></td>
+            <td>bgpls</td>
+        </tr>
+        <tr>
+            <td><strong>namespace</strong></td>
+            <td>urn:opendaylight:params:xml:ns:yang:controller:bgp:linkstate</td>
+        </tr>
+        <tr>
+            <td><strong>revision</strong></td>
+            <td>2013-11-15</td>
+        </tr>
+        <tr>
+            <td><strong>description</strong></td>
+            <td>This module contains the base YANG definitions for
+                     BGP Linkstate extension.
+            
+                    Copyright (c)2013 Cisco Systems, Inc. All rights reserved.;
+            
+                    This program and the accompanying materials are made available
+                    under the terms of the Eclipse Public License v1.0 which
+                    accompanies this distribution, and is available at
+                    http://www.eclipse.org/legal/epl-v10.html</td>
+        </tr>
+        <tr>
+            <td><strong>yang-version</strong></td>
+            <td>1</td>
+        </tr>
+        <tr>
+    <td><strong>imports</strong></td><td>        bgpspi:config-bgp-parser-spi 2013-11-15;
+            ribspi:config-bgp-rib-spi 2013-11-15;
+            config:config 2013-04-05;
+    </td>    </tr>
+    </table>
+    
+    <h3>Identities Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-linkstate"><strong>bgp-linkstate</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <h3>Augmentations Summary</h3>
+    <table>
+        <tr>
+            <th>Target</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)bgp-linkstate"><strong>/config:modules/config:module/config:configuration/(case)bgp-linkstate</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    
+    
+    <h2>Identities</h2>
+    <ul>
+    <li>
+        <h3 id="bgp-linkstate">bgp-linkstate</h3>
+        <ul>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    </ul>
+    
+    
+    
+    
+    
+    <h2>Augmentations</h2>
+    
+    <ul>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)bgp-linkstate">
+        Target [config:/config:modules/config:module/config:configuration/(case)bgp-linkstate]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-linkstate">
+            case: bgp-linkstate
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'bgp-linkstate'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    </ul>
+    
+    
+    
+    
+  </body>
+</html>

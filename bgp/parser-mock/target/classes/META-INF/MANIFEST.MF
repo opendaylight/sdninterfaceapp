@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1406700828805
+Build-Jdk: 1.7.0_15
+Built-By: root
+Bundle-Description: BGP Parser Mock Implementation
+Bundle-License: http://www.eclipse.org/legal/epl-v10.html
+Bundle-ManifestVersion: 2
+Bundle-Name: org.opendaylight.bgpcep.bgp-parser-mock
+Bundle-SymbolicName: org.opendaylight.bgpcep.bgp-parser-mock
+Bundle-Version: 0.3.1.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.opendaylight.protocol.bgp.parser.mock;uses:="io.nett
+ y.buffer,org.opendaylight.protocol.bgp.parser,org.opendaylight.protocol
+ .bgp.parser.spi,org.opendaylight.yangtools.yang.binding";version="0.3.1
+ .SNAPSHOT"
+Import-Package: io.netty.buffer;version="[4.0,5)",org.opendaylight.proto
+ col.bgp.parser;version="[0.3,1)",org.opendaylight.protocol.bgp.parser.s
+ pi;version="[0.3,1)",org.opendaylight.yangtools.yang.binding;version="[
+ 0.6,1)"
+Tool: Bnd-2.1.0.20130426-122213

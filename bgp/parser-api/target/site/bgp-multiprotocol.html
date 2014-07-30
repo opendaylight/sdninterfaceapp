@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>bgp-multiprotocol</title>
+  </head>
+  <body>
+    <h1>bgp-multiprotocol</h1>
+    
+    <h2>Base Information</h2>
+    <table>
+        <tr>
+            <td><strong>prefix</strong></td>
+            <td>bgp-mp</td>
+        </tr>
+        <tr>
+            <td><strong>namespace</strong></td>
+            <td>urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol</td>
+        </tr>
+        <tr>
+            <td><strong>revision</strong></td>
+            <td>2013-09-19</td>
+        </tr>
+        <tr>
+            <td><strong>description</strong></td>
+            <td>This module contains the base data model of a BGP message.
+                    It rolls up the definitions contained in RFC4271
+                    and draft-ietf-idr-ls-distribution-03.
+            
+                    Copyright (c)2013 Cisco Systems, Inc. All rights reserved.
+            
+                    This program and the accompanying materials are made available
+                    under the terms of the Eclipse Public License v1.0 which
+                    accompanies this distribution, and is available at
+                    http://www.eclipse.org/legal/epl-v10.html</td>
+        </tr>
+        <tr>
+            <td><strong>yang-version</strong></td>
+            <td>1</td>
+        </tr>
+        <tr>
+    <td><strong>imports</strong></td><td>        bgp-msg:bgp-message 2013-09-19;
+            bgp-t:bgp-types 2013-09-19;
+            inet:ietf-inet-types 2010-09-24;
+    </td>    </tr>
+    </table>
+    
+    <h3>Groupings Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-table-type"><strong>bgp-table-type</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#destination"><strong>destination</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <h3>Augmentations Summary</h3>
+    <table>
+        <tr>
+            <th>Target</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/bgp-message:open/bgp-message:bgp-parameters/bgp-message:c-parameters/(case)multiprotocol-case"><strong>/bgp-message:open/bgp-message:bgp-parameters/bgp-message:c-parameters/(case)multiprotocol-case</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/bgp-message:update/bgp-message:path-attributes/"><strong>/bgp-message:update/bgp-message:path-attributes/</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/bgp-message:update/bgp-message:path-attributes/"><strong>/bgp-message:update/bgp-message:path-attributes/</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    
+    
+    
+    <h2>Groupings</h2>
+    <ul>
+    <li>
+        <h3 id="bgp-table-type">bgp-table-type</h3>
+        <ul>
+            <ul>
+            <strong><li>
+                leaf: afi
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: identityref
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: safi
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: identityref
+            </li>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    <li>
+        <h3 id="destination">destination</h3>
+        <ul>
+            <ul>
+            <strong>
+            <li id="destination/destination-type">
+                choice: destination-type
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="destination/destination-type/destination-ipv4-case">
+                case: destination-ipv4-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="destination/destination-type/destination-ipv4-case/destination-ipv4">
+                container: destination-ipv4
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../../afi = ipv4
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf-list: ipv4-prefixes
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: ipv4-prefix
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="destination/destination-type/destination-ipv6-case">
+                case: destination-ipv6-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="destination/destination-type/destination-ipv6-case/destination-ipv6">
+                container: destination-ipv6
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../../afi = ipv6
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf-list: ipv6-prefixes
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: ipv6-prefix
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    </ul>
+    
+    
+    
+    
+    <h2>Augmentations</h2>
+    
+    <ul>
+    <li>
+        <h3 id="/bgp-message:open/bgp-message:bgp-parameters/bgp-message:c-parameters/(case)multiprotocol-case">
+        Target [bgp-msg:/bgp-message:open/bgp-message:bgp-parameters/bgp-message:c-parameters/(case)multiprotocol-case]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/multiprotocol-case">
+            case: multiprotocol-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/multiprotocol-case/multiprotocol-capability">
+            container: multiprotocol-capability
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-8
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#bgp-table-type">bgp-table-type</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/graceful-restart-case">
+            case: graceful-restart-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/graceful-restart-case/graceful-restart-capability">
+            container: graceful-restart-capability
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4724#section-3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: restart-flags
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bits
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: restart-time
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: <a href="#graceful-restart-case/graceful-restart-capability/restart-time/uint16">uint16</a>
+        </li>
+        <li>
+            units: seconds
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="open/bgp-parameters/c-parameters/graceful-restart-case/graceful-restart-capability/tables">
+            list: tables
+        </li>
+        </strong>
+        <ul>
+        <li>
+            key definition: afi
+        </li>
+        <li>
+            key definition: safi
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#bgp-table-type">bgp-table-type</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: afi-flags
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: bits
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/bgp-message:update/bgp-message:path-attributes/">
+        Target [bgp-msg:/bgp-message:update/bgp-message:path-attributes/]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri">
+            container: mp-reach-nlri
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-3
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#bgp-table-type">bgp-table-type</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        <strong><li>
+            uses: bgp-t:next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop">
+            choice: c-next-hop
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv4-next-hop-case">
+            case: ipv4-next-hop-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv4-next-hop-case/ipv4-next-hop">
+            container: ipv4-next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4271#section-5.1.3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv4-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv6-next-hop-case">
+            case: ipv6-next-hop-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/c-next-hop/ipv6-next-hop-case/ipv6-next-hop">
+            container: ipv6-next-hop
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-3
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: global
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv6-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: link-local
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: inet:ipv6-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes">
+            container: advertized-routes
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#destination">destination</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type">
+            choice: destination-type
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv4-case">
+            case: destination-ipv4-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv4-case/destination-ipv4">
+            container: destination-ipv4
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv4
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv4-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv4-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv6-case">
+            case: destination-ipv6-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-reach-nlri/advertized-routes/destination-type/destination-ipv6-case/destination-ipv6">
+            container: destination-ipv6
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv6
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv6-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv6-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/bgp-message:update/bgp-message:path-attributes/">
+        Target [bgp-msg:/bgp-message:update/bgp-message:path-attributes/]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri">
+            container: mp-unreach-nlri
+        </li>
+        </strong>
+        <ul>
+        <li>
+            reference: http://tools.ietf.org/html/rfc4760#section-4
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#bgp-table-type">bgp-table-type</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes">
+            container: withdrawn-routes
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#destination">destination</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type">
+            choice: destination-type
+        </li>
+        </strong>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv4-case">
+            case: destination-ipv4-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv4-case/destination-ipv4">
+            container: destination-ipv4
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv4
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv4-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv4-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv6-case">
+            case: destination-ipv6-case
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/mp-unreach-nlri/withdrawn-routes/destination-type/destination-ipv6-case/destination-ipv6">
+            container: destination-ipv6
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: ../../afi = ipv6
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf-list: ipv6-prefixes
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: ipv6-prefix
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    </ul>
+    
+    
+    
+    
+  </body>
+</html>

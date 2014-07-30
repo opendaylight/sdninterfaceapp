@@ -1,0 +1,3 @@
+org.opendaylight.controller.config.yang.bgp.topology.provider.LinkstateTopologyBuilderModuleFactory
+org.opendaylight.controller.config.yang.bgp.topology.provider.Ipv6ReachabilityTopologyBuilderModuleFactory
+org.opendaylight.controller.config.yang.bgp.topology.provider.Ipv4ReachabilityTopologyBuilderModuleFactory
