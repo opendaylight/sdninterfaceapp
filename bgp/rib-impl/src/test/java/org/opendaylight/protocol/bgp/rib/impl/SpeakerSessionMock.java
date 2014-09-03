@@ -8,10 +8,9 @@
 package org.opendaylight.protocol.bgp.rib.impl;
 
 import static org.mockito.Mockito.mock;
-import io.netty.channel.Channel;
-import io.netty.util.HashedWheelTimer;
 
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
+import io.netty.channel.Channel;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.OpenBuilder;
 import org.opendaylight.yangtools.yang.binding.Notification;
 
@@ -23,13 +22,13 @@ public class SpeakerSessionMock extends BGPSessionImpl {
     private final BGPSessionListener client;
 
     SpeakerSessionMock(final BGPSessionListener listener, final BGPSessionListener client) {
-        super(new HashedWheelTimer(), listener, mock(Channel.class), new OpenBuilder().setHoldTimer(5).build(), 10);
+        super(listener, mock(Channel.class), new OpenBuilder().setHoldTimer(5).build(), 10);
         this.client = client;
     }
 
     @Override
     public void sendMessage(final Notification msg) {
-        this.lastMessageSentAt = System.nanoTime();
+        this.setLastMessageSentAt(System.nanoTime());
         this.client.onMessage(this, msg);
     }
 }

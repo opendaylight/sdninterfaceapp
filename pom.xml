@@ -17,6 +17,7 @@
   <modules>
     <module>sdniaggregator</module>
    <module>sdni</module>
+    <module>features</module>
   </modules>
 
   <properties>

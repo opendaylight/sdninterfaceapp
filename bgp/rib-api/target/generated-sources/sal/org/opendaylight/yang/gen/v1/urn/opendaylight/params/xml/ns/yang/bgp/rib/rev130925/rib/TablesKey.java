@@ -8,11 +8,12 @@ public class TablesKey
     private static final long serialVersionUID = 7040661022102848903L; 
     final private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
     final private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
-
+    
     public TablesKey(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi, java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi) {
         this._afi = _afi;
         this._safi = _safi;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -22,7 +23,7 @@ public class TablesKey
         this._afi = source._afi;
         this._safi = source._safi;
     }
-    
+
 
     public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
         return _afi;
@@ -72,7 +73,7 @@ public class TablesKey
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("TablesKey [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_afi != null) {

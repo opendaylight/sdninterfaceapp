@@ -10,17 +10,15 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-rib
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-rib?revision=2013-09-25)rib/rib/tables]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables
  */
 public class TablesBuilder {
 
-    private Attributes _attributes;
-    private Routes _routes;
-    private TablesKey _key;
     private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
+    private Attributes _attributes;
+    private TablesKey _key;
+    private Routes _routes;
     private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables>> augmentation = new HashMap<>();
@@ -78,20 +76,20 @@ public class TablesBuilder {
         }
     }
 
-    public Attributes getAttributes() {
-        return _attributes;
+    public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
+        return _afi;
     }
     
-    public Routes getRoutes() {
-        return _routes;
+    public Attributes getAttributes() {
+        return _attributes;
     }
     
     public TablesKey getKey() {
         return _key;
     }
     
-    public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
-        return _afi;
+    public Routes getRoutes() {
+        return _routes;
     }
     
     public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
@@ -106,13 +104,13 @@ public class TablesBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
-    public TablesBuilder setAttributes(Attributes value) {
-        this._attributes = value;
+    public TablesBuilder setAfi(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> value) {
+        this._afi = value;
         return this;
     }
     
-    public TablesBuilder setRoutes(Routes value) {
-        this._routes = value;
+    public TablesBuilder setAttributes(Attributes value) {
+        this._attributes = value;
         return this;
     }
     
@@ -121,8 +119,8 @@ public class TablesBuilder {
         return this;
     }
     
-    public TablesBuilder setAfi(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> value) {
-        this._afi = value;
+    public TablesBuilder setRoutes(Routes value) {
+        this._routes = value;
         return this;
     }
     
@@ -146,10 +144,10 @@ public class TablesBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables.class;
         }
 
-        private final Attributes _attributes;
-        private final Routes _routes;
-        private final TablesKey _key;
         private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
+        private final Attributes _attributes;
+        private final TablesKey _key;
+        private final Routes _routes;
         private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables>> augmentation = new HashMap<>();
@@ -183,13 +181,13 @@ public class TablesBuilder {
         }
 
         @Override
-        public Attributes getAttributes() {
-            return _attributes;
+        public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
+            return _afi;
         }
         
         @Override
-        public Routes getRoutes() {
-            return _routes;
+        public Attributes getAttributes() {
+            return _attributes;
         }
         
         @Override
@@ -198,8 +196,8 @@ public class TablesBuilder {
         }
         
         @Override
-        public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
-            return _afi;
+        public Routes getRoutes() {
+            return _routes;
         }
         
         @Override
@@ -220,10 +218,10 @@ public class TablesBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_attributes == null) ? 0 : _attributes.hashCode());
-            result = prime * result + ((_routes == null) ? 0 : _routes.hashCode());
-            result = prime * result + ((_key == null) ? 0 : _key.hashCode());
             result = prime * result + ((_afi == null) ? 0 : _afi.hashCode());
+            result = prime * result + ((_attributes == null) ? 0 : _attributes.hashCode());
+            result = prime * result + ((_key == null) ? 0 : _key.hashCode());
+            result = prime * result + ((_routes == null) ? 0 : _routes.hashCode());
             result = prime * result + ((_safi == null) ? 0 : _safi.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
@@ -234,54 +232,69 @@ public class TablesBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            TablesImpl other = (TablesImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables)obj;
+            if (_afi == null) {
+                if (other.getAfi() != null) {
+                    return false;
+                }
+            } else if(!_afi.equals(other.getAfi())) {
+                return false;
+            }
             if (_attributes == null) {
-                if (other._attributes != null) {
+                if (other.getAttributes() != null) {
                     return false;
                 }
-            } else if(!_attributes.equals(other._attributes)) {
-                return false;
-            }
-            if (_routes == null) {
-                if (other._routes != null) {
-                    return false;
-                }
-            } else if(!_routes.equals(other._routes)) {
+            } else if(!_attributes.equals(other.getAttributes())) {
                 return false;
             }
             if (_key == null) {
-                if (other._key != null) {
+                if (other.getKey() != null) {
                     return false;
                 }
-            } else if(!_key.equals(other._key)) {
+            } else if(!_key.equals(other.getKey())) {
                 return false;
             }
-            if (_afi == null) {
-                if (other._afi != null) {
+            if (_routes == null) {
+                if (other.getRoutes() != null) {
                     return false;
                 }
-            } else if(!_afi.equals(other._afi)) {
+            } else if(!_routes.equals(other.getRoutes())) {
                 return false;
             }
             if (_safi == null) {
-                if (other._safi != null) {
+                if (other.getSafi() != null) {
                     return false;
                 }
-            } else if(!_safi.equals(other._safi)) {
+            } else if(!_safi.equals(other.getSafi())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                TablesImpl otherImpl = (TablesImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -291,6 +304,15 @@ public class TablesBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("Tables [");
             boolean first = true;
         
+            if (_afi != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_afi=");
+                builder.append(_afi);
+             }
             if (_attributes != null) {
                 if (first) {
                     first = false;
@@ -299,15 +321,6 @@ public class TablesBuilder {
                 }
                 builder.append("_attributes=");
                 builder.append(_attributes);
-             }
-            if (_routes != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_routes=");
-                builder.append(_routes);
              }
             if (_key != null) {
                 if (first) {
@@ -318,14 +331,14 @@ public class TablesBuilder {
                 builder.append("_key=");
                 builder.append(_key);
              }
-            if (_afi != null) {
+            if (_routes != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_afi=");
-                builder.append(_afi);
+                builder.append("_routes=");
+                builder.append(_routes);
              }
             if (_safi != null) {
                 if (first) {

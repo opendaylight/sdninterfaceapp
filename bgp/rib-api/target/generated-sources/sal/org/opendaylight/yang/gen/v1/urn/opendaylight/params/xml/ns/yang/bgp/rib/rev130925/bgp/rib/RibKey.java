@@ -8,10 +8,11 @@ public class RibKey
  implements Identifier<Rib> {
     private static final long serialVersionUID = 4859304099418497978L; 
     final private RibId _id;
-
+    
     public RibKey(RibId _id) {
         this._id = _id;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -20,7 +21,7 @@ public class RibKey
     public RibKey(RibKey source) {
         this._id = source._id;
     }
-    
+
 
     public RibId getId() {
         return _id;
@@ -58,7 +59,7 @@ public class RibKey
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("RibKey [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.RibKey.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_id != null) {

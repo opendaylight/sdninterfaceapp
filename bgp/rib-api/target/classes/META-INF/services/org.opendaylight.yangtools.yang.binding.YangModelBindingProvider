@@ -1,1 +1,2 @@
 org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.$YangModelBindingProvider
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.controller.bgp.rib.cfg.rev130701.$YangModelBindingProvider

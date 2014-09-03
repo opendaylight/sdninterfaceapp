@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1409129093587
+Build-Jdk: 1.7.0_15
+Built-By: root
+Bundle-Activator: org.opendaylight.controller.sdniwrapper.internal.Activ
+ ator
+Bundle-ManifestVersion: 2
+Bundle-Name: sdniwrapper
+Bundle-SymbolicName: org.opendaylight.controller.sdniwrapper
+Bundle-Version: 0.5.2.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.opendaylight.protocol.bgp.sdniwrapper
+Import-Package: org.opendaylight.controller.sal.core;version="[0.8,1)",o
+ rg.apache.felix.dm;version="[3.0,4)",org.slf4j;version="[1.7,2)",javax.
+ ws.rs.core;version="[1.1,2)",javax.xml.bind.annotation,org.opendaylight
+ .controller.sal.utils;version="[0.8,1)",javax.xml.bind,org.opendaylight
+ .controller.sal.packet.address;version="[0.8,1)",org.opendaylight.contr
+ oller.hosttracker.hostAware;version="[0.5,1)",org.opendaylight.controll
+ er.hosttracker;version="[0.5,1)",javax.ws.rs;version="[1.1,2)",org.open
+ daylight.controller.topologymanager;version="[0.4,1)",org.opendaylight.
+ controller.clustering.services;version="[0.5,1)",org.opendaylight.contr
+ oller.switchmanager;version="[0.7,1)",org.opendaylight.controller.sal.a
+ ction;version="[0.8,1)",org.osgi.service.component;version="[1.2,2)"
+Tool: Bnd-2.1.0.20130426-122213

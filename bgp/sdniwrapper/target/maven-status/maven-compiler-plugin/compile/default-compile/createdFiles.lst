@@ -1,3 +1,10 @@
-org/opendaylight/protocol/bgp/sdniwrapper/SdniWrapper.class
-org/opendaylight/protocol/bgp/sdniwrapper/SdniWrapper$1.class
+org/opendaylight/protocol/bgp/sdniwrapper/MessageReceiver.class
 org/opendaylight/protocol/bgp/sdniwrapper/NetworkCapabilities.class
+org/opendaylight/protocol/bgp/sdniwrapper/XmlParser.class
+org/opendaylight/protocol/bgp/sdniwrapper/SdniWrapper.class
+org/opendaylight/protocol/bgp/sdniwrapper/TimeSchedular.class
+org/opendaylight/protocol/bgp/sdniwrapper/MessageSender.class
+org/opendaylight/protocol/bgp/sdniwrapper/TimeSchedular$2.class
+org/opendaylight/protocol/bgp/sdniwrapper/TimeSchedular$1.class
+org/opendaylight/protocol/bgp/sdniwrapper/XmlParser$1.class
+org/opendaylight/protocol/bgp/sdniwrapper/SdniWrapper$1.class

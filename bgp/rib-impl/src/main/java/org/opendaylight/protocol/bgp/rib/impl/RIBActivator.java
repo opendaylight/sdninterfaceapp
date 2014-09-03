@@ -11,32 +11,32 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import org.opendaylight.controller.sal.binding.api.data.DataModificationTransaction;
-import org.opendaylight.protocol.bgp.rib.RibReference;
 import org.opendaylight.protocol.bgp.rib.spi.AbstractRIBExtensionProviderActivator;
+import org.opendaylight.protocol.bgp.rib.spi.AdjRIBsFactory;
 import org.opendaylight.protocol.bgp.rib.spi.AdjRIBsIn;
-import org.opendaylight.protocol.bgp.rib.spi.AdjRIBsInFactory;
 import org.opendaylight.protocol.bgp.rib.spi.RIBExtensionProviderContext;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv6AddressFamily;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.UnicastSubsequentAddressFamily;
+import org.opendaylight.yangtools.yang.binding.KeyedInstanceIdentifier;
 
 public final class RIBActivator extends AbstractRIBExtensionProviderActivator {
 
     @Override
     protected List<AutoCloseable> startRIBExtensionProviderImpl(final RIBExtensionProviderContext context) {
-        AdjRIBsInFactory adj1 = new AdjRIBsInFactory() {
+        AdjRIBsFactory adj1 = new AdjRIBsFactory() {
             @Override
-            public AdjRIBsIn createAdjRIBsIn(final DataModificationTransaction trans, final RibReference rib, final TablesKey key) {
-                return new Ipv4AdjRIBsIn(trans, rib, key);
+            public AdjRIBsIn<?, ?> createAdjRIBs(final KeyedInstanceIdentifier<Tables, TablesKey> basePath) {
+                return new Ipv4AdjRIBsIn(basePath);
             }
         };
 
-        AdjRIBsInFactory adj2 = new AdjRIBsInFactory() {
+        AdjRIBsFactory adj2 = new AdjRIBsFactory() {
             @Override
-            public AdjRIBsIn createAdjRIBsIn(final DataModificationTransaction trans, final RibReference rib, final TablesKey key) {
-                return new Ipv6AdjRIBsIn(trans, rib, key);
+            public AdjRIBsIn<?, ?> createAdjRIBs(final KeyedInstanceIdentifier<Tables, TablesKey> basePath) {
+                return new Ipv6AdjRIBsIn(basePath);
             }
         };
         return Lists.newArrayList(
