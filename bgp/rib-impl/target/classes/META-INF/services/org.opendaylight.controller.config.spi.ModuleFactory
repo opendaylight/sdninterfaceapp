@@ -1,0 +1,9 @@
+org.opendaylight.controller.config.yang.bgp.rib.impl.BGPPeerModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.BGPApplicationPeerModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.BaseBGPParserModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.BGPPeerAcceptorModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.StrictBgpPeerRegistryModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.BGPDispatcherImplModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.BGPTableTypeImplModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.BaseBGPRIBModuleFactory
+org.opendaylight.controller.config.yang.bgp.rib.impl.RIBImplModuleFactory

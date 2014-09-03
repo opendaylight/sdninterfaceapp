@@ -1,7 +1,12 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 
 
+/**
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1
+ */
 public class PathAttributes1Builder {
 
     private MpReachNlri _mpReachNlri;
@@ -59,18 +64,18 @@ public class PathAttributes1Builder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            PathAttributes1Impl other = (PathAttributes1Impl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1 other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1)obj;
             if (_mpReachNlri == null) {
-                if (other._mpReachNlri != null) {
+                if (other.getMpReachNlri() != null) {
                     return false;
                 }
-            } else if(!_mpReachNlri.equals(other._mpReachNlri)) {
+            } else if(!_mpReachNlri.equals(other.getMpReachNlri())) {
                 return false;
             }
             return true;

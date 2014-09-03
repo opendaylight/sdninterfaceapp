@@ -15,20 +15,18 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-destination/linkstate-destination/c-linkstate-destination/remote-node-descriptors]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors
  */
 public class RemoteNodeDescriptorsBuilder {
 
-    private AsNumber _asNumber;
-    private static List<Range<BigInteger>> _asNumber_range;
     private AreaIdentifier _areaId;
     private static List<Range<BigInteger>> _areaId_range;
+    private AsNumber _asNumber;
+    private static List<Range<BigInteger>> _asNumber_range;
+    private CRouterIdentifier _cRouterIdentifier;
     private DomainIdentifier _domainId;
     private static List<Range<BigInteger>> _domainId_range;
-    private CRouterIdentifier _cRouterIdentifier;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>> augmentation = new HashMap<>();
 
@@ -43,10 +41,10 @@ public class RemoteNodeDescriptorsBuilder {
     }
 
     public RemoteNodeDescriptorsBuilder(RemoteNodeDescriptors base) {
-        this._asNumber = base.getAsNumber();
         this._areaId = base.getAreaId();
-        this._domainId = base.getDomainId();
+        this._asNumber = base.getAsNumber();
         this._cRouterIdentifier = base.getCRouterIdentifier();
+        this._domainId = base.getDomainId();
         if (base instanceof RemoteNodeDescriptorsImpl) {
             RemoteNodeDescriptorsImpl _impl = (RemoteNodeDescriptorsImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -79,20 +77,20 @@ public class RemoteNodeDescriptorsBuilder {
         }
     }
 
-    public AsNumber getAsNumber() {
-        return _asNumber;
-    }
-    
     public AreaIdentifier getAreaId() {
         return _areaId;
     }
     
-    public DomainIdentifier getDomainId() {
-        return _domainId;
+    public AsNumber getAsNumber() {
+        return _asNumber;
     }
     
     public CRouterIdentifier getCRouterIdentifier() {
         return _cRouterIdentifier;
+    }
+    
+    public DomainIdentifier getDomainId() {
+        return _domainId;
     }
     
     @SuppressWarnings("unchecked")
@@ -103,6 +101,35 @@ public class RemoteNodeDescriptorsBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
+    public RemoteNodeDescriptorsBuilder setAreaId(AreaIdentifier value) {
+        if (value != null) {
+            BigInteger _constraint = BigInteger.valueOf(value.getValue());
+            boolean isValidRange = false;
+            for (Range<BigInteger> r : _areaId_range()) {
+                if (r.contains(_constraint)) {
+                    isValidRange = true;
+                }
+            }
+            if (!isValidRange) {
+                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _areaId_range));
+            }
+        }
+        this._areaId = value;
+        return this;
+    }
+    public static List<Range<BigInteger>> _areaId_range() {
+        if (_areaId_range == null) {
+            synchronized (RemoteNodeDescriptorsBuilder.class) {
+                if (_areaId_range == null) {
+                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
+                    _areaId_range = builder.build();
+                }
+            }
+        }
+        return _areaId_range;
+    }
+    
     public RemoteNodeDescriptorsBuilder setAsNumber(AsNumber value) {
         if (value != null) {
             BigInteger _constraint = BigInteger.valueOf(value.getValue());
@@ -132,33 +159,9 @@ public class RemoteNodeDescriptorsBuilder {
         return _asNumber_range;
     }
     
-    public RemoteNodeDescriptorsBuilder setAreaId(AreaIdentifier value) {
-        if (value != null) {
-            BigInteger _constraint = BigInteger.valueOf(value.getValue());
-            boolean isValidRange = false;
-            for (Range<BigInteger> r : _areaId_range()) {
-                if (r.contains(_constraint)) {
-                    isValidRange = true;
-                }
-            }
-            if (!isValidRange) {
-                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _areaId_range));
-            }
-        }
-        this._areaId = value;
+    public RemoteNodeDescriptorsBuilder setCRouterIdentifier(CRouterIdentifier value) {
+        this._cRouterIdentifier = value;
         return this;
-    }
-    public static List<Range<BigInteger>> _areaId_range() {
-        if (_areaId_range == null) {
-            synchronized (RemoteNodeDescriptorsBuilder.class) {
-                if (_areaId_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
-                    _areaId_range = builder.build();
-                }
-            }
-        }
-        return _areaId_range;
     }
     
     public RemoteNodeDescriptorsBuilder setDomainId(DomainIdentifier value) {
@@ -190,11 +193,6 @@ public class RemoteNodeDescriptorsBuilder {
         return _domainId_range;
     }
     
-    public RemoteNodeDescriptorsBuilder setCRouterIdentifier(CRouterIdentifier value) {
-        this._cRouterIdentifier = value;
-        return this;
-    }
-    
     public RemoteNodeDescriptorsBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
@@ -210,18 +208,18 @@ public class RemoteNodeDescriptorsBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors.class;
         }
 
-        private final AsNumber _asNumber;
         private final AreaIdentifier _areaId;
-        private final DomainIdentifier _domainId;
+        private final AsNumber _asNumber;
         private final CRouterIdentifier _cRouterIdentifier;
+        private final DomainIdentifier _domainId;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>> augmentation = new HashMap<>();
 
         private RemoteNodeDescriptorsImpl(RemoteNodeDescriptorsBuilder base) {
-            this._asNumber = base.getAsNumber();
             this._areaId = base.getAreaId();
-            this._domainId = base.getDomainId();
+            this._asNumber = base.getAsNumber();
             this._cRouterIdentifier = base.getCRouterIdentifier();
+            this._domainId = base.getDomainId();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -236,23 +234,23 @@ public class RemoteNodeDescriptorsBuilder {
         }
 
         @Override
-        public AsNumber getAsNumber() {
-            return _asNumber;
-        }
-        
-        @Override
         public AreaIdentifier getAreaId() {
             return _areaId;
         }
         
         @Override
-        public DomainIdentifier getDomainId() {
-            return _domainId;
+        public AsNumber getAsNumber() {
+            return _asNumber;
         }
         
         @Override
         public CRouterIdentifier getCRouterIdentifier() {
             return _cRouterIdentifier;
+        }
+        
+        @Override
+        public DomainIdentifier getDomainId() {
+            return _domainId;
         }
         
         @SuppressWarnings("unchecked")
@@ -268,10 +266,10 @@ public class RemoteNodeDescriptorsBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_asNumber == null) ? 0 : _asNumber.hashCode());
             result = prime * result + ((_areaId == null) ? 0 : _areaId.hashCode());
-            result = prime * result + ((_domainId == null) ? 0 : _domainId.hashCode());
+            result = prime * result + ((_asNumber == null) ? 0 : _asNumber.hashCode());
             result = prime * result + ((_cRouterIdentifier == null) ? 0 : _cRouterIdentifier.hashCode());
+            result = prime * result + ((_domainId == null) ? 0 : _domainId.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -281,47 +279,62 @@ public class RemoteNodeDescriptorsBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            RemoteNodeDescriptorsImpl other = (RemoteNodeDescriptorsImpl) obj;
-            if (_asNumber == null) {
-                if (other._asNumber != null) {
-                    return false;
-                }
-            } else if(!_asNumber.equals(other._asNumber)) {
-                return false;
-            }
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors)obj;
             if (_areaId == null) {
-                if (other._areaId != null) {
+                if (other.getAreaId() != null) {
                     return false;
                 }
-            } else if(!_areaId.equals(other._areaId)) {
+            } else if(!_areaId.equals(other.getAreaId())) {
                 return false;
             }
-            if (_domainId == null) {
-                if (other._domainId != null) {
+            if (_asNumber == null) {
+                if (other.getAsNumber() != null) {
                     return false;
                 }
-            } else if(!_domainId.equals(other._domainId)) {
+            } else if(!_asNumber.equals(other.getAsNumber())) {
                 return false;
             }
             if (_cRouterIdentifier == null) {
-                if (other._cRouterIdentifier != null) {
+                if (other.getCRouterIdentifier() != null) {
                     return false;
                 }
-            } else if(!_cRouterIdentifier.equals(other._cRouterIdentifier)) {
+            } else if(!_cRouterIdentifier.equals(other.getCRouterIdentifier())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_domainId == null) {
+                if (other.getDomainId() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_domainId.equals(other.getDomainId())) {
                 return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                RemoteNodeDescriptorsImpl otherImpl = (RemoteNodeDescriptorsImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -331,15 +344,6 @@ public class RemoteNodeDescriptorsBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("RemoteNodeDescriptors [");
             boolean first = true;
         
-            if (_asNumber != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_asNumber=");
-                builder.append(_asNumber);
-             }
             if (_areaId != null) {
                 if (first) {
                     first = false;
@@ -349,14 +353,14 @@ public class RemoteNodeDescriptorsBuilder {
                 builder.append("_areaId=");
                 builder.append(_areaId);
              }
-            if (_domainId != null) {
+            if (_asNumber != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_domainId=");
-                builder.append(_domainId);
+                builder.append("_asNumber=");
+                builder.append(_asNumber);
              }
             if (_cRouterIdentifier != null) {
                 if (first) {
@@ -366,6 +370,15 @@ public class RemoteNodeDescriptorsBuilder {
                 }
                 builder.append("_cRouterIdentifier=");
                 builder.append(_cRouterIdentifier);
+             }
+            if (_domainId != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_domainId=");
+                builder.append(_domainId);
              }
             if (first) {
                 first = false;

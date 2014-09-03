@@ -15,12 +15,66 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.2">http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.2</a>
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)link-state/link-state]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping link-state {
+ *     leaf local-ipv4-router-id {
+ *         type ipv4-router-identifier;
+ *     }
+ *     leaf local-ipv6-router-id {
+ *         type ipv6-router-identifier;
+ *     }
+ *     leaf remote-ipv4-router-id {
+ *         type ipv4-router-identifier;
+ *     }
+ *     leaf remote-ipv6-router-id {
+ *         type ipv6-router-identifier;
+ *     }
+ *     leaf mpls-protocol {
+ *         type mpls-protocol-mask;
+ *     }
+ *     leaf te-metric {
+ *         type te-metric;
+ *     }
+ *     leaf metric {
+ *         type metric;
+ *     }
+ *     leaf-list shared-risk-link-groups {
+ *         type srlg-id;
+ *     }
+ *     leaf link-name {
+ *         type string;
+ *     }
+ *     leaf max-link-bandwidth {
+ *         type bandwidth;
+ *     }
+ *     leaf max-reservable-bandwidth {
+ *         type bandwidth;
+ *     }
+ *     list unreserved-bandwidth {
+ *         key "priority"
+ *         leaf priority {
+ *             type uint8;
+ *         }
+ *         leaf bandwidth {
+ *             type bandwidth;
+ *         }
+ *         uses unreserved-bandwidth;
+ *     }
+ *     leaf link-protection {
+ *         type link-protection-type;
+ *     }
+ *     leaf admin-group {
+ *         type administrative-group;
+ *     }
+ *     leaf sdni-link-state {
+ *         type string;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/link-state</i>
  */
 public interface LinkState
     extends

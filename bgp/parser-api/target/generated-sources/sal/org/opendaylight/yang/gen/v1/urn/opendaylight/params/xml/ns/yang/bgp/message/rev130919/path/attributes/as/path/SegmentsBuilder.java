@@ -8,10 +8,8 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)path-attributes/path-attributes/as-path/segments]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments
  */
 public class SegmentsBuilder {
 
@@ -136,26 +134,41 @@ public class SegmentsBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            SegmentsImpl other = (SegmentsImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments)obj;
             if (_cSegment == null) {
-                if (other._cSegment != null) {
+                if (other.getCSegment() != null) {
                     return false;
                 }
-            } else if(!_cSegment.equals(other._cSegment)) {
+            } else if(!_cSegment.equals(other.getCSegment())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                SegmentsImpl otherImpl = (SegmentsImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }

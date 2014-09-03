@@ -12,17 +12,15 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.type
 
 
 /**
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)path-attributes/path-attributes/extended-communities]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities
  */
 public class ExtendedCommunitiesBuilder {
 
-    private java.lang.Short _commType;
-    private static List<Range<BigInteger>> _commType_range;
     private java.lang.Short _commSubType;
     private static List<Range<BigInteger>> _commSubType_range;
+    private java.lang.Short _commType;
+    private static List<Range<BigInteger>> _commType_range;
     private ExtendedCommunity _extendedCommunity;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities>> augmentation = new HashMap<>();
@@ -37,8 +35,8 @@ public class ExtendedCommunitiesBuilder {
     }
 
     public ExtendedCommunitiesBuilder(ExtendedCommunities base) {
-        this._commType = base.getCommType();
         this._commSubType = base.getCommSubType();
+        this._commType = base.getCommType();
         this._extendedCommunity = base.getExtendedCommunity();
         if (base instanceof ExtendedCommunitiesImpl) {
             ExtendedCommunitiesImpl _impl = (ExtendedCommunitiesImpl) base;
@@ -71,12 +69,12 @@ public class ExtendedCommunitiesBuilder {
         }
     }
 
-    public java.lang.Short getCommType() {
-        return _commType;
-    }
-    
     public java.lang.Short getCommSubType() {
         return _commSubType;
+    }
+    
+    public java.lang.Short getCommType() {
+        return _commType;
     }
     
     public ExtendedCommunity getExtendedCommunity() {
@@ -91,35 +89,6 @@ public class ExtendedCommunitiesBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
-    public ExtendedCommunitiesBuilder setCommType(java.lang.Short value) {
-        if (value != null) {
-            BigInteger _constraint = BigInteger.valueOf(value);
-            boolean isValidRange = false;
-            for (Range<BigInteger> r : _commType_range()) {
-                if (r.contains(_constraint)) {
-                    isValidRange = true;
-                }
-            }
-            if (!isValidRange) {
-                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _commType_range));
-            }
-        }
-        this._commType = value;
-        return this;
-    }
-    public static List<Range<BigInteger>> _commType_range() {
-        if (_commType_range == null) {
-            synchronized (ExtendedCommunitiesBuilder.class) {
-                if (_commType_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(255L)));
-                    _commType_range = builder.build();
-                }
-            }
-        }
-        return _commType_range;
-    }
-    
     public ExtendedCommunitiesBuilder setCommSubType(java.lang.Short value) {
         if (value != null) {
             BigInteger _constraint = BigInteger.valueOf(value);
@@ -149,6 +118,35 @@ public class ExtendedCommunitiesBuilder {
         return _commSubType_range;
     }
     
+    public ExtendedCommunitiesBuilder setCommType(java.lang.Short value) {
+        if (value != null) {
+            BigInteger _constraint = BigInteger.valueOf(value);
+            boolean isValidRange = false;
+            for (Range<BigInteger> r : _commType_range()) {
+                if (r.contains(_constraint)) {
+                    isValidRange = true;
+                }
+            }
+            if (!isValidRange) {
+                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _commType_range));
+            }
+        }
+        this._commType = value;
+        return this;
+    }
+    public static List<Range<BigInteger>> _commType_range() {
+        if (_commType_range == null) {
+            synchronized (ExtendedCommunitiesBuilder.class) {
+                if (_commType_range == null) {
+                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(255L)));
+                    _commType_range = builder.build();
+                }
+            }
+        }
+        return _commType_range;
+    }
+    
     public ExtendedCommunitiesBuilder setExtendedCommunity(ExtendedCommunity value) {
         this._extendedCommunity = value;
         return this;
@@ -169,15 +167,15 @@ public class ExtendedCommunitiesBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities.class;
         }
 
-        private final java.lang.Short _commType;
         private final java.lang.Short _commSubType;
+        private final java.lang.Short _commType;
         private final ExtendedCommunity _extendedCommunity;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities>> augmentation = new HashMap<>();
 
         private ExtendedCommunitiesImpl(ExtendedCommunitiesBuilder base) {
-            this._commType = base.getCommType();
             this._commSubType = base.getCommSubType();
+            this._commType = base.getCommType();
             this._extendedCommunity = base.getExtendedCommunity();
                 switch (base.augmentation.size()) {
                 case 0:
@@ -193,13 +191,13 @@ public class ExtendedCommunitiesBuilder {
         }
 
         @Override
-        public java.lang.Short getCommType() {
-            return _commType;
+        public java.lang.Short getCommSubType() {
+            return _commSubType;
         }
         
         @Override
-        public java.lang.Short getCommSubType() {
-            return _commSubType;
+        public java.lang.Short getCommType() {
+            return _commType;
         }
         
         @Override
@@ -220,8 +218,8 @@ public class ExtendedCommunitiesBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_commType == null) ? 0 : _commType.hashCode());
             result = prime * result + ((_commSubType == null) ? 0 : _commSubType.hashCode());
+            result = prime * result + ((_commType == null) ? 0 : _commType.hashCode());
             result = prime * result + ((_extendedCommunity == null) ? 0 : _extendedCommunity.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
@@ -232,40 +230,55 @@ public class ExtendedCommunitiesBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            ExtendedCommunitiesImpl other = (ExtendedCommunitiesImpl) obj;
-            if (_commType == null) {
-                if (other._commType != null) {
-                    return false;
-                }
-            } else if(!_commType.equals(other._commType)) {
-                return false;
-            }
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities)obj;
             if (_commSubType == null) {
-                if (other._commSubType != null) {
+                if (other.getCommSubType() != null) {
                     return false;
                 }
-            } else if(!_commSubType.equals(other._commSubType)) {
+            } else if(!_commSubType.equals(other.getCommSubType())) {
+                return false;
+            }
+            if (_commType == null) {
+                if (other.getCommType() != null) {
+                    return false;
+                }
+            } else if(!_commType.equals(other.getCommType())) {
                 return false;
             }
             if (_extendedCommunity == null) {
-                if (other._extendedCommunity != null) {
+                if (other.getExtendedCommunity() != null) {
                     return false;
                 }
-            } else if(!_extendedCommunity.equals(other._extendedCommunity)) {
+            } else if(!_extendedCommunity.equals(other.getExtendedCommunity())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                ExtendedCommunitiesImpl otherImpl = (ExtendedCommunitiesImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ExtendedCommunities>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -275,15 +288,6 @@ public class ExtendedCommunitiesBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("ExtendedCommunities [");
             boolean first = true;
         
-            if (_commType != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_commType=");
-                builder.append(_commType);
-             }
             if (_commSubType != null) {
                 if (first) {
                     first = false;
@@ -292,6 +296,15 @@ public class ExtendedCommunitiesBuilder {
                 }
                 builder.append("_commSubType=");
                 builder.append(_commSubType);
+             }
+            if (_commType != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_commType=");
+                builder.append(_commType);
              }
             if (_extendedCommunity != null) {
                 if (first) {

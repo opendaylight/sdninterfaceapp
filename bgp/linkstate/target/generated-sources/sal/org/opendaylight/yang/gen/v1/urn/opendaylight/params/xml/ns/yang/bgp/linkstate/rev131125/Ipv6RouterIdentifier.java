@@ -4,22 +4,15 @@ import java.io.Serializable;
 import java.beans.ConstructorProperties;
 
 
-/**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.1.4">http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.1.4</a>
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)ipv6-router-identifier/ipv6-router-identifier]
- */
 public class Ipv6RouterIdentifier extends Ipv6Address
  implements Serializable {
     private static final long serialVersionUID = -7137485050626839766L; 
-
+    
     @ConstructorProperties("value")
     public Ipv6RouterIdentifier(java.lang.String _value) {
         super(_value);
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -36,7 +29,7 @@ public class Ipv6RouterIdentifier extends Ipv6Address
     public Ipv6RouterIdentifier(Ipv6Address source) {
             super(source);
     }
-    
+
     public static Ipv6RouterIdentifier getDefaultInstance(String defaultValue) {
         return new Ipv6RouterIdentifier(defaultValue);
     }

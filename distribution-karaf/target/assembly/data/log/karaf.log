@@ -1,0 +1,531 @@
+Sep 02, 2014 1:05:50 PM org.apache.karaf.main.Main launch
+INFO: Installing and starting initial bundles
+Sep 02, 2014 1:05:50 PM org.apache.karaf.main.Main launch
+INFO: All initial bundles installed and set to start
+Sep 02, 2014 1:05:50 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 1:05:50 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock acquired
+Sep 02, 2014 1:05:50 PM org.apache.karaf.main.Main$KarafLockCallback lockAquired
+INFO: Lock acquired. Setting startlevel to 100
+Sep 02, 2014 1:06:21 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 1:06:21 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock acquired
+Sep 02, 2014 1:06:21 PM org.apache.karaf.main.Main$KarafLockCallback lockAquired
+INFO: Lock acquired. Setting startlevel to 100
+2014-09-02 13:06:25,491 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature config 3.0.1
+2014-09-02 13:06:25,528 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature standard 3.0.1
+2014-09-02 13:06:25,599 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature package 3.0.1
+2014-09-02 13:06:25,607 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature region 3.0.1
+2014-09-02 13:06:25,653 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature kar 3.0.1
+2014-09-02 13:06:25,676 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature ssh 3.0.1
+2014-09-02 13:06:25,744 | INFO  | Event Dispatcher | FeaturesServiceImpl              | 24 - org.apache.karaf.features.core - 3.0.1 | Installing feature management 3.0.1
+2014-09-02 13:06:25,833 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.features.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:25,843 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.shell.console is waiting for dependencies [(objectClass=org.apache.felix.service.threadio.ThreadIO), (objectClass=org.apache.felix.service.command.CommandProcessor)]
+2014-09-02 13:06:25,848 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.jaas.modules is waiting for namespace handlers [http://karaf.apache.org/xmlns/jaas/v1.0.0]
+2014-09-02 13:06:25,890 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.bundle.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:25,958 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.shell.help is waiting for dependencies [(objectClass=org.apache.felix.service.threadio.ThreadIO)]
+2014-09-02 13:06:25,973 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.system.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:25,978 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.shell.commands is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:26,035 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.config.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:26,038 | INFO  | rint Extender: 1 | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.shell.console is waiting for dependencies [(objectClass=org.apache.felix.service.command.CommandProcessor)]
+2014-09-02 13:06:26,066 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.feature into service ACL configs [org.apache.karaf.service.acl.command.feature.uninstall, org.apache.karaf.service.acl.command.feature.install]
+2014-09-02 13:06:26,069 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.instance.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:26,073 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.jaas into service ACL configs [org.apache.karaf.service.acl.command.jaas.update]
+2014-09-02 13:06:26,074 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.config into service ACL configs [org.apache.karaf.service.acl.command.config.property-set, org.apache.karaf.service.acl.command.config.delete, org.apache.karaf.service.acl.command.config.cancel, org.apache.karaf.service.acl.command.config.update, org.apache.karaf.service.acl.command.config.property-delete, org.apache.karaf.service.acl.command.config.property-append, org.apache.karaf.service.acl.command.config.edit]
+2014-09-02 13:06:26,078 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.jaas.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:26,086 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.shell into service ACL configs [org.apache.karaf.service.acl.command.shell.java, org.apache.karaf.service.acl.command.shell.edit, org.apache.karaf.service.acl.command.shell.exec, org.apache.karaf.service.acl.command.shell.new]
+2014-09-02 13:06:26,090 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.system into service ACL configs [org.apache.karaf.service.acl.command.system.start-level, org.apache.karaf.service.acl.command.system.shutdown, org.apache.karaf.service.acl.command.system.property]
+2014-09-02 13:06:26,094 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.kar into service ACL configs [org.apache.karaf.service.acl.command.kar.install, org.apache.karaf.service.acl.command.kar.uninstall]
+2014-09-02 13:06:26,096 | INFO  | rint Extender: 2 | SecuredCommandConfigTransformer  | 37 - org.apache.karaf.shell.console - 3.0.1 | Generating command ACL config org.apache.karaf.command.acl.bundle into service ACL configs [org.apache.karaf.service.acl.command.bundle.install, org.apache.karaf.service.acl.command.bundle.uninstall, org.apache.karaf.service.acl.command.bundle.update, org.apache.karaf.service.acl.command.bundle.restart, org.apache.karaf.service.acl.command.bundle.start, org.apache.karaf.service.acl.command.bundle.stop, org.apache.karaf.service.acl.command.bundle.watch, org.apache.karaf.service.acl.command.bundle.refresh]
+2014-09-02 13:06:26,122 | INFO  | Event Dispatcher | BlueprintContainerImpl           | 19 - org.apache.aries.blueprint.core - 1.4.0 | Bundle org.apache.karaf.diagnostic.command is waiting for namespace handlers [http://karaf.apache.org/xmlns/shell/v1.1.0]
+2014-09-02 13:06:26,438 | INFO  | Event Dispatcher | RegionsPersistenceImpl           | 65 - org.apache.karaf.region.persist - 3.0.1 | Loading region digraph persistence
+2014-09-02 13:06:26,473 | INFO  | Event Dispatcher | RegionsPersistenceImpl           | 65 - org.apache.karaf.region.persist - 3.0.1 | initializing region digraph from etc/regions-config.xml
+2014-09-02 13:06:26,755 | INFO  | Event Dispatcher | SecurityUtils                    | 41 - org.apache.sshd.core - 0.9.0 | BouncyCastle not registered, using the default JCE provider
+2014-09-02 13:07:00,513 | ERROR | Local user karaf | ShellUtil                        | 37 - org.apache.karaf.shell.console - 3.0.1 | Exception caught while executing command
+java.lang.Exception: No feature named 'sdninterfaceapp' with version '0.0.0' available
+	at org.apache.karaf.features.internal.FeaturesServiceImpl.installFeature(FeaturesServiceImpl.java:359)
+	at Proxy43c912bb_a7a5_44d7_9535_ad6080f7550b.installFeature(Unknown Source)
+	at org.apache.karaf.features.command.InstallFeatureCommand.doExecute(InstallFeatureCommand.java:67)
+	at org.apache.karaf.features.command.FeaturesCommandSupport.doExecute(FeaturesCommandSupport.java:38)
+	at org.apache.karaf.shell.console.AbstractAction.execute(AbstractAction.java:33)
+	at org.apache.karaf.shell.console.OsgiCommandSupport.execute(OsgiCommandSupport.java:39)
+	at org.apache.karaf.shell.commands.basic.AbstractCommand.execute(AbstractCommand.java:33)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)[:1.7.0_65]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)[:1.7.0_65]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)[:1.7.0_65]
+	at java.lang.reflect.Method.invoke(Method.java:606)[:1.7.0_65]
+	at org.apache.aries.proxy.impl.ProxyHandler$1.invoke(ProxyHandler.java:54)
+	at org.apache.aries.proxy.impl.ProxyHandler.invoke(ProxyHandler.java:119)
+	at org.apache.karaf.shell.console.commands.$BlueprintCommand902864473.execute(Unknown Source)[37:org.apache.karaf.shell.console:3.0.1]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)[:1.7.0_65]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)[:1.7.0_65]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)[:1.7.0_65]
+	at java.lang.reflect.Method.invoke(Method.java:606)[:1.7.0_65]
+	at org.apache.aries.proxy.impl.ProxyHandler$1.invoke(ProxyHandler.java:54)
+	at org.apache.aries.proxy.impl.ProxyHandler.invoke(ProxyHandler.java:119)
+	at org.apache.karaf.shell.console.commands.$BlueprintCommand902864473.execute(Unknown Source)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.CommandProxy.execute(CommandProxy.java:78)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.Closure.executeCmd(Closure.java:477)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.Closure.executeStatement(Closure.java:403)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.Pipe.run(Pipe.java:108)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.Closure.execute(Closure.java:183)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.Closure.execute(Closure.java:120)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.felix.gogo.runtime.CommandSessionImpl.execute(CommandSessionImpl.java:89)
+	at org.apache.karaf.shell.console.impl.jline.ConsoleImpl$DelegateSession.execute(ConsoleImpl.java:521)
+	at org.apache.karaf.shell.console.impl.jline.ConsoleImpl.run(ConsoleImpl.java:212)
+	at java.lang.Thread.run(Thread.java:745)[:1.7.0_65]
+	at org.apache.karaf.shell.console.impl.jline.ConsoleFactoryService$3.doRun(ConsoleFactoryService.java:126)[37:org.apache.karaf.shell.console:3.0.1]
+	at org.apache.karaf.shell.console.impl.jline.ConsoleFactoryService$3$1.run(ConsoleFactoryService.java:117)
+	at java.security.AccessController.doPrivileged(Native Method)[:1.7.0_65]
+	at org.apache.karaf.jaas.modules.JaasHelper.doAs(JaasHelper.java:47)[38:org.apache.karaf.jaas.modules:3.0.1]
+	at org.apache.karaf.shell.console.impl.jline.ConsoleFactoryService$3.run(ConsoleFactoryService.java:115)[37:org.apache.karaf.shell.console:3.0.1]
+Sep 02, 2014 2:15:41 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:15:41 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:15:42 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:15:42 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:15:43 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:15:43 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:15:44 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:15:44 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:15:45 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:15:45 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:05 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:05 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:06 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:06 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:07 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:07 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:08 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:08 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:09 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:09 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:10 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:10 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:11 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:11 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:12 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:12 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:13 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:13 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:14 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:14 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:15 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:15 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:16 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:16 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:17 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:17 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:18 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:18 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:19 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:19 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:20 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:20 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:21 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:21 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:22 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:22 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:23 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:23 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:24 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:24 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:25 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:25 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:26 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:26 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:27 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:27 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:28 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:28 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:29 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:29 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:30 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:30 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:31 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:31 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:32 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:32 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:33 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:33 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:34 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:34 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:35 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:35 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:36 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:36 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:37 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:37 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:38 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:38 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:39 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:39 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:40 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:40 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:41 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:41 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:42 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:42 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:43 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:43 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:44 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:44 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:45 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:45 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:46 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:46 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:47 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:47 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:48 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:48 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:49 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:49 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:50 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:50 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:51 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:51 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:52 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:52 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:53 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:53 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:54 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:54 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:55 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:55 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:56 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:56 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:57 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:57 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:58 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:58 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:17:59 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:17:59 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:00 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:00 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:01 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:01 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:02 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:02 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:03 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:03 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:04 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:04 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:05 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:05 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:06 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:06 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:07 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:07 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:08 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:08 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:09 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:09 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:10 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:10 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:11 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:11 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:12 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:12 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:13 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:13 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:14 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:14 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:15 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:15 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:16 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:16 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:17 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:17 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:18 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:18 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:19 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:19 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:20 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:20 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:21 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:21 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:22 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:22 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:23 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:23 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:24 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:24 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:25 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:25 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:26 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:26 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:27 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:27 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:28 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:28 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:29 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:29 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:30 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:30 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:31 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:31 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:32 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:32 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:33 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:33 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:34 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:34 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:35 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:35 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:36 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:36 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:37 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:37 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:38 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:38 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:39 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:39 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:40 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:40 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:41 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:41 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:42 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:42 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:43 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:43 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:44 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:44 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:45 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:45 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:46 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:46 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:47 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:47 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:48 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:48 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:49 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:49 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:50 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:50 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed
+Sep 02, 2014 2:18:51 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Trying to lock /root/sdninterfaceapp/distribution-karaf/target/assembly/lock
+Sep 02, 2014 2:18:51 PM org.apache.karaf.main.lock.SimpleFileLock lock
+INFO: Lock failed

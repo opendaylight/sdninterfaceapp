@@ -7,12 +7,8 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4760#section-8">http://tools.ietf.org/html/rfc4760#section-8</a>
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)open/open/bgp-parameters/c-parameters/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)multiprotocol-case/multiprotocol-capability]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability
  */
 public class MultiprotocolCapabilityBuilder {
 
@@ -158,33 +154,48 @@ public class MultiprotocolCapabilityBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            MultiprotocolCapabilityImpl other = (MultiprotocolCapabilityImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability)obj;
             if (_afi == null) {
-                if (other._afi != null) {
+                if (other.getAfi() != null) {
                     return false;
                 }
-            } else if(!_afi.equals(other._afi)) {
+            } else if(!_afi.equals(other.getAfi())) {
                 return false;
             }
             if (_safi == null) {
-                if (other._safi != null) {
+                if (other.getSafi() != null) {
                     return false;
                 }
-            } else if(!_safi.equals(other._safi)) {
+            } else if(!_safi.equals(other.getSafi())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                MultiprotocolCapabilityImpl otherImpl = (MultiprotocolCapabilityImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapability>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }

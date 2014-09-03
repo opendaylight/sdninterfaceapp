@@ -13,10 +13,8 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)path-attributes/path-attributes/aggregator]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator
  */
 public class AggregatorBuilder {
 
@@ -187,33 +185,48 @@ public class AggregatorBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            AggregatorImpl other = (AggregatorImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator)obj;
             if (_asNumber == null) {
-                if (other._asNumber != null) {
+                if (other.getAsNumber() != null) {
                     return false;
                 }
-            } else if(!_asNumber.equals(other._asNumber)) {
+            } else if(!_asNumber.equals(other.getAsNumber())) {
                 return false;
             }
             if (_networkAddress == null) {
-                if (other._networkAddress != null) {
+                if (other.getNetworkAddress() != null) {
                     return false;
                 }
-            } else if(!_networkAddress.equals(other._networkAddress)) {
+            } else if(!_networkAddress.equals(other.getNetworkAddress())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                AggregatorImpl otherImpl = (AggregatorImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }

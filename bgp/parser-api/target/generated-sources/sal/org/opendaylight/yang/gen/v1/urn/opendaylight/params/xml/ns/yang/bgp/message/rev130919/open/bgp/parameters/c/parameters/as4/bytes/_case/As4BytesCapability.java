@@ -7,12 +7,19 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc6793">http://tools.ietf.org/html/rfc6793</a>
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)open/open/bgp-parameters/c-parameters/as4-bytes-case/as4-bytes-capability]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-message</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-message.yang</i>):
+ * <pre>
+ * container as4-bytes-capability {
+ *     leaf as-number {
+ *         type as-number;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-message/open/bgp-parameters/c-parameters/as4-bytes-case/as4-bytes-capability</i>
+ * <p>To create instances of this class use {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.c.parameters.as4.bytes._case.As4BytesCapabilityBuilder}.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.c.parameters.as4.bytes._case.As4BytesCapabilityBuilder
  */
 public interface As4BytesCapability
     extends

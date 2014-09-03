@@ -5,26 +5,19 @@ import com.google.common.collect.Lists;
 
 
 /**
- * The bits built-in type represents a bit set. That is, a bits value is a set of 
- * flags identified by small integer position numbers starting at 0. Each bit 
- * number has an assigned name.
- * Reference:
- *     https://tools.ietf.org/html/rfc6020#section-9.7
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)mpls-protocol-mask/mpls-protocol-mask/(urn:ietf:params:xml:ns:yang:1)bits]
+ * The bits built-in type represents a bit set.  That is, a bits value is a set of flags identified by small integer position numbers starting at 0.  Each bit number has an assigned name.
  */
 public class MplsProtocolMask
  implements Serializable {
     private static final long serialVersionUID = -3533580884068242141L; 
     final private java.lang.Boolean _ldp;
     final private java.lang.Boolean _rsvpte;
-
+    
     public MplsProtocolMask(java.lang.Boolean _ldp, java.lang.Boolean _rsvpte) {
         this._ldp = _ldp;
         this._rsvpte = _rsvpte;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -34,7 +27,7 @@ public class MplsProtocolMask
         this._ldp = source._ldp;
         this._rsvpte = source._rsvpte;
     }
-    
+
     public static MplsProtocolMask getDefaultInstance(String defaultValue) {
         List<java.lang.String> properties = Lists.newArrayList("ldp",
         "rsvpte"
@@ -97,7 +90,7 @@ public class MplsProtocolMask
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("MplsProtocolMask [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.MplsProtocolMask.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_ldp != null) {

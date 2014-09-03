@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1406700826610
-Build-Jdk: 1.7.0_15
+Bnd-LastModified: 1409641877680
+Build-Jdk: 1.7.0_65
 Built-By: root
 Bundle-Description: BGP utilities
 Bundle-License: http://www.eclipse.org/legal/epl-v10.html
@@ -14,7 +14,7 @@ Export-Package: org.opendaylight.protocol.bgp.util;version="0.3.1.SNAPSH
 Import-Package: com.google.common.base;version="[14.0,15)",com.google.co
  mmon.collect;version="[14.0,15)",com.google.common.io;version="[14.0,15
  )",com.google.common.primitives;version="[14.0,15)",org.apache.commons.
- codec;version="[1.7,2)",org.apache.commons.codec.binary;version="[1.7,2
+ codec;version="[1.8,2)",org.apache.commons.codec.binary;version="[1.8,2
  )",org.opendaylight.protocol.util;version="[0.3,1)",org.slf4j;version="
  [1.7,2)"
 Tool: Bnd-2.1.0.20130426-122213

@@ -7,10 +7,38 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-destination/linkstate-destination/c-linkstate-destination/link-descriptors]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * container link-descriptors {
+ *     leaf link-local-identifier {
+ *         type uint32;
+ *     }
+ *     leaf link-remote-identifier {
+ *         type uint32;
+ *     }
+ *     leaf ipv4-interface-address {
+ *         type ipv4-interface-identifier;
+ *     }
+ *     leaf ipv6-interface-address {
+ *         type ipv6-interface-identifier;
+ *     }
+ *     leaf ipv4-neighbor-address {
+ *         type ipv4-interface-identifier;
+ *     }
+ *     leaf ipv6-neighbor-address {
+ *         type ipv6-interface-identifier;
+ *     }
+ *     leaf multi-topology-id {
+ *         type topology-identifier;
+ *     }
+ *     uses link-identifier;
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/linkstate-destination/c-linkstate-destination/link-descriptors</i>
+ * <p>To create instances of this class use {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptorsBuilder}.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptorsBuilder
  */
 public interface LinkDescriptors
     extends

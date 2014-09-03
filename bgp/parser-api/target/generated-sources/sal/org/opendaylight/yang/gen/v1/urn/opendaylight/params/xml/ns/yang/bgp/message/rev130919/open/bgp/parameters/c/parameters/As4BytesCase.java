@@ -7,10 +7,19 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)open/open/bgp-parameters/c-parameters/as4-bytes-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-message</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-message.yang</i>):
+ * <pre>
+ * case as4-bytes-case {
+ *     container as4-bytes-capability {
+ *         leaf as-number {
+ *             type as-number;
+ *         }
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-message/open/bgp-parameters/c-parameters/as4-bytes-case</i>
  */
 public interface As4BytesCase
     extends

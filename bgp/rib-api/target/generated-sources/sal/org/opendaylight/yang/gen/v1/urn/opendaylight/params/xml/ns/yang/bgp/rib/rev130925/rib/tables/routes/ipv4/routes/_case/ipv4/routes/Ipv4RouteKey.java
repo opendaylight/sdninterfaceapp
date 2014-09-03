@@ -8,10 +8,11 @@ public class Ipv4RouteKey
  implements Identifier<Ipv4Route> {
     private static final long serialVersionUID = -8880790420965273375L; 
     final private Ipv4Prefix _prefix;
-
+    
     public Ipv4RouteKey(Ipv4Prefix _prefix) {
         this._prefix = _prefix;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -20,7 +21,7 @@ public class Ipv4RouteKey
     public Ipv4RouteKey(Ipv4RouteKey source) {
         this._prefix = source._prefix;
     }
-    
+
 
     public Ipv4Prefix getPrefix() {
         return _prefix;
@@ -58,7 +59,7 @@ public class Ipv4RouteKey
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("Ipv4RouteKey [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv4.routes._case.ipv4.routes.Ipv4RouteKey.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_prefix != null) {

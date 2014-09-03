@@ -2,17 +2,14 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mes
 import java.util.Collections;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.BgpOrigin;
 import java.util.Map;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import java.util.HashMap;
 import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4271#section-5.1.1">http://tools.ietf.org/html/rfc4271#section-5.1.1</a>
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)path-attributes/path-attributes/origin]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin
  */
 public class OriginBuilder {
 
@@ -111,26 +108,41 @@ public class OriginBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            OriginImpl other = (OriginImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin)obj;
             if (_value == null) {
-                if (other._value != null) {
+                if (other.getValue() != null) {
                     return false;
                 }
-            } else if(!_value.equals(other._value)) {
+            } else if(!_value.equals(other.getValue())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                OriginImpl otherImpl = (OriginImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }

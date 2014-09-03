@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>bgp-types</title>
+  </head>
+  <body>
+    <h1>bgp-types</h1>
+    
+    <h2>Base Information</h2>
+    <table>
+        <tr>
+            <td><strong>prefix</strong></td>
+            <td>bgp-t</td>
+        </tr>
+        <tr>
+            <td><strong>namespace</strong></td>
+            <td>urn:opendaylight:params:xml:ns:yang:bgp-types</td>
+        </tr>
+        <tr>
+            <td><strong>revision</strong></td>
+            <td>2013-09-19</td>
+        </tr>
+        <tr>
+            <td><strong>description</strong></td>
+            <td>This module contains the base concepts contained in RFC4271 and RFC4760.
+            
+                    Copyright (c)2013 Cisco Systems, Inc. All rights reserved.
+            
+                    This program and the accompanying materials are made available
+                    under the terms of the Eclipse Public License v1.0 which
+                    accompanies this distribution, and is available at
+                    http://www.eclipse.org/legal/epl-v10.html</td>
+        </tr>
+        <tr>
+            <td><strong>yang-version</strong></td>
+            <td>1</td>
+        </tr>
+        <tr>
+    <td><strong>imports</strong></td><td>        inet:ietf-inet-types 2010-09-24;
+    </td>    </tr>
+    </table>
+    
+    <div>
+        <h3>Type Definitions Summary</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>
+                <a href="#bgp-origin"><strong>bgp-origin</strong></a>
+                </td>
+                <td>
+                Values of BGP Origin Path Attribute.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <a href="#cluster-identifier"><strong>cluster-identifier</strong></a>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <a href="#short-as-number"><strong>short-as-number</strong></a>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <h3>Identities Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#address-family"><strong>address-family</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#ipv4-address-family"><strong>ipv4-address-family</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#ipv6-address-family"><strong>ipv6-address-family</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#mpls-labeled-vpn-subsequent-address-family"><strong>mpls-labeled-vpn-subsequent-address-family</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#subsequent-address-family"><strong>subsequent-address-family</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#unicast-subsequent-address-family"><strong>unicast-subsequent-address-family</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <h3>Groupings Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#as-path-segment"><strong>as-path-segment</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-aggregator"><strong>bgp-aggregator</strong></a>
+            </td>
+            <td>
+            BGP Path Attribute AGGREGATOR.
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#community"><strong>community</strong></a>
+            </td>
+            <td>
+            Community Path Attribute
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#extended-community"><strong>extended-community</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#next-hop"><strong>next-hop</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    
+    <h2>Type Definitions</h2>
+    <ul>
+    <li>
+        <h3 id="bgp-origin">bgp-origin</h3>
+        <ul>
+        <li>
+            Description: Values of BGP Origin Path Attribute.
+        </li>
+        <li>
+            Reference: http://tools.ietf.org/html/rfc4271#section-5
+        </li>
+        <li>
+            Base type: (urn:ietf:params:xml:ns:yang:1)enumeration
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="cluster-identifier">cluster-identifier</h3>
+        <ul>
+        <li>
+            Reference: http://tools.ietf.org/html/rfc4456#section-8
+        </li>
+        <li>
+            Base type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="short-as-number">short-as-number</h3>
+        <ul>
+        <li>
+            Base type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
+        </li>
+        <li>
+            Range restrictions:
+        </li>
+        <ul>
+        <li>
+        &lt;0, 65535&gt;
+        </li>
+        </ul>
+        </ul>
+    </li>
+    </ul>
+    
+    <h2>Identities</h2>
+    <ul>
+    <li>
+        <h3 id="address-family">address-family</h3>
+        <ul>
+        <li>
+            Reference: http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml#address-family-numbers-2
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="ipv4-address-family">ipv4-address-family</h3>
+        <ul>
+        <li>
+            base: address-family
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="ipv6-address-family">ipv6-address-family</h3>
+        <ul>
+        <li>
+            base: address-family
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="mpls-labeled-vpn-subsequent-address-family">mpls-labeled-vpn-subsequent-address-family</h3>
+        <ul>
+        <li>
+            Reference: http://tools.ietf.org/html/rfc4760#section-6
+        </li>
+        <li>
+            base: subsequent-address-family
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="subsequent-address-family">subsequent-address-family</h3>
+        <ul>
+        <li>
+            Reference: http://tools.ietf.org/html/rfc4760#section-6
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="unicast-subsequent-address-family">unicast-subsequent-address-family</h3>
+        <ul>
+        <li>
+            Reference: http://tools.ietf.org/html/rfc4760#section-6
+        </li>
+        <li>
+            base: subsequent-address-family
+        </li>
+        </ul>
+    </li>
+    </ul>
+    
+    <h2>Groupings</h2>
+    <ul>
+    <li>
+        <h3 id="as-path-segment">as-path-segment</h3>
+        <ul>
+            <li>
+                Reference: http://tools.ietf.org/html/rfc4271#section-5.1.2
+            </li>
+            <ul>
+            <strong>
+            <li id="as-path-segment/c-segment">
+                choice: c-segment
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="as-path-segment/c-segment/a-list-case">
+                case: a-list-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="as-path-segment/c-segment/a-list-case/a-list">
+                container: a-list
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="as-path-segment/c-segment/a-list-case/a-list/as-sequence">
+                list: as-sequence
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: as
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="as-path-segment/c-segment/a-set-case">
+                case: a-set-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="as-path-segment/c-segment/a-set-case/a-set">
+                container: a-set
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf-list: as-set
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: as-number
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-aggregator">bgp-aggregator</h3>
+        <ul>
+            <li>
+                Description: BGP Path Attribute AGGREGATOR.
+            </li>
+            <li>
+                Reference: http://tools.ietf.org/html/rfc4271#section-5.1.7
+            </li>
+            <ul>
+            <strong><li>
+                leaf: as-number
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: network-address
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+            </li>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    <li>
+        <h3 id="community">community</h3>
+        <ul>
+            <li>
+                Description: Community Path Attribute
+            </li>
+            <li>
+                Reference: https://tools.ietf.org/html/rfc1997
+            </li>
+            <ul>
+            <strong><li>
+                leaf: as-number
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: semantics
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:1)uint16
+            </li>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    <li>
+        <h3 id="extended-community">extended-community</h3>
+        <ul>
+            <ul>
+            <strong><li>
+                leaf: comm-type
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:1)uint8
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: comm-sub-type
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:1)uint8
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community">
+                choice: extended-community
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/as-specific-extended-community-case">
+                case: as-specific-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/as-specific-extended-community-case/as-specific-extended-community">
+                container: as-specific-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 0 and ../comm-sub-type = 0 or ../comm-type = 40 and ../comm-sub-type = 0
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: transitive
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:1)boolean
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#short-as-number">short-as-number</a>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#extended-community/extended-community/as-specific-extended-community-case/as-specific-extended-community/local-administrator/binary">binary</a>
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/inet4-specific-extended-community-case">
+                case: inet4-specific-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/inet4-specific-extended-community-case/inet4-specific-extended-community">
+                container: inet4-specific-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 1 and ../comm-sub-type = 0 or ../comm-type = 41 and ../comm-sub-type = 0
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: transitive
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:1)boolean
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#extended-community/extended-community/inet4-specific-extended-community-case/inet4-specific-extended-community/local-administrator/binary">binary</a>
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/opaque-extended-community-case">
+                case: opaque-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/opaque-extended-community-case/opaque-extended-community">
+                container: opaque-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 3 and ../comm-sub-type = 0 or ../comm-type = 43 and ../comm-sub-type = 0
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: transitive
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:1)boolean
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: value
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#extended-community/extended-community/opaque-extended-community-case/opaque-extended-community/value/binary">binary</a>
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/route-origin-extended-community-case">
+                case: route-origin-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/route-origin-extended-community-case/route-origin-extended-community">
+                container: route-origin-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 1 and ../comm-sub-type = 3 or ../comm-type = 2 and ../comm-sub-type = 3 or ../comm-type = 3 and ../comm-sub-type = 3
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#short-as-number">short-as-number</a>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#extended-community/extended-community/route-origin-extended-community-case/route-origin-extended-community/local-administrator/binary">binary</a>
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/route-target-extended-community-case">
+                case: route-target-extended-community-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="extended-community/extended-community/route-target-extended-community-case/route-target-extended-community">
+                container: route-target-extended-community
+            </li>
+            </strong>
+            <ul>
+            <li>
+                when condition: ../comm-type = 1 and ../comm-sub-type = 2 or ../comm-type = 2 and ../comm-sub-type = 2 or ../comm-type = 3 and ../comm-sub-type = 2
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#short-as-number">short-as-number</a>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: local-administrator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: <a href="#extended-community/extended-community/route-target-extended-community-case/route-target-extended-community/local-administrator/binary">binary</a>
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    <li>
+        <h3 id="next-hop">next-hop</h3>
+        <ul>
+            <ul>
+            <strong>
+            <li id="next-hop/c-next-hop">
+                choice: c-next-hop
+            </li>
+            </strong>
+            <ul>
+            <ul>
+            <strong>
+            <li id="next-hop/c-next-hop/ipv4-next-hop-case">
+                case: ipv4-next-hop-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="next-hop/c-next-hop/ipv4-next-hop-case/ipv4-next-hop">
+                container: ipv4-next-hop
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4271#section-5.1.3
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="next-hop/c-next-hop/ipv6-next-hop-case">
+                case: ipv6-next-hop-case
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong>
+            <li id="next-hop/c-next-hop/ipv6-next-hop-case/ipv6-next-hop">
+                container: ipv6-next-hop
+            </li>
+            </strong>
+            <ul>
+            <li>
+                reference: http://tools.ietf.org/html/rfc4760#section-3
+            </li>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: global
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            <strong><li>
+                leaf: link-local
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+  </body>
+</html>

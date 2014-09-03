@@ -9,11 +9,8 @@ package org.opendaylight.protocol.bgp.parser.spi;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedBytes;
-
 import io.netty.buffer.ByteBuf;
-
 import java.util.Arrays;
-
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
@@ -48,20 +45,27 @@ public abstract class AbstractMessageRegistry implements MessageRegistry {
         final byte typeBytes = buffer.readByte();
         final int messageType = UnsignedBytes.toInt(typeBytes);
 
-        final ByteBuf msgBody = buffer.slice(buffer.readerIndex(), messageLength - MessageUtil.COMMON_HEADER_LENGTH);
-
         if (messageLength < MessageUtil.COMMON_HEADER_LENGTH) {
             throw BGPDocumentedException.badMessageLength("Message length field not within valid range.", messageLength);
         }
-        if (msgBody.readableBytes() != messageLength - MessageUtil.COMMON_HEADER_LENGTH) {
-            throw new BGPParsingException("Size doesn't match size specified in header. Passed: " + msgBody.readableBytes()
+
+        if (messageLength - MessageUtil.COMMON_HEADER_LENGTH != buffer.readableBytes()) {
+            throw new BGPParsingException("Size doesn't match size specified in header. Passed: " + buffer.readableBytes()
                     + "; Expected: " + (messageLength - MessageUtil.COMMON_HEADER_LENGTH) + ". ");
         }
-        final Notification msg = parseBody(messageType, msgBody, messageLength);
+
+        final ByteBuf msgBody = buffer.slice(buffer.readerIndex(), messageLength - MessageUtil.COMMON_HEADER_LENGTH);
+
+        Notification msg = null;
+        try {
+            msg = parseBody(messageType, msgBody, messageLength);
+        } finally {
+            // Always reads body bytes
+            buffer.skipBytes(messageLength - MessageUtil.COMMON_HEADER_LENGTH);
+        }
         if (msg == null) {
             throw new BGPDocumentedException("Unhandled message type " + messageType, BGPError.BAD_MSG_TYPE, new byte[] { typeBytes });
         }
-        buffer.skipBytes(messageLength - MessageUtil.COMMON_HEADER_LENGTH);
         return msg;
     }
 

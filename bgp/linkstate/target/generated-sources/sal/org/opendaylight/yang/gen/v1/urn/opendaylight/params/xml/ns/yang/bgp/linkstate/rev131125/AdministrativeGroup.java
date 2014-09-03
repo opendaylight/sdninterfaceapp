@@ -7,18 +7,18 @@ import java.util.List;
 import java.beans.ConstructorProperties;
 
 
-/**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)administrative-group/administrative-group]
- */
 public class AdministrativeGroup
  implements Serializable {
     private static final long serialVersionUID = -5252554850198588574L; 
-    private static List<Range<BigInteger>> _range;
+    private static final List<Range<BigInteger>> _range;
     final private java.lang.Long _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
+        _range = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public AdministrativeGroup(java.lang.Long _value) {
         if (_value != null) {
@@ -35,6 +35,7 @@ public class AdministrativeGroup
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -43,9 +44,9 @@ public class AdministrativeGroup
     public AdministrativeGroup(AdministrativeGroup source) {
         this._value = source._value;
     }
-    
+
     public static AdministrativeGroup getDefaultInstance(String defaultValue) {
-        return new AdministrativeGroup(new java.lang.Long(defaultValue));
+        return new AdministrativeGroup(Long.valueOf(defaultValue));
     }
 
     public java.lang.Long getValue() {
@@ -84,7 +85,7 @@ public class AdministrativeGroup
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("AdministrativeGroup [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.AdministrativeGroup.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -101,15 +102,6 @@ public class AdministrativeGroup
 
 
     public static List<Range<BigInteger>> range() {
-        if (_range == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.AdministrativeGroup.class) {
-                if (_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
-                    _range = builder.build();
-                }
-            }
-        }
         return _range;
     }
 

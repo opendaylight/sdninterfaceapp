@@ -10,16 +10,14 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-rib
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-rib?revision=2013-09-25)rib/rib/tables/routes/ipv6-routes-case/ipv6-routes/ipv6-route]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route
  */
 public class Ipv6RouteBuilder {
 
-    private Ipv6Prefix _prefix;
-    private Ipv6RouteKey _key;
     private Attributes _attributes;
+    private Ipv6RouteKey _key;
+    private Ipv6Prefix _prefix;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route>> augmentation = new HashMap<>();
 
@@ -70,16 +68,16 @@ public class Ipv6RouteBuilder {
         }
     }
 
-    public Ipv6Prefix getPrefix() {
-        return _prefix;
+    public Attributes getAttributes() {
+        return _attributes;
     }
     
     public Ipv6RouteKey getKey() {
         return _key;
     }
     
-    public Attributes getAttributes() {
-        return _attributes;
+    public Ipv6Prefix getPrefix() {
+        return _prefix;
     }
     
     @SuppressWarnings("unchecked")
@@ -90,8 +88,8 @@ public class Ipv6RouteBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
-    public Ipv6RouteBuilder setPrefix(Ipv6Prefix value) {
-        this._prefix = value;
+    public Ipv6RouteBuilder setAttributes(Attributes value) {
+        this._attributes = value;
         return this;
     }
     
@@ -100,8 +98,8 @@ public class Ipv6RouteBuilder {
         return this;
     }
     
-    public Ipv6RouteBuilder setAttributes(Attributes value) {
-        this._attributes = value;
+    public Ipv6RouteBuilder setPrefix(Ipv6Prefix value) {
+        this._prefix = value;
         return this;
     }
     
@@ -120,9 +118,9 @@ public class Ipv6RouteBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route.class;
         }
 
-        private final Ipv6Prefix _prefix;
-        private final Ipv6RouteKey _key;
         private final Attributes _attributes;
+        private final Ipv6RouteKey _key;
+        private final Ipv6Prefix _prefix;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route>> augmentation = new HashMap<>();
 
@@ -151,8 +149,8 @@ public class Ipv6RouteBuilder {
         }
 
         @Override
-        public Ipv6Prefix getPrefix() {
-            return _prefix;
+        public Attributes getAttributes() {
+            return _attributes;
         }
         
         @Override
@@ -161,8 +159,8 @@ public class Ipv6RouteBuilder {
         }
         
         @Override
-        public Attributes getAttributes() {
-            return _attributes;
+        public Ipv6Prefix getPrefix() {
+            return _prefix;
         }
         
         @SuppressWarnings("unchecked")
@@ -178,9 +176,9 @@ public class Ipv6RouteBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_prefix == null) ? 0 : _prefix.hashCode());
-            result = prime * result + ((_key == null) ? 0 : _key.hashCode());
             result = prime * result + ((_attributes == null) ? 0 : _attributes.hashCode());
+            result = prime * result + ((_key == null) ? 0 : _key.hashCode());
+            result = prime * result + ((_prefix == null) ? 0 : _prefix.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -190,40 +188,55 @@ public class Ipv6RouteBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            Ipv6RouteImpl other = (Ipv6RouteImpl) obj;
-            if (_prefix == null) {
-                if (other._prefix != null) {
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route)obj;
+            if (_attributes == null) {
+                if (other.getAttributes() != null) {
                     return false;
                 }
-            } else if(!_prefix.equals(other._prefix)) {
+            } else if(!_attributes.equals(other.getAttributes())) {
                 return false;
             }
             if (_key == null) {
-                if (other._key != null) {
+                if (other.getKey() != null) {
                     return false;
                 }
-            } else if(!_key.equals(other._key)) {
+            } else if(!_key.equals(other.getKey())) {
                 return false;
             }
-            if (_attributes == null) {
-                if (other._attributes != null) {
+            if (_prefix == null) {
+                if (other.getPrefix() != null) {
                     return false;
                 }
-            } else if(!_attributes.equals(other._attributes)) {
+            } else if(!_prefix.equals(other.getPrefix())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                Ipv6RouteImpl otherImpl = (Ipv6RouteImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.routes.ipv6.routes._case.ipv6.routes.Ipv6Route>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -233,14 +246,14 @@ public class Ipv6RouteBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("Ipv6Route [");
             boolean first = true;
         
-            if (_prefix != null) {
+            if (_attributes != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_prefix=");
-                builder.append(_prefix);
+                builder.append("_attributes=");
+                builder.append(_attributes);
              }
             if (_key != null) {
                 if (first) {
@@ -251,14 +264,14 @@ public class Ipv6RouteBuilder {
                 builder.append("_key=");
                 builder.append(_key);
              }
-            if (_attributes != null) {
+            if (_prefix != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_attributes=");
-                builder.append(_attributes);
+                builder.append("_prefix=");
+                builder.append(_prefix);
              }
             if (first) {
                 first = false;

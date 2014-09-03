@@ -7,10 +7,20 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)node-identifier/node-identifier/c-router-identifier/ospf-node-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * case ospf-node-case {
+ *     container ospf-node {
+ *         leaf ospf-router-id {
+ *             type uint32;
+ *         }
+ *         uses ospf-router-identifier;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/node-identifier/c-router-identifier/ospf-node-case</i>
  */
 public interface OspfNodeCase
     extends

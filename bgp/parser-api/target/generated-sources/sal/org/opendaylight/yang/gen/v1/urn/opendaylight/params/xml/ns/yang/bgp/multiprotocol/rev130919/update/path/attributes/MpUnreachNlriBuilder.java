@@ -8,18 +8,14 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mult
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4760#section-4">http://tools.ietf.org/html/rfc4760#section-4</a>
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)update/update/path-attributes/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)mp-unreach-nlri]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri
  */
 public class MpUnreachNlriBuilder {
 
-    private WithdrawnRoutes _withdrawnRoutes;
     private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
     private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
+    private WithdrawnRoutes _withdrawnRoutes;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri>> augmentation = new HashMap<>();
 
@@ -32,9 +28,9 @@ public class MpUnreachNlriBuilder {
     }
 
     public MpUnreachNlriBuilder(MpUnreachNlri base) {
-        this._withdrawnRoutes = base.getWithdrawnRoutes();
         this._afi = base.getAfi();
         this._safi = base.getSafi();
+        this._withdrawnRoutes = base.getWithdrawnRoutes();
         if (base instanceof MpUnreachNlriImpl) {
             MpUnreachNlriImpl _impl = (MpUnreachNlriImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -65,16 +61,16 @@ public class MpUnreachNlriBuilder {
         }
     }
 
-    public WithdrawnRoutes getWithdrawnRoutes() {
-        return _withdrawnRoutes;
-    }
-    
     public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
         return _afi;
     }
     
     public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
         return _safi;
+    }
+    
+    public WithdrawnRoutes getWithdrawnRoutes() {
+        return _withdrawnRoutes;
     }
     
     @SuppressWarnings("unchecked")
@@ -85,11 +81,6 @@ public class MpUnreachNlriBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
-    public MpUnreachNlriBuilder setWithdrawnRoutes(WithdrawnRoutes value) {
-        this._withdrawnRoutes = value;
-        return this;
-    }
-    
     public MpUnreachNlriBuilder setAfi(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> value) {
         this._afi = value;
         return this;
@@ -97,6 +88,11 @@ public class MpUnreachNlriBuilder {
     
     public MpUnreachNlriBuilder setSafi(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> value) {
         this._safi = value;
+        return this;
+    }
+    
+    public MpUnreachNlriBuilder setWithdrawnRoutes(WithdrawnRoutes value) {
+        this._withdrawnRoutes = value;
         return this;
     }
     
@@ -115,16 +111,16 @@ public class MpUnreachNlriBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri.class;
         }
 
-        private final WithdrawnRoutes _withdrawnRoutes;
         private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
         private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
+        private final WithdrawnRoutes _withdrawnRoutes;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri>> augmentation = new HashMap<>();
 
         private MpUnreachNlriImpl(MpUnreachNlriBuilder base) {
-            this._withdrawnRoutes = base.getWithdrawnRoutes();
             this._afi = base.getAfi();
             this._safi = base.getSafi();
+            this._withdrawnRoutes = base.getWithdrawnRoutes();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -139,11 +135,6 @@ public class MpUnreachNlriBuilder {
         }
 
         @Override
-        public WithdrawnRoutes getWithdrawnRoutes() {
-            return _withdrawnRoutes;
-        }
-        
-        @Override
         public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> getAfi() {
             return _afi;
         }
@@ -151,6 +142,11 @@ public class MpUnreachNlriBuilder {
         @Override
         public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
             return _safi;
+        }
+        
+        @Override
+        public WithdrawnRoutes getWithdrawnRoutes() {
+            return _withdrawnRoutes;
         }
         
         @SuppressWarnings("unchecked")
@@ -166,9 +162,9 @@ public class MpUnreachNlriBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_withdrawnRoutes == null) ? 0 : _withdrawnRoutes.hashCode());
             result = prime * result + ((_afi == null) ? 0 : _afi.hashCode());
             result = prime * result + ((_safi == null) ? 0 : _safi.hashCode());
+            result = prime * result + ((_withdrawnRoutes == null) ? 0 : _withdrawnRoutes.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -178,40 +174,55 @@ public class MpUnreachNlriBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            MpUnreachNlriImpl other = (MpUnreachNlriImpl) obj;
-            if (_withdrawnRoutes == null) {
-                if (other._withdrawnRoutes != null) {
-                    return false;
-                }
-            } else if(!_withdrawnRoutes.equals(other._withdrawnRoutes)) {
-                return false;
-            }
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri)obj;
             if (_afi == null) {
-                if (other._afi != null) {
+                if (other.getAfi() != null) {
                     return false;
                 }
-            } else if(!_afi.equals(other._afi)) {
+            } else if(!_afi.equals(other.getAfi())) {
                 return false;
             }
             if (_safi == null) {
-                if (other._safi != null) {
+                if (other.getSafi() != null) {
                     return false;
                 }
-            } else if(!_safi.equals(other._safi)) {
+            } else if(!_safi.equals(other.getSafi())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_withdrawnRoutes == null) {
+                if (other.getWithdrawnRoutes() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_withdrawnRoutes.equals(other.getWithdrawnRoutes())) {
                 return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                MpUnreachNlriImpl otherImpl = (MpUnreachNlriImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -221,15 +232,6 @@ public class MpUnreachNlriBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("MpUnreachNlri [");
             boolean first = true;
         
-            if (_withdrawnRoutes != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_withdrawnRoutes=");
-                builder.append(_withdrawnRoutes);
-             }
             if (_afi != null) {
                 if (first) {
                     first = false;
@@ -247,6 +249,15 @@ public class MpUnreachNlriBuilder {
                 }
                 builder.append("_safi=");
                 builder.append(_safi);
+             }
+            if (_withdrawnRoutes != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_withdrawnRoutes=");
+                builder.append(_withdrawnRoutes);
              }
             if (first) {
                 first = false;

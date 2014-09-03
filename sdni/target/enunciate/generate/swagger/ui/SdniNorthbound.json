@@ -1,0 +1,114 @@
+{
+  "swaggerVersion": "1.1",
+  "basePath": "http://localhost:8080/full",
+  "resourcePath": "SdniNorthbound",
+  "apis" : [
+    {
+      "path" : "/controller/nb/v2/sdni/{containerName}/topology",
+      "description" : "The class provides Northbound SDNi REST APIs to access the nodes, node connectors\nand their properties.",
+      "operations" : [
+        {
+          "httpMethod" : "GET",
+          "nickname" : "getTopologyDetails",
+          "responseClass" : "ns0_networkCapabilities",
+          "parameters" : [
+            {
+              "name" : "containerName",
+              "paramType" : "path",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+        ],
+        "summary" : "Retrieve the Network Capabilities information like links, b…",
+        "notes" : "Retrieve the Network Capabilities information like links, bandwidth, node etc.,",
+        "errorResponses" : [
+          {
+            "code" : 404,
+            "reason" : "The Container Name was not found"
+          }
+        ],
+        "produces" : [
+          
+          
+          "application/json"
+        ],
+        "consumes" : [
+          "*/*"
+          ,"application/xml"
+          
+        ]
+      }
+      ]
+    }
+  ],
+  "models" : {
+    "ns0_networkCapabilities" : {
+      "properties" : {
+        "link" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "macAddressList" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "controller" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "node" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "bandwidth" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "host" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "ipAddressList" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "latency" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+      },
+      "id" : "ns0_networkCapabilities"
+    }
+  }
+}

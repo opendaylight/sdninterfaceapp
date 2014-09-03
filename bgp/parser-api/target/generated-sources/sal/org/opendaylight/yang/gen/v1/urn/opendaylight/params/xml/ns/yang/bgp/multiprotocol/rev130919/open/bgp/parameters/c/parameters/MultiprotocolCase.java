@@ -7,10 +7,23 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)open/open/bgp-parameters/c-parameters/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)multiprotocol-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-multiprotocol</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-multiprotocol.yang</i>):
+ * <pre>
+ * case multiprotocol-case {
+ *     container multiprotocol-capability {
+ *         leaf afi {
+ *             type identityref;
+ *         }
+ *         leaf safi {
+ *             type identityref;
+ *         }
+ *         uses bgp-table-type;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-multiprotocol/open/bgp-parameters/c-parameters/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)multiprotocol-case</i>
  */
 public interface MultiprotocolCase
     extends

@@ -1,2 +1,2 @@
-/home/lte/opendaylight/bgpcep_modify/bgp/rib-mock/src/main/java/org/opendaylight/protocol/bgp/rib/mock/EventBusRegistration.java
-/home/lte/opendaylight/bgpcep_modify/bgp/rib-mock/src/main/java/org/opendaylight/protocol/bgp/rib/mock/BGPMock.java
+/root/bgpcep/bgp/rib-mock/src/main/java/org/opendaylight/protocol/bgp/rib/mock/EventBusRegistration.java
+/root/bgpcep/bgp/rib-mock/src/main/java/org/opendaylight/protocol/bgp/rib/mock/BGPMock.java

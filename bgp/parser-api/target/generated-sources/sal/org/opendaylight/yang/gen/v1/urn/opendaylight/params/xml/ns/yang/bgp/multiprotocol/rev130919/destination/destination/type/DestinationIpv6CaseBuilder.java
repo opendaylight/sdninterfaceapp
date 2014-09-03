@@ -2,15 +2,14 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mul
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.destination.ipv6._case.DestinationIpv6;
 import java.util.Collections;
 import java.util.Map;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import java.util.HashMap;
 import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)destination/destination/destination-type/destination-ipv6-case]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case
  */
 public class DestinationIpv6CaseBuilder {
 
@@ -110,26 +109,41 @@ public class DestinationIpv6CaseBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            DestinationIpv6CaseImpl other = (DestinationIpv6CaseImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case)obj;
             if (_destinationIpv6 == null) {
-                if (other._destinationIpv6 != null) {
+                if (other.getDestinationIpv6() != null) {
                     return false;
                 }
-            } else if(!_destinationIpv6.equals(other._destinationIpv6)) {
+            } else if(!_destinationIpv6.equals(other.getDestinationIpv6())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                DestinationIpv6CaseImpl otherImpl = (DestinationIpv6CaseImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }

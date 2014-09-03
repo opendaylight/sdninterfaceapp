@@ -13,17 +13,15 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.network.
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)link-state/link-state/unreserved-bandwidth]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth
  */
 public class UnreservedBandwidthBuilder {
 
+    private Bandwidth _bandwidth;
     private UnreservedBandwidthKey _key;
     private java.lang.Short _priority;
     private static List<Range<BigInteger>> _priority_range;
-    private Bandwidth _bandwidth;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>> augmentation = new HashMap<>();
 
@@ -76,16 +74,16 @@ public class UnreservedBandwidthBuilder {
         }
     }
 
+    public Bandwidth getBandwidth() {
+        return _bandwidth;
+    }
+    
     public UnreservedBandwidthKey getKey() {
         return _key;
     }
     
     public java.lang.Short getPriority() {
         return _priority;
-    }
-    
-    public Bandwidth getBandwidth() {
-        return _bandwidth;
     }
     
     @SuppressWarnings("unchecked")
@@ -96,6 +94,11 @@ public class UnreservedBandwidthBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
+    public UnreservedBandwidthBuilder setBandwidth(Bandwidth value) {
+        this._bandwidth = value;
+        return this;
+    }
+    
     public UnreservedBandwidthBuilder setKey(UnreservedBandwidthKey value) {
         this._key = value;
         return this;
@@ -130,11 +133,6 @@ public class UnreservedBandwidthBuilder {
         return _priority_range;
     }
     
-    public UnreservedBandwidthBuilder setBandwidth(Bandwidth value) {
-        this._bandwidth = value;
-        return this;
-    }
-    
     public UnreservedBandwidthBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
@@ -150,9 +148,9 @@ public class UnreservedBandwidthBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth.class;
         }
 
+        private final Bandwidth _bandwidth;
         private final UnreservedBandwidthKey _key;
         private final java.lang.Short _priority;
-        private final Bandwidth _bandwidth;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>> augmentation = new HashMap<>();
 
@@ -181,6 +179,11 @@ public class UnreservedBandwidthBuilder {
         }
 
         @Override
+        public Bandwidth getBandwidth() {
+            return _bandwidth;
+        }
+        
+        @Override
         public UnreservedBandwidthKey getKey() {
             return _key;
         }
@@ -188,11 +191,6 @@ public class UnreservedBandwidthBuilder {
         @Override
         public java.lang.Short getPriority() {
             return _priority;
-        }
-        
-        @Override
-        public Bandwidth getBandwidth() {
-            return _bandwidth;
         }
         
         @SuppressWarnings("unchecked")
@@ -208,9 +206,9 @@ public class UnreservedBandwidthBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
+            result = prime * result + ((_bandwidth == null) ? 0 : _bandwidth.hashCode());
             result = prime * result + ((_key == null) ? 0 : _key.hashCode());
             result = prime * result + ((_priority == null) ? 0 : _priority.hashCode());
-            result = prime * result + ((_bandwidth == null) ? 0 : _bandwidth.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -220,40 +218,55 @@ public class UnreservedBandwidthBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            UnreservedBandwidthImpl other = (UnreservedBandwidthImpl) obj;
-            if (_key == null) {
-                if (other._key != null) {
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth)obj;
+            if (_bandwidth == null) {
+                if (other.getBandwidth() != null) {
                     return false;
                 }
-            } else if(!_key.equals(other._key)) {
+            } else if(!_bandwidth.equals(other.getBandwidth())) {
+                return false;
+            }
+            if (_key == null) {
+                if (other.getKey() != null) {
+                    return false;
+                }
+            } else if(!_key.equals(other.getKey())) {
                 return false;
             }
             if (_priority == null) {
-                if (other._priority != null) {
+                if (other.getPriority() != null) {
                     return false;
                 }
-            } else if(!_priority.equals(other._priority)) {
+            } else if(!_priority.equals(other.getPriority())) {
                 return false;
             }
-            if (_bandwidth == null) {
-                if (other._bandwidth != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                UnreservedBandwidthImpl otherImpl = (UnreservedBandwidthImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!_bandwidth.equals(other._bandwidth)) {
-                return false;
-            }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidth>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
             }
             return true;
         }
@@ -263,6 +276,15 @@ public class UnreservedBandwidthBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("UnreservedBandwidth [");
             boolean first = true;
         
+            if (_bandwidth != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_bandwidth=");
+                builder.append(_bandwidth);
+             }
             if (_key != null) {
                 if (first) {
                     first = false;
@@ -280,15 +302,6 @@ public class UnreservedBandwidthBuilder {
                 }
                 builder.append("_priority=");
                 builder.append(_priority);
-             }
-            if (_bandwidth != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_bandwidth=");
-                builder.append(_bandwidth);
              }
             if (first) {
                 first = false;

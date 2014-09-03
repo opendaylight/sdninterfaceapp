@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1406700838433
-Build-Jdk: 1.7.0_15
+Bnd-LastModified: 1409641880375
+Build-Jdk: 1.7.0_65
 Built-By: root
 Bundle-Description: BGP Update Mock Implementation
 Bundle-License: http://www.eclipse.org/legal/epl-v10.html
@@ -10,27 +10,27 @@ Bundle-SymbolicName: org.opendaylight.bgpcep.bgp-rib-mock
 Bundle-Version: 0.3.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Export-Package: org.opendaylight.protocol.bgp.rib.mock;uses:="com.google
- .common.eventbus,org.opendaylight.protocol.bgp.parser,org.opendaylight.
- protocol.bgp.parser.spi,org.opendaylight.yangtools.concepts,org.openday
- light.yangtools.yang.binding";version="0.3.1.SNAPSHOT"
+ .common.eventbus,org.opendaylight.protocol.bgp.parser.spi,org.opendayli
+ ght.protocol.bgp.rib.spi,org.opendaylight.yangtools.concepts,org.openda
+ ylight.yangtools.yang.binding";version="0.3.1.SNAPSHOT"
 Import-Package: com.google.common.collect;version="[14.0,15)",com.google
  .common.eventbus;version="[14.0,15)",io.netty.buffer;version="[4.0,5)",
  org.opendaylight.protocol.bgp.parser;version="[0.3,1)",org.opendaylight
- .protocol.bgp.parser.spi;version="[0.3,1)",org.opendaylight.protocol.fr
- amework;version="[0.5,1)",org.opendaylight.protocol.util;version="[0.3,
- 1)",org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.
- types.rev100924;version="[2010.9,2011)",org.opendaylight.yang.gen.v1.ur
- n.opendaylight.params.xml.ns.yang.bgp.message.rev130919;version="[0.3,1
- )",org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp
- .message.rev130919.open;version="[0.3,1)",org.opendaylight.yang.gen.v1.
- urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.para
- meters;version="[0.3,1)",org.opendaylight.yang.gen.v1.urn.opendaylight.
- params.xml.ns.yang.bgp.multiprotocol.rev130919;version="[0.3,1)",org.op
- endaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multipro
- tocol.rev130919.open.bgp.parameters.c.parameters;version="[0.3,1)",org.
- opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multip
- rotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case;
- version="[0.3,1)",org.opendaylight.yangtools.concepts;version="[0.6,1)"
- ,org.opendaylight.yangtools.yang.binding;version="[0.6,1)",org.slf4j;ve
- rsion="[1.7,2)"
+ .protocol.bgp.parser.spi;version="[0.3,1)",org.opendaylight.protocol.bg
+ p.rib.spi;version="[0.3,1)",org.opendaylight.protocol.framework;version
+ ="[0.5,1)",org.opendaylight.protocol.util;version="[0.3,1)",org.openday
+ light.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924
+ ;version="[2010.9,2011)",org.opendaylight.yang.gen.v1.urn.opendaylight.
+ params.xml.ns.yang.bgp.message.rev130919;version="[0.3,1)",org.opendayl
+ ight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130
+ 919.open;version="[0.3,1)",org.opendaylight.yang.gen.v1.urn.opendayligh
+ t.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters;version=
+ "[0.3,1)",org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.y
+ ang.bgp.multiprotocol.rev130919;version="[0.3,1)",org.opendaylight.yang
+ .gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919
+ .open.bgp.parameters.c.parameters;version="[0.3,1)",org.opendaylight.ya
+ ng.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev1309
+ 19.open.bgp.parameters.c.parameters.multiprotocol._case;version="[0.3,1
+ )",org.opendaylight.yangtools.concepts;version="[0.6,1)",org.opendaylig
+ ht.yangtools.yang.binding;version="[0.6,1)",org.slf4j;version="[1.7,2)"
 Tool: Bnd-2.1.0.20130426-122213

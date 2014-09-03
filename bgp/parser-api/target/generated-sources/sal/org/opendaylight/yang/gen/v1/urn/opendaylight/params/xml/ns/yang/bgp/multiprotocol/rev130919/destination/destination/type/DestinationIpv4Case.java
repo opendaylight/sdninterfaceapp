@@ -7,10 +7,19 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)destination/destination/destination-type/destination-ipv4-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-multiprotocol</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-multiprotocol.yang</i>):
+ * <pre>
+ * case destination-ipv4-case {
+ *     container destination-ipv4 {
+ *         leaf-list ipv4-prefixes {
+ *             type ipv4-prefix;
+ *         }
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-multiprotocol/destination/destination-type/destination-ipv4-case</i>
  */
 public interface DestinationIpv4Case
     extends

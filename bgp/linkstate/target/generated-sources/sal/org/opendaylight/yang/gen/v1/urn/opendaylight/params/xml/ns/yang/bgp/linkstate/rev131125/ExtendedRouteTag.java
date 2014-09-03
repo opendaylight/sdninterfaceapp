@@ -9,20 +9,18 @@ import java.beans.ConstructorProperties;
 import java.util.Arrays;
 
 
-/**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.3.3">http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.3.3</a>
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)extended-route-tag/extended-route-tag]
- */
 public class ExtendedRouteTag
  implements Serializable {
     private static final long serialVersionUID = -5374633724658239310L; 
-    private static List<Range<BigInteger>> _length;
+    private static final List<Range<BigInteger>> _length;
     final private byte[] _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.valueOf(8L), BigInteger.valueOf(8L)));
+        _length = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public ExtendedRouteTag(byte[] _value) {
         if (_value != null) {
@@ -39,6 +37,7 @@ public class ExtendedRouteTag
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -47,7 +46,7 @@ public class ExtendedRouteTag
     public ExtendedRouteTag(ExtendedRouteTag source) {
         this._value = source._value;
     }
-    
+
     public static ExtendedRouteTag getDefaultInstance(String defaultValue) {
         BaseEncoding baseEncoding = BaseEncoding.base64(); 
         return new ExtendedRouteTag(baseEncoding.decode(defaultValue));
@@ -89,7 +88,7 @@ public class ExtendedRouteTag
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("ExtendedRouteTag [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.ExtendedRouteTag.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -105,15 +104,6 @@ public class ExtendedRouteTag
     }
 
     public static List<Range<BigInteger>> length() {
-        if (_length == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.ExtendedRouteTag.class) {
-                if (_length == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.valueOf(8L), BigInteger.valueOf(8L)));
-                    _length = builder.build();
-                }
-            }
-        }
         return _length;
     }
 

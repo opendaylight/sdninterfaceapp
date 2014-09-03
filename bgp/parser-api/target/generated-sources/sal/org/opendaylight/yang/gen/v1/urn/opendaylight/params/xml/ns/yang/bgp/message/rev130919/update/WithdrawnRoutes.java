@@ -8,10 +8,19 @@ import java.util.List;
 
 
 /**
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)update/update/withdrawn-routes]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-message</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-message.yang</i>):
+ * <pre>
+ * container withdrawn-routes {
+ *     leaf-list withdrawn-routes {
+ *         type ipv4-prefix;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-message/update/withdrawn-routes</i>
+ * <p>To create instances of this class use {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutesBuilder}.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutesBuilder
  */
 public interface WithdrawnRoutes
     extends

@@ -66,6 +66,20 @@
         </tr>
         <tr>
             <td>
+            <a href="#cluster-id"><strong>cluster-id</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#originator-id"><strong>originator-id</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
             <a href="#path-attributes"><strong>path-attributes</strong></a>
             </td>
             <td>
@@ -118,7 +132,7 @@
         <h3 id="protocol-version">protocol-version</h3>
         <ul>
         <li>
-            Base type: uint8
+            Base type: (urn:ietf:params:xml:ns:yang:1)uint8
         </li>
         <li>
             Range restrictions:
@@ -135,6 +149,38 @@
     
     <h2>Groupings</h2>
     <ul>
+    <li>
+        <h3 id="cluster-id">cluster-id</h3>
+        <ul>
+            <ul>
+            <strong><li>
+                leaf-list: cluster
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: cluster-identifier
+            </li>
+            </ul>
+            </ul>
+        </ul>
+    </li>
+    <li>
+        <h3 id="originator-id">originator-id</h3>
+        <ul>
+            <ul>
+            <strong><li>
+                leaf: originator
+            </li>
+            </strong>
+            <ul>
+            <li>
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+            </li>
+            </ul>
+            </ul>
+        </ul>
+    </li>
     <li>
         <h3 id="path-attributes">path-attributes</h3>
         <ul>
@@ -166,7 +212,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:bgp-origin
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)bgp-origin
             </li>
             </ul>
             </ul>
@@ -200,7 +246,7 @@
             </ul>
             <ul>
             <strong><li>
-                uses: bgp-t:as-path-segment
+                uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)as-path-segment
             </li>
             </strong>
             <ul>
@@ -274,7 +320,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:as-number
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
             </li>
             </ul>
             </ul>
@@ -382,7 +428,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:ipv4-address
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
             </li>
             </ul>
             </ul>
@@ -430,7 +476,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:ipv6-address
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
             </li>
             </ul>
             </ul>
@@ -441,7 +487,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:ipv6-address
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
             </li>
             </ul>
             </ul>
@@ -476,7 +522,7 @@
             </strong>
             <ul>
             <li>
-                type: uint32
+                type: (urn:ietf:params:xml:ns:yang:1)uint32
             </li>
             </ul>
             </ul>
@@ -507,7 +553,7 @@
             </strong>
             <ul>
             <li>
-                type: uint32
+                type: (urn:ietf:params:xml:ns:yang:1)uint32
             </li>
             </ul>
             </ul>
@@ -543,7 +589,7 @@
             </ul>
             <ul>
             <strong><li>
-                uses: bgp-t:bgp-aggregator
+                uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)bgp-aggregator
             </li>
             </strong>
             <ul>
@@ -565,7 +611,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:as-number
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
             </li>
             </ul>
             </ul>
@@ -576,7 +622,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:ipv4-address
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
             </li>
             </ul>
             </ul>
@@ -592,7 +638,7 @@
             </ul>
             <ul>
             <strong><li>
-                uses: bgp-t:community
+                uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)community
             </li>
             </strong>
             <ul>
@@ -614,7 +660,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:as-number
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
             </li>
             </ul>
             </ul>
@@ -625,7 +671,7 @@
             </strong>
             <ul>
             <li>
-                type: uint16
+                type: (urn:ietf:params:xml:ns:yang:1)uint16
             </li>
             </ul>
             </ul>
@@ -641,7 +687,7 @@
             </ul>
             <ul>
             <strong><li>
-                uses: bgp-t:extended-community
+                uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)extended-community
             </li>
             </strong>
             <ul>
@@ -663,7 +709,7 @@
             </strong>
             <ul>
             <li>
-                type: uint8
+                type: (urn:ietf:params:xml:ns:yang:1)uint8
             </li>
             </ul>
             </ul>
@@ -674,7 +720,7 @@
             </strong>
             <ul>
             <li>
-                type: uint8
+                type: (urn:ietf:params:xml:ns:yang:1)uint8
             </li>
             </ul>
             </ul>
@@ -725,7 +771,7 @@
             </strong>
             <ul>
             <li>
-                type: boolean
+                type: (urn:ietf:params:xml:ns:yang:1)boolean
             </li>
             </ul>
             </ul>
@@ -736,7 +782,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:short-as-number
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)short-as-number
             </li>
             </ul>
             </ul>
@@ -747,7 +793,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:binary
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
             </li>
             </ul>
             </ul>
@@ -795,7 +841,7 @@
             </strong>
             <ul>
             <li>
-                type: boolean
+                type: (urn:ietf:params:xml:ns:yang:1)boolean
             </li>
             </ul>
             </ul>
@@ -806,7 +852,7 @@
             </strong>
             <ul>
             <li>
-                type: inet:ipv4-address
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
             </li>
             </ul>
             </ul>
@@ -817,7 +863,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:binary
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
             </li>
             </ul>
             </ul>
@@ -865,7 +911,7 @@
             </strong>
             <ul>
             <li>
-                type: boolean
+                type: (urn:ietf:params:xml:ns:yang:1)boolean
             </li>
             </ul>
             </ul>
@@ -876,7 +922,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:binary
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
             </li>
             </ul>
             </ul>
@@ -924,7 +970,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:short-as-number
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)short-as-number
             </li>
             </ul>
             </ul>
@@ -935,7 +981,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:binary
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
             </li>
             </ul>
             </ul>
@@ -983,7 +1029,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:short-as-number
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)short-as-number
             </li>
             </ul>
             </ul>
@@ -994,7 +1040,7 @@
             </strong>
             <ul>
             <li>
-                type: bgp-t:binary
+                type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
             </li>
             </ul>
             </ul>
@@ -1007,25 +1053,79 @@
             </ul>
             </ul>
             <ul>
+            <strong>
+            <li id="path-attributes/originator-id">
+                container: originator-id
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
             <strong><li>
-                leaf: originator-id
+                uses: <a href="#originator-id">originator-id</a>
+            </li>
+            </strong>
+            <ul>
+            <li>refines:
+                <ul>
+                </ul>
+            </li>
+            </ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
+            <strong><li>
+                leaf: originator
             </li>
             </strong>
             <ul>
             <li>
-                type: inet:ipv4-address
+                type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+            </li>
+            </ul>
+            </ul>
+            </ul>
+            </ul>
+            <ul>
+            <strong>
+            <li id="path-attributes/cluster-id">
+                container: cluster-id
+            </li>
+            </strong>
+            <ul>
+            </ul>
+            <ul>
+            <strong><li>
+                uses: <a href="#cluster-id">cluster-id</a>
+            </li>
+            </strong>
+            <ul>
+            <li>refines:
+                <ul>
+                </ul>
             </li>
             </ul>
             </ul>
             <ul>
+            </ul>
+            <ul>
+            </ul>
+            <ul>
+            <ul>
             <strong><li>
-                leaf-list: cluster-id
+                leaf-list: cluster
             </li>
             </strong>
             <ul>
             <li>
                 type: cluster-identifier
             </li>
+            </ul>
+            </ul>
             </ul>
             </ul>
         </ul>
@@ -1052,7 +1152,7 @@
         </strong>
         <ul>
         <li>
-            type: uint8
+            type: (urn:ietf:params:xml:ns:yang:1)uint8
         </li>
         </ul>
         </ul>
@@ -1063,7 +1163,7 @@
         </strong>
         <ul>
         <li>
-            type: uint8
+            type: (urn:ietf:params:xml:ns:yang:1)uint8
         </li>
         </ul>
         </ul>
@@ -1074,7 +1174,7 @@
         </strong>
         <ul>
         <li>
-            type: binary
+            type: (urn:ietf:params:xml:ns:yang:1)binary
         </li>
         </ul>
         </ul>
@@ -1104,7 +1204,7 @@
         </strong>
         <ul>
         <li>
-            type: uint16
+            type: (urn:ietf:params:xml:ns:yang:1)uint16
         </li>
         <li>
             default: 23456
@@ -1118,7 +1218,7 @@
         </strong>
         <ul>
         <li>
-            type: uint16
+            type: (urn:ietf:params:xml:ns:yang:1)uint16
         </li>
         </ul>
         </ul>
@@ -1129,7 +1229,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv4-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
         </li>
         </ul>
         </ul>
@@ -1198,7 +1298,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:as-number
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
         </li>
         </ul>
         </ul>
@@ -1246,7 +1346,7 @@
         </strong>
         <ul>
         <li>
-            type: bits
+            type: (urn:ietf:params:xml:ns:yang:1)bits
         </li>
         </ul>
         </ul>
@@ -1257,7 +1357,7 @@
         </strong>
         <ul>
         <li>
-            type: uint16
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)uint16
         </li>
         <li>
             units: seconds
@@ -1280,7 +1380,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-table-type
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)bgp-table-type
         </li>
         </strong>
         <ul>
@@ -1302,7 +1402,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -1313,7 +1413,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -1324,7 +1424,7 @@
         </strong>
         <ul>
         <li>
-            type: bits
+            type: (urn:ietf:params:xml:ns:yang:1)bits
         </li>
         </ul>
         </ul>
@@ -1362,7 +1462,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-table-type
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)bgp-table-type
         </li>
         </strong>
         <ul>
@@ -1384,7 +1484,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -1395,7 +1495,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -1465,7 +1565,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:bgp-origin
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)bgp-origin
         </li>
         </ul>
         </ul>
@@ -1499,7 +1599,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-t:as-path-segment
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)as-path-segment
         </li>
         </strong>
         <ul>
@@ -1573,7 +1673,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:as-number
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
         </li>
         </ul>
         </ul>
@@ -1681,7 +1781,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv4-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
         </li>
         </ul>
         </ul>
@@ -1729,7 +1829,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv6-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
         </li>
         </ul>
         </ul>
@@ -1740,7 +1840,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv6-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
         </li>
         </ul>
         </ul>
@@ -1775,7 +1875,7 @@
         </strong>
         <ul>
         <li>
-            type: uint32
+            type: (urn:ietf:params:xml:ns:yang:1)uint32
         </li>
         </ul>
         </ul>
@@ -1806,7 +1906,7 @@
         </strong>
         <ul>
         <li>
-            type: uint32
+            type: (urn:ietf:params:xml:ns:yang:1)uint32
         </li>
         </ul>
         </ul>
@@ -1842,7 +1942,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-t:bgp-aggregator
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)bgp-aggregator
         </li>
         </strong>
         <ul>
@@ -1864,7 +1964,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:as-number
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
         </li>
         </ul>
         </ul>
@@ -1875,7 +1975,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv4-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
         </li>
         </ul>
         </ul>
@@ -1891,7 +1991,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-t:community
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)community
         </li>
         </strong>
         <ul>
@@ -1913,7 +2013,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:as-number
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)as-number
         </li>
         </ul>
         </ul>
@@ -1924,7 +2024,7 @@
         </strong>
         <ul>
         <li>
-            type: uint16
+            type: (urn:ietf:params:xml:ns:yang:1)uint16
         </li>
         </ul>
         </ul>
@@ -1940,7 +2040,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-t:extended-community
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)extended-community
         </li>
         </strong>
         <ul>
@@ -1962,7 +2062,7 @@
         </strong>
         <ul>
         <li>
-            type: uint8
+            type: (urn:ietf:params:xml:ns:yang:1)uint8
         </li>
         </ul>
         </ul>
@@ -1973,7 +2073,7 @@
         </strong>
         <ul>
         <li>
-            type: uint8
+            type: (urn:ietf:params:xml:ns:yang:1)uint8
         </li>
         </ul>
         </ul>
@@ -2024,7 +2124,7 @@
         </strong>
         <ul>
         <li>
-            type: boolean
+            type: (urn:ietf:params:xml:ns:yang:1)boolean
         </li>
         </ul>
         </ul>
@@ -2035,7 +2135,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:short-as-number
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)short-as-number
         </li>
         </ul>
         </ul>
@@ -2046,7 +2146,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:binary
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
         </li>
         </ul>
         </ul>
@@ -2094,7 +2194,7 @@
         </strong>
         <ul>
         <li>
-            type: boolean
+            type: (urn:ietf:params:xml:ns:yang:1)boolean
         </li>
         </ul>
         </ul>
@@ -2105,7 +2205,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv4-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
         </li>
         </ul>
         </ul>
@@ -2116,7 +2216,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:binary
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
         </li>
         </ul>
         </ul>
@@ -2164,7 +2264,7 @@
         </strong>
         <ul>
         <li>
-            type: boolean
+            type: (urn:ietf:params:xml:ns:yang:1)boolean
         </li>
         </ul>
         </ul>
@@ -2175,7 +2275,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:binary
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
         </li>
         </ul>
         </ul>
@@ -2223,7 +2323,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:short-as-number
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)short-as-number
         </li>
         </ul>
         </ul>
@@ -2234,7 +2334,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:binary
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
         </li>
         </ul>
         </ul>
@@ -2282,7 +2382,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:short-as-number
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)short-as-number
         </li>
         </ul>
         </ul>
@@ -2293,7 +2393,7 @@
         </strong>
         <ul>
         <li>
-            type: bgp-t:binary
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-types)binary
         </li>
         </ul>
         </ul>
@@ -2306,25 +2406,79 @@
         </ul>
         </ul>
         <ul>
+        <strong>
+        <li id="update/path-attributes/originator-id">
+            container: originator-id
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
         <strong><li>
-            leaf: originator-id
+            uses: <a href="#originator-id">originator-id</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: originator
         </li>
         </strong>
         <ul>
         <li>
-            type: inet:ipv4-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="update/path-attributes/cluster-id">
+            container: cluster-id
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: <a href="#cluster-id">cluster-id</a>
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            </ul>
         </li>
         </ul>
         </ul>
         <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
         <strong><li>
-            leaf-list: cluster-id
+            leaf-list: cluster
         </li>
         </strong>
         <ul>
         <li>
             type: cluster-identifier
         </li>
+        </ul>
+        </ul>
         </ul>
         </ul>
         <ul>
@@ -2340,7 +2494,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-table-type
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)bgp-table-type
         </li>
         </strong>
         <ul>
@@ -2350,7 +2504,7 @@
         </li>
         </ul>
         <strong><li>
-            uses: bgp-t:next-hop
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-types)next-hop
         </li>
         </strong>
         <ul>
@@ -2372,7 +2526,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -2383,7 +2537,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -2434,7 +2588,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv4-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
         </li>
         </ul>
         </ul>
@@ -2482,7 +2636,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv6-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
         </li>
         </ul>
         </ul>
@@ -2493,7 +2647,7 @@
         </strong>
         <ul>
         <li>
-            type: inet:ipv6-address
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv6-address
         </li>
         </ul>
         </ul>
@@ -2513,7 +2667,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: destination
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)destination
         </li>
         </strong>
         <ul>
@@ -2650,7 +2804,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: bgp-table-type
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)bgp-table-type
         </li>
         </strong>
         <ul>
@@ -2672,7 +2826,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -2683,7 +2837,7 @@
         </strong>
         <ul>
         <li>
-            type: identityref
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
         </li>
         </ul>
         </ul>
@@ -2697,7 +2851,7 @@
         </ul>
         <ul>
         <strong><li>
-            uses: destination
+            uses: (urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol)destination
         </li>
         </strong>
         <ul>

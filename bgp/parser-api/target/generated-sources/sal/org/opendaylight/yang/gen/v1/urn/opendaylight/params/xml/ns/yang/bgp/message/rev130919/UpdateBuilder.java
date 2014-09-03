@@ -2,26 +2,22 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mes
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import java.util.Collections;
 import java.util.Map;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import java.util.HashMap;
 import org.opendaylight.yangtools.yang.binding.Augmentation;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.Nlri;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.Nlri;
 
 
 /**
- * Update Message
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4271#section-4.3">http://tools.ietf.org/html/rfc4271#section-4.3</a>
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)update/update]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update
  */
 public class UpdateBuilder {
 
+    private Nlri _nlri;
     private PathAttributes _pathAttributes;
     private WithdrawnRoutes _withdrawnRoutes;
-    private Nlri _nlri;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update>> augmentation = new HashMap<>();
 
@@ -29,9 +25,9 @@ public class UpdateBuilder {
     } 
 
     public UpdateBuilder(Update base) {
+        this._nlri = base.getNlri();
         this._pathAttributes = base.getPathAttributes();
         this._withdrawnRoutes = base.getWithdrawnRoutes();
-        this._nlri = base.getNlri();
         if (base instanceof UpdateImpl) {
             UpdateImpl _impl = (UpdateImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -39,16 +35,16 @@ public class UpdateBuilder {
     }
 
 
+    public Nlri getNlri() {
+        return _nlri;
+    }
+    
     public PathAttributes getPathAttributes() {
         return _pathAttributes;
     }
     
     public WithdrawnRoutes getWithdrawnRoutes() {
         return _withdrawnRoutes;
-    }
-    
-    public Nlri getNlri() {
-        return _nlri;
     }
     
     @SuppressWarnings("unchecked")
@@ -59,6 +55,11 @@ public class UpdateBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
+    public UpdateBuilder setNlri(Nlri value) {
+        this._nlri = value;
+        return this;
+    }
+    
     public UpdateBuilder setPathAttributes(PathAttributes value) {
         this._pathAttributes = value;
         return this;
@@ -66,11 +67,6 @@ public class UpdateBuilder {
     
     public UpdateBuilder setWithdrawnRoutes(WithdrawnRoutes value) {
         this._withdrawnRoutes = value;
-        return this;
-    }
-    
-    public UpdateBuilder setNlri(Nlri value) {
-        this._nlri = value;
         return this;
     }
     
@@ -89,16 +85,16 @@ public class UpdateBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update.class;
         }
 
+        private final Nlri _nlri;
         private final PathAttributes _pathAttributes;
         private final WithdrawnRoutes _withdrawnRoutes;
-        private final Nlri _nlri;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update>> augmentation = new HashMap<>();
 
         private UpdateImpl(UpdateBuilder base) {
+            this._nlri = base.getNlri();
             this._pathAttributes = base.getPathAttributes();
             this._withdrawnRoutes = base.getWithdrawnRoutes();
-            this._nlri = base.getNlri();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -113,6 +109,11 @@ public class UpdateBuilder {
         }
 
         @Override
+        public Nlri getNlri() {
+            return _nlri;
+        }
+        
+        @Override
         public PathAttributes getPathAttributes() {
             return _pathAttributes;
         }
@@ -120,11 +121,6 @@ public class UpdateBuilder {
         @Override
         public WithdrawnRoutes getWithdrawnRoutes() {
             return _withdrawnRoutes;
-        }
-        
-        @Override
-        public Nlri getNlri() {
-            return _nlri;
         }
         
         @SuppressWarnings("unchecked")
@@ -140,9 +136,9 @@ public class UpdateBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
+            result = prime * result + ((_nlri == null) ? 0 : _nlri.hashCode());
             result = prime * result + ((_pathAttributes == null) ? 0 : _pathAttributes.hashCode());
             result = prime * result + ((_withdrawnRoutes == null) ? 0 : _withdrawnRoutes.hashCode());
-            result = prime * result + ((_nlri == null) ? 0 : _nlri.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -152,40 +148,55 @@ public class UpdateBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            UpdateImpl other = (UpdateImpl) obj;
-            if (_pathAttributes == null) {
-                if (other._pathAttributes != null) {
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update)obj;
+            if (_nlri == null) {
+                if (other.getNlri() != null) {
                     return false;
                 }
-            } else if(!_pathAttributes.equals(other._pathAttributes)) {
+            } else if(!_nlri.equals(other.getNlri())) {
+                return false;
+            }
+            if (_pathAttributes == null) {
+                if (other.getPathAttributes() != null) {
+                    return false;
+                }
+            } else if(!_pathAttributes.equals(other.getPathAttributes())) {
                 return false;
             }
             if (_withdrawnRoutes == null) {
-                if (other._withdrawnRoutes != null) {
+                if (other.getWithdrawnRoutes() != null) {
                     return false;
                 }
-            } else if(!_withdrawnRoutes.equals(other._withdrawnRoutes)) {
+            } else if(!_withdrawnRoutes.equals(other.getWithdrawnRoutes())) {
                 return false;
             }
-            if (_nlri == null) {
-                if (other._nlri != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                UpdateImpl otherImpl = (UpdateImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!_nlri.equals(other._nlri)) {
-                return false;
-            }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
             }
             return true;
         }
@@ -195,6 +206,15 @@ public class UpdateBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("Update [");
             boolean first = true;
         
+            if (_nlri != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_nlri=");
+                builder.append(_nlri);
+             }
             if (_pathAttributes != null) {
                 if (first) {
                     first = false;
@@ -212,15 +232,6 @@ public class UpdateBuilder {
                 }
                 builder.append("_withdrawnRoutes=");
                 builder.append(_withdrawnRoutes);
-             }
-            if (_nlri != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_nlri=");
-                builder.append(_nlri);
              }
             if (first) {
                 first = false;

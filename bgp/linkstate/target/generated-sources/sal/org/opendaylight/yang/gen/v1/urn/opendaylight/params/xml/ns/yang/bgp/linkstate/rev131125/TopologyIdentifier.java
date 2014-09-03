@@ -7,20 +7,18 @@ import java.util.List;
 import java.beans.ConstructorProperties;
 
 
-/**
- * Reference:
- *     https://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.2.1.5
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)topology-identifier/topology-identifier]
- */
 public class TopologyIdentifier
  implements Serializable {
     private static final long serialVersionUID = -6374364979721281800L; 
-    private static List<Range<BigInteger>> _range;
+    private static final List<Range<BigInteger>> _range;
     final private java.lang.Integer _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4095L)));
+        _range = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public TopologyIdentifier(java.lang.Integer _value) {
         if (_value != null) {
@@ -37,6 +35,7 @@ public class TopologyIdentifier
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -45,9 +44,9 @@ public class TopologyIdentifier
     public TopologyIdentifier(TopologyIdentifier source) {
         this._value = source._value;
     }
-    
+
     public static TopologyIdentifier getDefaultInstance(String defaultValue) {
-        return new TopologyIdentifier(new java.lang.Integer(defaultValue));
+        return new TopologyIdentifier(Integer.valueOf(defaultValue));
     }
 
     public java.lang.Integer getValue() {
@@ -86,7 +85,7 @@ public class TopologyIdentifier
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("TopologyIdentifier [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.TopologyIdentifier.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -103,15 +102,6 @@ public class TopologyIdentifier
 
 
     public static List<Range<BigInteger>> range() {
-        if (_range == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.TopologyIdentifier.class) {
-                if (_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4095L)));
-                    _range = builder.build();
-                }
-            }
-        }
         return _range;
     }
 

@@ -8,22 +8,24 @@
 package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
 import com.google.common.base.Preconditions;
-
 import io.netty.buffer.ByteBuf;
-
+import io.netty.buffer.Unpooled;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeParser;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeSerializer;
+import org.opendaylight.protocol.bgp.parser.spi.AttributeUtil;
 import org.opendaylight.protocol.bgp.parser.spi.NlriRegistry;
+import org.opendaylight.protocol.bgp.parser.spi.NlriSerializer;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2Builder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 
-public final class MPUnreachAttributeParser implements AttributeParser,AttributeSerializer {
-
+public final class MPUnreachAttributeParser implements AttributeParser, AttributeSerializer {
     public static final int TYPE = 15;
 
     private final NlriRegistry reg;
@@ -43,7 +45,19 @@ public final class MPUnreachAttributeParser implements AttributeParser,Attribute
     }
 
     @Override
-    public void serializeAttribute(DataObject attribute, ByteBuf byteAggregator) {
-        //FIME: implement this
+    public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
+        Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
+        final PathAttributes pathAttributes = (PathAttributes) attribute;
+        final PathAttributes2 pathAttributes2 = pathAttributes.getAugmentation(PathAttributes2.class);
+        if (pathAttributes2 == null) {
+            return;
+        }
+        final MpUnreachNlri mpUnreachNlri = pathAttributes2.getMpUnreachNlri();
+        final ByteBuf unreachBuffer = Unpooled.buffer();
+        this.reg.serializeMpUnReach(mpUnreachNlri, unreachBuffer);
+        for (final NlriSerializer nlriSerializer : this.reg.getSerializers()){
+            nlriSerializer.serializeAttribute(attribute,unreachBuffer);
+        }
+        AttributeUtil.formatAttribute(AttributeUtil.OPTIONAL, TYPE, unreachBuffer, byteAggregator);
     }
 }

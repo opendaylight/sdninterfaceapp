@@ -7,20 +7,18 @@ import java.util.List;
 import java.beans.ConstructorProperties;
 
 
-/**
- * Reference:
- *     https://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.2.1.4
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)area-identifier/area-identifier]
- */
 public class AreaIdentifier
  implements Serializable {
     private static final long serialVersionUID = 9103741976864914148L; 
-    private static List<Range<BigInteger>> _range;
+    private static final List<Range<BigInteger>> _range;
     final private java.lang.Long _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
+        _range = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public AreaIdentifier(java.lang.Long _value) {
         if (_value != null) {
@@ -37,6 +35,7 @@ public class AreaIdentifier
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -45,9 +44,9 @@ public class AreaIdentifier
     public AreaIdentifier(AreaIdentifier source) {
         this._value = source._value;
     }
-    
+
     public static AreaIdentifier getDefaultInstance(String defaultValue) {
-        return new AreaIdentifier(new java.lang.Long(defaultValue));
+        return new AreaIdentifier(Long.valueOf(defaultValue));
     }
 
     public java.lang.Long getValue() {
@@ -86,7 +85,7 @@ public class AreaIdentifier
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("AreaIdentifier [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.AreaIdentifier.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -103,15 +102,6 @@ public class AreaIdentifier
 
 
     public static List<Range<BigInteger>> range() {
-        if (_range == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.AreaIdentifier.class) {
-                if (_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
-                    _range = builder.build();
-                }
-            }
-        }
         return _range;
     }
 

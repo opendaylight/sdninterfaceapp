@@ -5,10 +5,30 @@ import org.opendaylight.yangtools.yang.binding.DataObject;
 
 
 /**
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)destination/destination]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-multiprotocol</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-multiprotocol.yang</i>):
+ * <pre>
+ * grouping destination {
+ *     choice destination-type {
+ *         case destination-ipv4-case {
+ *             container destination-ipv4 {
+ *                 leaf-list ipv4-prefixes {
+ *                     type ipv4-prefix;
+ *                 }
+ *             }
+ *         }
+ *         case destination-ipv6-case {
+ *             container destination-ipv6 {
+ *                 leaf-list ipv6-prefixes {
+ *                     type ipv6-prefix;
+ *                 }
+ *             }
+ *         }
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-multiprotocol/destination</i>
  */
 public interface Destination
     extends

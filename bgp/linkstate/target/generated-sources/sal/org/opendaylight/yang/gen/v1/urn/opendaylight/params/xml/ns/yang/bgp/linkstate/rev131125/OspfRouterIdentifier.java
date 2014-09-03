@@ -4,12 +4,17 @@ import org.opendaylight.yangtools.yang.binding.DataObject;
 
 
 /**
- * Reference:
- *     https://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.2.1.4
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)ospf-router-identifier/ospf-router-identifier]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping ospf-router-identifier {
+ *     leaf ospf-router-id {
+ *         type uint32;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/ospf-router-identifier</i>
  */
 public interface OspfRouterIdentifier
     extends

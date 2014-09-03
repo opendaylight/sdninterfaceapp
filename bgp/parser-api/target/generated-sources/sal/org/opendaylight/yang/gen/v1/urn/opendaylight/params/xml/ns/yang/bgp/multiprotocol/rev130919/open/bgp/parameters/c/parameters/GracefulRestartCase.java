@@ -7,10 +7,36 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)open/open/bgp-parameters/c-parameters/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)graceful-restart-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-multiprotocol</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-multiprotocol.yang</i>):
+ * <pre>
+ * case graceful-restart-case {
+ *     container graceful-restart-capability {
+ *         leaf restart-flags {
+ *             type bits;
+ *         }
+ *         leaf restart-time {
+ *             type uint16;
+ *         }
+ *         list tables {
+ *             key "afi" 
+ *         "safi"
+ *             leaf afi {
+ *                 type identityref;
+ *             }
+ *             leaf safi {
+ *                 type identityref;
+ *             }
+ *             leaf afi-flags {
+ *                 type bits;
+ *             }
+ *             uses bgp-table-type;
+ *         }
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-multiprotocol/open/bgp-parameters/c-parameters/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)graceful-restart-case</i>
  */
 public interface GracefulRestartCase
     extends

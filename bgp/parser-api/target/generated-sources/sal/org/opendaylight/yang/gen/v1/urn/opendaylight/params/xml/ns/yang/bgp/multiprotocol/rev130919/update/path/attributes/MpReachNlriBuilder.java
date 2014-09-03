@@ -9,19 +9,15 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4760#section-3">http://tools.ietf.org/html/rfc4760#section-3</a>
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)update/update/path-attributes/(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)mp-reach-nlri]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri
  */
 public class MpReachNlriBuilder {
 
     private AdvertizedRoutes _advertizedRoutes;
     private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
-    private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
     private CNextHop _cNextHop;
+    private java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri>> augmentation = new HashMap<>();
 
@@ -40,8 +36,8 @@ public class MpReachNlriBuilder {
     public MpReachNlriBuilder(MpReachNlri base) {
         this._advertizedRoutes = base.getAdvertizedRoutes();
         this._afi = base.getAfi();
-        this._safi = base.getSafi();
         this._cNextHop = base.getCNextHop();
+        this._safi = base.getSafi();
         if (base instanceof MpReachNlriImpl) {
             MpReachNlriImpl _impl = (MpReachNlriImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -85,12 +81,12 @@ public class MpReachNlriBuilder {
         return _afi;
     }
     
-    public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
-        return _safi;
-    }
-    
     public CNextHop getCNextHop() {
         return _cNextHop;
+    }
+    
+    public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
+        return _safi;
     }
     
     @SuppressWarnings("unchecked")
@@ -111,13 +107,13 @@ public class MpReachNlriBuilder {
         return this;
     }
     
-    public MpReachNlriBuilder setSafi(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> value) {
-        this._safi = value;
+    public MpReachNlriBuilder setCNextHop(CNextHop value) {
+        this._cNextHop = value;
         return this;
     }
     
-    public MpReachNlriBuilder setCNextHop(CNextHop value) {
-        this._cNextHop = value;
+    public MpReachNlriBuilder setSafi(java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> value) {
+        this._safi = value;
         return this;
     }
     
@@ -138,16 +134,16 @@ public class MpReachNlriBuilder {
 
         private final AdvertizedRoutes _advertizedRoutes;
         private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily> _afi;
-        private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
         private final CNextHop _cNextHop;
+        private final java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> _safi;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri>> augmentation = new HashMap<>();
 
         private MpReachNlriImpl(MpReachNlriBuilder base) {
             this._advertizedRoutes = base.getAdvertizedRoutes();
             this._afi = base.getAfi();
-            this._safi = base.getSafi();
             this._cNextHop = base.getCNextHop();
+            this._safi = base.getSafi();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -172,13 +168,13 @@ public class MpReachNlriBuilder {
         }
         
         @Override
-        public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
-            return _safi;
+        public CNextHop getCNextHop() {
+            return _cNextHop;
         }
         
         @Override
-        public CNextHop getCNextHop() {
-            return _cNextHop;
+        public java.lang.Class<? extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily> getSafi() {
+            return _safi;
         }
         
         @SuppressWarnings("unchecked")
@@ -196,8 +192,8 @@ public class MpReachNlriBuilder {
             int result = 1;
             result = prime * result + ((_advertizedRoutes == null) ? 0 : _advertizedRoutes.hashCode());
             result = prime * result + ((_afi == null) ? 0 : _afi.hashCode());
-            result = prime * result + ((_safi == null) ? 0 : _safi.hashCode());
             result = prime * result + ((_cNextHop == null) ? 0 : _cNextHop.hashCode());
+            result = prime * result + ((_safi == null) ? 0 : _safi.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -207,47 +203,62 @@ public class MpReachNlriBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            MpReachNlriImpl other = (MpReachNlriImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri)obj;
             if (_advertizedRoutes == null) {
-                if (other._advertizedRoutes != null) {
+                if (other.getAdvertizedRoutes() != null) {
                     return false;
                 }
-            } else if(!_advertizedRoutes.equals(other._advertizedRoutes)) {
+            } else if(!_advertizedRoutes.equals(other.getAdvertizedRoutes())) {
                 return false;
             }
             if (_afi == null) {
-                if (other._afi != null) {
+                if (other.getAfi() != null) {
                     return false;
                 }
-            } else if(!_afi.equals(other._afi)) {
-                return false;
-            }
-            if (_safi == null) {
-                if (other._safi != null) {
-                    return false;
-                }
-            } else if(!_safi.equals(other._safi)) {
+            } else if(!_afi.equals(other.getAfi())) {
                 return false;
             }
             if (_cNextHop == null) {
-                if (other._cNextHop != null) {
+                if (other.getCNextHop() != null) {
                     return false;
                 }
-            } else if(!_cNextHop.equals(other._cNextHop)) {
+            } else if(!_cNextHop.equals(other.getCNextHop())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_safi == null) {
+                if (other.getSafi() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_safi.equals(other.getSafi())) {
                 return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                MpReachNlriImpl otherImpl = (MpReachNlriImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -275,15 +286,6 @@ public class MpReachNlriBuilder {
                 builder.append("_afi=");
                 builder.append(_afi);
              }
-            if (_safi != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_safi=");
-                builder.append(_safi);
-             }
             if (_cNextHop != null) {
                 if (first) {
                     first = false;
@@ -292,6 +294,15 @@ public class MpReachNlriBuilder {
                 }
                 builder.append("_cNextHop=");
                 builder.append(_cNextHop);
+             }
+            if (_safi != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_safi=");
+                builder.append(_safi);
              }
             if (first) {
                 first = false;

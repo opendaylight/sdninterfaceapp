@@ -8,20 +8,18 @@
 package org.opendaylight.protocol.bgp.testtool;
 
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.util.HashedWheelTimer;
 import io.netty.util.concurrent.GlobalEventExecutor;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
-import org.opendaylight.protocol.bgp.parser.impl.BGPActivator;
 import org.opendaylight.protocol.bgp.parser.spi.pojo.ServiceLoaderBGPExtensionProviderContext;
 import org.opendaylight.protocol.bgp.rib.impl.BGPDispatcherImpl;
 import org.opendaylight.protocol.bgp.rib.impl.BGPSessionProposalImpl;
+import org.opendaylight.protocol.bgp.rib.impl.StrictBGPPeerRegistry;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionPreferences;
+import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
 import org.opendaylight.protocol.framework.NeverReconnectStrategy;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
@@ -42,10 +40,10 @@ public final class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     private static final String USAGE = "DESCRIPTION:\n"
-            + "\tCreates a server with given parameters. As long as it runs, it accepts connections " + "from PCCs.\n" + "USAGE:\n"
-            + "\t-a, --address\n" + "\t\tthe ip address to which is this server bound.\n"
-            + "\t\tFormat: x.x.x.x:y where y is port number.\n\n"
-            + "\t\tThis IP address will appear in BGP Open message as BGP Identifier of the server.\n" +
+        + "\tCreates a server with given parameters. As long as it runs, it accepts connections " + "from PCCs.\n" + "USAGE:\n"
+        + "\t-a, --address\n" + "\t\tthe ip address to which is this server bound.\n"
+        + "\t\tFormat: x.x.x.x:y where y is port number.\n\n"
+        + "\t\tThis IP address will appear in BGP Open message as BGP Identifier of the server.\n" +
 
             "\t-as\n" + "\t\t value of AS in the initial open message\n\n" +
 
@@ -63,13 +61,11 @@ public final class Main {
 
     private static final int RECONNECT_MILLIS = 5000;
 
-    private Main() throws Exception {
-        BGPActivator bgpActivator = new BGPActivator();
-        bgpActivator.start(ServiceLoaderBGPExtensionProviderContext.getSingletonInstance());
-        this.dispatcher = new BGPDispatcherImpl(ServiceLoaderBGPExtensionProviderContext.getSingletonInstance().getMessageRegistry(), new HashedWheelTimer(), new NioEventLoopGroup(), new NioEventLoopGroup());
+    private Main() {
+        this.dispatcher = new BGPDispatcherImpl(ServiceLoaderBGPExtensionProviderContext.getSingletonInstance().getMessageRegistry(), new NioEventLoopGroup(), new NioEventLoopGroup());
     }
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws NumberFormatException, UnknownHostException {
         if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("--help"))) {
             LOG.info(Main.USAGE);
             return;
@@ -83,7 +79,7 @@ public final class Main {
         while (i < args.length) {
             if (args[i].equalsIgnoreCase("-a") || args[i].equalsIgnoreCase("--address")) {
                 final String[] ip = args[i + 1].split(":");
-                address = new InetSocketAddress(InetAddress.getByName(ip[0]), Integer.valueOf(ip[1]));
+                address = new InetSocketAddress(InetAddress.getByName(ip[0]), Integer.parseInt(ip[1]));
                 i++;
             } else if (args[i].equalsIgnoreCase("-h") || args[i].equalsIgnoreCase("--holdtimer")) {
                 holdTimerValue = Short.valueOf(args[i + 1]);
@@ -99,7 +95,7 @@ public final class Main {
 
         final Main m = new Main();
 
-        final BGPSessionListener sessionListener = new TestingListener();
+        final ReusableBGPPeer sessionListener = new TestingListener();
 
         final Map<Class<? extends AddressFamily>, Class<? extends SubsequentAddressFamily>> tables = new HashMap<>();
         tables.put(Ipv4AddressFamily.class, UnicastSubsequentAddressFamily.class);
@@ -112,7 +108,10 @@ public final class Main {
         LOG.debug("{} {} {}", address, sessionListener, proposal);
 
         final InetSocketAddress addr = address;
-        m.dispatcher.createClient(addr, proposal, as, sessionListener,
-                new NeverReconnectStrategy(GlobalEventExecutor.INSTANCE, RECONNECT_MILLIS));
+        final StrictBGPPeerRegistry strictBGPPeerRegistry = new StrictBGPPeerRegistry();
+        strictBGPPeerRegistry.addPeer(StrictBGPPeerRegistry.getIpAddress(address), sessionListener, proposal);
+
+        m.dispatcher.createClient(addr, as, strictBGPPeerRegistry,
+            new NeverReconnectStrategy(GlobalEventExecutor.INSTANCE, RECONNECT_MILLIS));
     }
 }

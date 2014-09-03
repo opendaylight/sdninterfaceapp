@@ -1,5 +1,5 @@
-org/opendaylight/protocol/bgp/parser/impl/message/BGPUpdateMessageParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/open/MultiProtocolCapabilityHandler.class
+org/opendaylight/protocol/bgp/parser/impl/message/BGPUpdateMessageParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/AS4PathAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/AggregatorAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/BGPActivator.class
@@ -11,8 +11,8 @@ org/opendaylight/protocol/bgp/parser/impl/message/update/AsPathSegmentParser$1.c
 org/opendaylight/protocol/bgp/parser/impl/message/update/AsPathAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/BGPKeepAliveMessageParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/BGPNotificationMessageParser.class
-org/opendaylight/protocol/bgp/parser/impl/message/update/MPUnreachAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/ExtendedCommunitiesAttributeParser.class
+org/opendaylight/protocol/bgp/parser/impl/message/update/MPUnreachAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/MPReachAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/NextHopAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/CommunitiesAttributeParser.class
@@ -23,10 +23,12 @@ org/opendaylight/protocol/bgp/parser/impl/message/BGPOpenMessageParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/open/GracefulCapabilityHandler.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/MultiExitDiscriminatorAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/AsPathSegmentParser$SegmentType.class
+org/opendaylight/protocol/bgp/parser/impl/message/update/AdvertizedRoutesSerializer.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/AsPathSegmentParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/OriginAttributeParser.class
-org/opendaylight/protocol/bgp/parser/impl/message/update/OriginatorIdAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/CommunitiesParser.class
+org/opendaylight/protocol/bgp/parser/impl/message/update/OriginatorIdAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/update/LocalPreferenceAttributeParser.class
 org/opendaylight/protocol/bgp/parser/impl/message/open/As4CapabilityHandler.class
 org/opendaylight/protocol/bgp/parser/impl/message/open/CapabilityParameterParser.class
+org/opendaylight/protocol/bgp/parser/impl/message/update/WithdrawnRoutesSerializer.class

@@ -7,18 +7,18 @@ import java.util.List;
 import java.beans.ConstructorProperties;
 
 
-/**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)identifier/identifier]
- */
 public class Identifier
  implements Serializable {
     private static final long serialVersionUID = -8921356948766432307L; 
-    private static List<Range<BigInteger>> _range;
+    private static final List<Range<BigInteger>> _range;
     final private BigInteger _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.ZERO, new BigInteger("18446744073709551615")));
+        _range = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public Identifier(BigInteger _value) {
         if (_value != null) {
@@ -35,6 +35,7 @@ public class Identifier
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -43,7 +44,7 @@ public class Identifier
     public Identifier(Identifier source) {
         this._value = source._value;
     }
-    
+
     public static Identifier getDefaultInstance(String defaultValue) {
         return new Identifier(new BigInteger(defaultValue));
     }
@@ -84,7 +85,7 @@ public class Identifier
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("Identifier [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.Identifier.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -101,15 +102,6 @@ public class Identifier
 
 
     public static List<Range<BigInteger>> range() {
-        if (_range == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.Identifier.class) {
-                if (_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, new BigInteger("18446744073709551615")));
-                    _range = builder.build();
-                }
-            }
-        }
         return _range;
     }
 

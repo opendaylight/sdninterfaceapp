@@ -8,7 +8,6 @@
 package org.opendaylight.protocol.bgp.parser;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParametersBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.c.parameters.As4BytesCaseBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.c.parameters.as4.bytes._case.As4BytesCapabilityBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.MultiprotocolCaseBuilder;
 
 public class APITest {
 
@@ -30,7 +30,7 @@ public class APITest {
         final BGPDocumentedException de = new BGPDocumentedException("Some message", BGPError.BAD_BGP_ID);
         assertEquals("Some message", de.getMessage());
         assertEquals(BGPError.BAD_BGP_ID, de.getError());
-        assertNull(de.getData());
+        assertEquals(0, de.getData().length);
 
         final BGPDocumentedException doc = BGPDocumentedException.badMessageLength("Wrong length", 5000);
         assertEquals(5000, ByteArray.bytesToInt(doc.getData()));
@@ -40,6 +40,9 @@ public class APITest {
     public void testParsingException() {
         final BGPParsingException de = new BGPParsingException("Some message");
         assertEquals("Some message", de.getMessage());
+
+        final BGPParsingException de1 = new BGPParsingException("Some message", new IllegalArgumentException("text"));
+        assertEquals("text", de1.getCause().getMessage());
     }
 
     @Test
@@ -48,15 +51,10 @@ public class APITest {
     }
 
     @Test
-    public void testTerminationReason() {
-        assertEquals(BGPError.BAD_PEER_AS.toString(), new BGPTerminationReason(BGPError.BAD_PEER_AS).getErrorMessage());
-    }
-
-    @Test
     public void testAsNumberUtil() {
         final List<BgpParameters> params = new ArrayList<>();
-        params.add(new BgpParametersBuilder().setCParameters(
-                new As4BytesCaseBuilder().setAs4BytesCapability(new As4BytesCapabilityBuilder().setAsNumber(new AsNumber(35L)).build()).build()).build());
+        params.add(new BgpParametersBuilder().setCParameters(new MultiprotocolCaseBuilder().setMultiprotocolCapability(null).build()).build());
+        params.add(new BgpParametersBuilder().setCParameters(new As4BytesCaseBuilder().setAs4BytesCapability(new As4BytesCapabilityBuilder().setAsNumber(new AsNumber(35L)).build()).build()).build());
         final Open open1 = new OpenBuilder().setBgpParameters(params).build();
         assertEquals(35L, AsNumberUtil.advertizedAsNumber(open1).getValue().longValue());
 

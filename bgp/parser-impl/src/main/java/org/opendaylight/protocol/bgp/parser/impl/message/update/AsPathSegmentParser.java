@@ -10,11 +10,10 @@ package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
 import static org.opendaylight.protocol.bgp.parser.impl.message.update.AsPathSegmentParser.SegmentType.AS_SEQUENCE;
 import static org.opendaylight.protocol.bgp.parser.impl.message.update.AsPathSegmentParser.SegmentType.AS_SET;
-import io.netty.buffer.ByteBuf;
 
+import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.opendaylight.protocol.util.ReferenceCache;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.as.path.segment.c.segment.AListCase;
@@ -92,7 +91,7 @@ public final class AsPathSegmentParser {
         byteAggregator.writeByte(serializeType(AS_SET));
         byteAggregator.writeByte(aset.getAsSet().size());
         for (AsNumber asNumber : aset.getAsSet()) {
-            byteAggregator.writeShort(asNumber.getValue().shortValue());
+            byteAggregator.writeInt(asNumber.getValue().intValue());
         }
     }
 
@@ -104,7 +103,7 @@ public final class AsPathSegmentParser {
         byteAggregator.writeByte(serializeType(AS_SEQUENCE));
         byteAggregator.writeByte(alist.getAsSequence().size());
         for (AsSequence value : alist.getAsSequence()) {
-            byteAggregator.writeShort(value.getAs().getValue().shortValue());
+            byteAggregator.writeInt(value.getAs().getValue().intValue());
         }
     }
 }

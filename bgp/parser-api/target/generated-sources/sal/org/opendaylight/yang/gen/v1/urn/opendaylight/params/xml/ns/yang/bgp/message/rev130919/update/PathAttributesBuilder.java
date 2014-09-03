@@ -10,35 +10,31 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.AtomicAggregate;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.AsPath;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Communities;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.ClusterIdentifier;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ClusterId;
 import org.opendaylight.yangtools.yang.binding.DataObject;
-import java.util.List;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.OriginatorId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.next.hop.CNextHop;
+import java.util.List;
 import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4271#section-5">http://tools.ietf.org/html/rfc4271#section-5</a>
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)update/update/path-attributes]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes
  */
 public class PathAttributesBuilder {
 
-    private Origin _origin;
-    private AsPath _asPath;
-    private MultiExitDisc _multiExitDisc;
-    private LocalPref _localPref;
-    private AtomicAggregate _atomicAggregate;
     private Aggregator _aggregator;
+    private AsPath _asPath;
+    private AtomicAggregate _atomicAggregate;
+    private CNextHop _cNextHop;
+    private ClusterId _clusterId;
     private List<Communities> _communities;
     private List<ExtendedCommunities> _extendedCommunities;
-    private Ipv4Address _originatorId;
-    private List<ClusterIdentifier> _clusterId;
-    private CNextHop _cNextHop;
+    private LocalPref _localPref;
+    private MultiExitDisc _multiExitDisc;
+    private Origin _origin;
+    private OriginatorId _originatorId;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes>> augmentation = new HashMap<>();
 
@@ -64,17 +60,17 @@ public class PathAttributesBuilder {
     }
 
     public PathAttributesBuilder(PathAttributes base) {
-        this._origin = base.getOrigin();
-        this._asPath = base.getAsPath();
-        this._multiExitDisc = base.getMultiExitDisc();
-        this._localPref = base.getLocalPref();
-        this._atomicAggregate = base.getAtomicAggregate();
         this._aggregator = base.getAggregator();
+        this._asPath = base.getAsPath();
+        this._atomicAggregate = base.getAtomicAggregate();
+        this._cNextHop = base.getCNextHop();
+        this._clusterId = base.getClusterId();
         this._communities = base.getCommunities();
         this._extendedCommunities = base.getExtendedCommunities();
+        this._localPref = base.getLocalPref();
+        this._multiExitDisc = base.getMultiExitDisc();
+        this._origin = base.getOrigin();
         this._originatorId = base.getOriginatorId();
-        this._clusterId = base.getClusterId();
-        this._cNextHop = base.getCNextHop();
         if (base instanceof PathAttributesImpl) {
             PathAttributesImpl _impl = (PathAttributesImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -118,28 +114,24 @@ public class PathAttributesBuilder {
         }
     }
 
-    public Origin getOrigin() {
-        return _origin;
+    public Aggregator getAggregator() {
+        return _aggregator;
     }
     
     public AsPath getAsPath() {
         return _asPath;
     }
     
-    public MultiExitDisc getMultiExitDisc() {
-        return _multiExitDisc;
-    }
-    
-    public LocalPref getLocalPref() {
-        return _localPref;
-    }
-    
     public AtomicAggregate getAtomicAggregate() {
         return _atomicAggregate;
     }
     
-    public Aggregator getAggregator() {
-        return _aggregator;
+    public CNextHop getCNextHop() {
+        return _cNextHop;
+    }
+    
+    public ClusterId getClusterId() {
+        return _clusterId;
     }
     
     public List<Communities> getCommunities() {
@@ -150,16 +142,20 @@ public class PathAttributesBuilder {
         return _extendedCommunities;
     }
     
-    public Ipv4Address getOriginatorId() {
+    public LocalPref getLocalPref() {
+        return _localPref;
+    }
+    
+    public MultiExitDisc getMultiExitDisc() {
+        return _multiExitDisc;
+    }
+    
+    public Origin getOrigin() {
+        return _origin;
+    }
+    
+    public OriginatorId getOriginatorId() {
         return _originatorId;
-    }
-    
-    public List<ClusterIdentifier> getClusterId() {
-        return _clusterId;
-    }
-    
-    public CNextHop getCNextHop() {
-        return _cNextHop;
     }
     
     @SuppressWarnings("unchecked")
@@ -170,8 +166,8 @@ public class PathAttributesBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
-    public PathAttributesBuilder setOrigin(Origin value) {
-        this._origin = value;
+    public PathAttributesBuilder setAggregator(Aggregator value) {
+        this._aggregator = value;
         return this;
     }
     
@@ -180,23 +176,18 @@ public class PathAttributesBuilder {
         return this;
     }
     
-    public PathAttributesBuilder setMultiExitDisc(MultiExitDisc value) {
-        this._multiExitDisc = value;
-        return this;
-    }
-    
-    public PathAttributesBuilder setLocalPref(LocalPref value) {
-        this._localPref = value;
-        return this;
-    }
-    
     public PathAttributesBuilder setAtomicAggregate(AtomicAggregate value) {
         this._atomicAggregate = value;
         return this;
     }
     
-    public PathAttributesBuilder setAggregator(Aggregator value) {
-        this._aggregator = value;
+    public PathAttributesBuilder setCNextHop(CNextHop value) {
+        this._cNextHop = value;
+        return this;
+    }
+    
+    public PathAttributesBuilder setClusterId(ClusterId value) {
+        this._clusterId = value;
         return this;
     }
     
@@ -210,18 +201,23 @@ public class PathAttributesBuilder {
         return this;
     }
     
-    public PathAttributesBuilder setOriginatorId(Ipv4Address value) {
+    public PathAttributesBuilder setLocalPref(LocalPref value) {
+        this._localPref = value;
+        return this;
+    }
+    
+    public PathAttributesBuilder setMultiExitDisc(MultiExitDisc value) {
+        this._multiExitDisc = value;
+        return this;
+    }
+    
+    public PathAttributesBuilder setOrigin(Origin value) {
+        this._origin = value;
+        return this;
+    }
+    
+    public PathAttributesBuilder setOriginatorId(OriginatorId value) {
         this._originatorId = value;
-        return this;
-    }
-    
-    public PathAttributesBuilder setClusterId(List<ClusterIdentifier> value) {
-        this._clusterId = value;
-        return this;
-    }
-    
-    public PathAttributesBuilder setCNextHop(CNextHop value) {
-        this._cNextHop = value;
         return this;
     }
     
@@ -240,32 +236,32 @@ public class PathAttributesBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes.class;
         }
 
-        private final Origin _origin;
-        private final AsPath _asPath;
-        private final MultiExitDisc _multiExitDisc;
-        private final LocalPref _localPref;
-        private final AtomicAggregate _atomicAggregate;
         private final Aggregator _aggregator;
+        private final AsPath _asPath;
+        private final AtomicAggregate _atomicAggregate;
+        private final CNextHop _cNextHop;
+        private final ClusterId _clusterId;
         private final List<Communities> _communities;
         private final List<ExtendedCommunities> _extendedCommunities;
-        private final Ipv4Address _originatorId;
-        private final List<ClusterIdentifier> _clusterId;
-        private final CNextHop _cNextHop;
+        private final LocalPref _localPref;
+        private final MultiExitDisc _multiExitDisc;
+        private final Origin _origin;
+        private final OriginatorId _originatorId;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes>> augmentation = new HashMap<>();
 
         private PathAttributesImpl(PathAttributesBuilder base) {
-            this._origin = base.getOrigin();
-            this._asPath = base.getAsPath();
-            this._multiExitDisc = base.getMultiExitDisc();
-            this._localPref = base.getLocalPref();
-            this._atomicAggregate = base.getAtomicAggregate();
             this._aggregator = base.getAggregator();
+            this._asPath = base.getAsPath();
+            this._atomicAggregate = base.getAtomicAggregate();
+            this._cNextHop = base.getCNextHop();
+            this._clusterId = base.getClusterId();
             this._communities = base.getCommunities();
             this._extendedCommunities = base.getExtendedCommunities();
+            this._localPref = base.getLocalPref();
+            this._multiExitDisc = base.getMultiExitDisc();
+            this._origin = base.getOrigin();
             this._originatorId = base.getOriginatorId();
-            this._clusterId = base.getClusterId();
-            this._cNextHop = base.getCNextHop();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -280,8 +276,8 @@ public class PathAttributesBuilder {
         }
 
         @Override
-        public Origin getOrigin() {
-            return _origin;
+        public Aggregator getAggregator() {
+            return _aggregator;
         }
         
         @Override
@@ -290,23 +286,18 @@ public class PathAttributesBuilder {
         }
         
         @Override
-        public MultiExitDisc getMultiExitDisc() {
-            return _multiExitDisc;
-        }
-        
-        @Override
-        public LocalPref getLocalPref() {
-            return _localPref;
-        }
-        
-        @Override
         public AtomicAggregate getAtomicAggregate() {
             return _atomicAggregate;
         }
         
         @Override
-        public Aggregator getAggregator() {
-            return _aggregator;
+        public CNextHop getCNextHop() {
+            return _cNextHop;
+        }
+        
+        @Override
+        public ClusterId getClusterId() {
+            return _clusterId;
         }
         
         @Override
@@ -320,18 +311,23 @@ public class PathAttributesBuilder {
         }
         
         @Override
-        public Ipv4Address getOriginatorId() {
+        public LocalPref getLocalPref() {
+            return _localPref;
+        }
+        
+        @Override
+        public MultiExitDisc getMultiExitDisc() {
+            return _multiExitDisc;
+        }
+        
+        @Override
+        public Origin getOrigin() {
+            return _origin;
+        }
+        
+        @Override
+        public OriginatorId getOriginatorId() {
             return _originatorId;
-        }
-        
-        @Override
-        public List<ClusterIdentifier> getClusterId() {
-            return _clusterId;
-        }
-        
-        @Override
-        public CNextHop getCNextHop() {
-            return _cNextHop;
         }
         
         @SuppressWarnings("unchecked")
@@ -347,17 +343,17 @@ public class PathAttributesBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_origin == null) ? 0 : _origin.hashCode());
-            result = prime * result + ((_asPath == null) ? 0 : _asPath.hashCode());
-            result = prime * result + ((_multiExitDisc == null) ? 0 : _multiExitDisc.hashCode());
-            result = prime * result + ((_localPref == null) ? 0 : _localPref.hashCode());
-            result = prime * result + ((_atomicAggregate == null) ? 0 : _atomicAggregate.hashCode());
             result = prime * result + ((_aggregator == null) ? 0 : _aggregator.hashCode());
+            result = prime * result + ((_asPath == null) ? 0 : _asPath.hashCode());
+            result = prime * result + ((_atomicAggregate == null) ? 0 : _atomicAggregate.hashCode());
+            result = prime * result + ((_cNextHop == null) ? 0 : _cNextHop.hashCode());
+            result = prime * result + ((_clusterId == null) ? 0 : _clusterId.hashCode());
             result = prime * result + ((_communities == null) ? 0 : _communities.hashCode());
             result = prime * result + ((_extendedCommunities == null) ? 0 : _extendedCommunities.hashCode());
+            result = prime * result + ((_localPref == null) ? 0 : _localPref.hashCode());
+            result = prime * result + ((_multiExitDisc == null) ? 0 : _multiExitDisc.hashCode());
+            result = prime * result + ((_origin == null) ? 0 : _origin.hashCode());
             result = prime * result + ((_originatorId == null) ? 0 : _originatorId.hashCode());
-            result = prime * result + ((_clusterId == null) ? 0 : _clusterId.hashCode());
-            result = prime * result + ((_cNextHop == null) ? 0 : _cNextHop.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -367,96 +363,111 @@ public class PathAttributesBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            PathAttributesImpl other = (PathAttributesImpl) obj;
-            if (_origin == null) {
-                if (other._origin != null) {
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes)obj;
+            if (_aggregator == null) {
+                if (other.getAggregator() != null) {
                     return false;
                 }
-            } else if(!_origin.equals(other._origin)) {
+            } else if(!_aggregator.equals(other.getAggregator())) {
                 return false;
             }
             if (_asPath == null) {
-                if (other._asPath != null) {
+                if (other.getAsPath() != null) {
                     return false;
                 }
-            } else if(!_asPath.equals(other._asPath)) {
-                return false;
-            }
-            if (_multiExitDisc == null) {
-                if (other._multiExitDisc != null) {
-                    return false;
-                }
-            } else if(!_multiExitDisc.equals(other._multiExitDisc)) {
-                return false;
-            }
-            if (_localPref == null) {
-                if (other._localPref != null) {
-                    return false;
-                }
-            } else if(!_localPref.equals(other._localPref)) {
+            } else if(!_asPath.equals(other.getAsPath())) {
                 return false;
             }
             if (_atomicAggregate == null) {
-                if (other._atomicAggregate != null) {
+                if (other.getAtomicAggregate() != null) {
                     return false;
                 }
-            } else if(!_atomicAggregate.equals(other._atomicAggregate)) {
-                return false;
-            }
-            if (_aggregator == null) {
-                if (other._aggregator != null) {
-                    return false;
-                }
-            } else if(!_aggregator.equals(other._aggregator)) {
-                return false;
-            }
-            if (_communities == null) {
-                if (other._communities != null) {
-                    return false;
-                }
-            } else if(!_communities.equals(other._communities)) {
-                return false;
-            }
-            if (_extendedCommunities == null) {
-                if (other._extendedCommunities != null) {
-                    return false;
-                }
-            } else if(!_extendedCommunities.equals(other._extendedCommunities)) {
-                return false;
-            }
-            if (_originatorId == null) {
-                if (other._originatorId != null) {
-                    return false;
-                }
-            } else if(!_originatorId.equals(other._originatorId)) {
-                return false;
-            }
-            if (_clusterId == null) {
-                if (other._clusterId != null) {
-                    return false;
-                }
-            } else if(!_clusterId.equals(other._clusterId)) {
+            } else if(!_atomicAggregate.equals(other.getAtomicAggregate())) {
                 return false;
             }
             if (_cNextHop == null) {
-                if (other._cNextHop != null) {
+                if (other.getCNextHop() != null) {
                     return false;
                 }
-            } else if(!_cNextHop.equals(other._cNextHop)) {
+            } else if(!_cNextHop.equals(other.getCNextHop())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_clusterId == null) {
+                if (other.getClusterId() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_clusterId.equals(other.getClusterId())) {
                 return false;
+            }
+            if (_communities == null) {
+                if (other.getCommunities() != null) {
+                    return false;
+                }
+            } else if(!_communities.equals(other.getCommunities())) {
+                return false;
+            }
+            if (_extendedCommunities == null) {
+                if (other.getExtendedCommunities() != null) {
+                    return false;
+                }
+            } else if(!_extendedCommunities.equals(other.getExtendedCommunities())) {
+                return false;
+            }
+            if (_localPref == null) {
+                if (other.getLocalPref() != null) {
+                    return false;
+                }
+            } else if(!_localPref.equals(other.getLocalPref())) {
+                return false;
+            }
+            if (_multiExitDisc == null) {
+                if (other.getMultiExitDisc() != null) {
+                    return false;
+                }
+            } else if(!_multiExitDisc.equals(other.getMultiExitDisc())) {
+                return false;
+            }
+            if (_origin == null) {
+                if (other.getOrigin() != null) {
+                    return false;
+                }
+            } else if(!_origin.equals(other.getOrigin())) {
+                return false;
+            }
+            if (_originatorId == null) {
+                if (other.getOriginatorId() != null) {
+                    return false;
+                }
+            } else if(!_originatorId.equals(other.getOriginatorId())) {
+                return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                PathAttributesImpl otherImpl = (PathAttributesImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -466,14 +477,14 @@ public class PathAttributesBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("PathAttributes [");
             boolean first = true;
         
-            if (_origin != null) {
+            if (_aggregator != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_origin=");
-                builder.append(_origin);
+                builder.append("_aggregator=");
+                builder.append(_aggregator);
              }
             if (_asPath != null) {
                 if (first) {
@@ -484,24 +495,6 @@ public class PathAttributesBuilder {
                 builder.append("_asPath=");
                 builder.append(_asPath);
              }
-            if (_multiExitDisc != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_multiExitDisc=");
-                builder.append(_multiExitDisc);
-             }
-            if (_localPref != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_localPref=");
-                builder.append(_localPref);
-             }
             if (_atomicAggregate != null) {
                 if (first) {
                     first = false;
@@ -511,14 +504,23 @@ public class PathAttributesBuilder {
                 builder.append("_atomicAggregate=");
                 builder.append(_atomicAggregate);
              }
-            if (_aggregator != null) {
+            if (_cNextHop != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_aggregator=");
-                builder.append(_aggregator);
+                builder.append("_cNextHop=");
+                builder.append(_cNextHop);
+             }
+            if (_clusterId != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_clusterId=");
+                builder.append(_clusterId);
              }
             if (_communities != null) {
                 if (first) {
@@ -538,6 +540,33 @@ public class PathAttributesBuilder {
                 builder.append("_extendedCommunities=");
                 builder.append(_extendedCommunities);
              }
+            if (_localPref != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_localPref=");
+                builder.append(_localPref);
+             }
+            if (_multiExitDisc != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_multiExitDisc=");
+                builder.append(_multiExitDisc);
+             }
+            if (_origin != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_origin=");
+                builder.append(_origin);
+             }
             if (_originatorId != null) {
                 if (first) {
                     first = false;
@@ -546,24 +575,6 @@ public class PathAttributesBuilder {
                 }
                 builder.append("_originatorId=");
                 builder.append(_originatorId);
-             }
-            if (_clusterId != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_clusterId=");
-                builder.append(_clusterId);
-             }
-            if (_cNextHop != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_cNextHop=");
-                builder.append(_cNextHop);
              }
             if (first) {
                 first = false;

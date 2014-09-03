@@ -7,12 +7,19 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4271#section-5.1.1">http://tools.ietf.org/html/rfc4271#section-5.1.1</a>
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)path-attributes/path-attributes/origin]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-message</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-message.yang</i>):
+ * <pre>
+ * container origin {
+ *     leaf value {
+ *         type bgp-origin;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-message/path-attributes/origin</i>
+ * <p>To create instances of this class use {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.OriginBuilder}.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.OriginBuilder
  */
 public interface Origin
     extends

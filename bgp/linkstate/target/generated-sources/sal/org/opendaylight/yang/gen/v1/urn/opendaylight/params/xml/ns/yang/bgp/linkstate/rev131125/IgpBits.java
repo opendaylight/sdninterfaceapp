@@ -4,12 +4,17 @@ import org.opendaylight.yangtools.yang.binding.DataObject;
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.3.1">http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.3.1</a>
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)igp-bits/igp-bits]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping igp-bits {
+ *     leaf up-down {
+ *         type bits;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/igp-bits</i>
  */
 public interface IgpBits
     extends
@@ -17,23 +22,16 @@ public interface IgpBits
 {
 
     /**
-     * The bits built-in type represents a bit set. That is, a bits value is a set of 
-     * flags identified by small integer position numbers starting at 0. Each bit 
-     * number has an assigned name.
-     * Reference:
-     *     https://tools.ietf.org/html/rfc6020#section-9.7
-     * Module name:
-     *     bgp-linkstate
-     * Schema path:
-     *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)igp-bits/igp-bits/up-down/(urn:ietf:params:xml:ns:yang:1)bits]
+     * The bits built-in type represents a bit set.  That is, a bits value is a set of flags identified by small integer position numbers starting at 0.  Each bit number has an assigned name.
      */
     public static final class UpDown
      {
         final private java.lang.Boolean _upDown;
-    
+        
         public UpDown(java.lang.Boolean _upDown) {
             this._upDown = _upDown;
         }
+        
         /**
          * Creates a copy from Source Object.
          *
@@ -42,7 +40,7 @@ public interface IgpBits
         public UpDown(UpDown source) {
             this._upDown = source._upDown;
         }
-        
+    
     
         public java.lang.Boolean isUpDown() {
             return _upDown;
@@ -80,7 +78,7 @@ public interface IgpBits
     
         @Override
         public java.lang.String toString() {
-            java.lang.StringBuilder builder = new java.lang.StringBuilder("UpDown [");
+            java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.IgpBits.UpDown.class.getSimpleName()).append(" [");
             boolean first = true;
         
             if (_upDown != null) {

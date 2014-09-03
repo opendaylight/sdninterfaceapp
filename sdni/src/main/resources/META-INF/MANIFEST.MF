@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1402035675214
-Build-Jdk: 1.7.0_55
+Bnd-LastModified: 1409548953038
+Build-Jdk: 1.7.0_65
 Built-By: root
 Bundle-ManifestVersion: 2
-Bundle-Name: sdni.northbound
-Bundle-SymbolicName: org.opendaylight.controller.sdni.northbound
-Bundle-Version: 0.4.2.SNAPSHOT
+Bundle-Name: sdni
+Bundle-SymbolicName: org.opendaylight.sdninterfaceapp.sdni
+Bundle-Version: 0.5.2.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Export-Package: org.opendaylight.controller.sdnimanager.northbound;versi
  on="0.4.2.SNAPSHOT";uses:="javax.ws.rs,javax.ws.rs.core,org.opendayligh
@@ -21,9 +21,9 @@ Import-Package: org.opendaylight.controller.sal.utils;version="[0.8,1)",
  thorization;version="[0.8,1)",javax.ws.rs;version="[1.1,2)",javax.ws.rs
  .core;version="[1.1,2)",org.slf4j;version="[1.7,2)",org.opendaylight.co
  ntroller.sdniaggregator;version="[0.5,1)",org.opendaylight.controller.s
- al.core;version="[0.8,1)",com.sun.jersey.spi.container.servlet,org.apac
- he.commons.logging,org.opendaylight.controller.hosttracker.hostAware;ve
- rsion="[0.5,1)",org.opendaylight.controller.usermanager;version="[0.4,1
+ al.core;version="[0.8,1)",org.apache.commons.logging,com.sun.jersey.spi
+ .container.servlet,org.opendaylight.controller.usermanager;version="[0.
+ 4,1)",org.opendaylight.controller.hosttracker.hostAware;version="[0.5,1
  )"
 Jaxrs-Resources: ,org.opendaylight.controller.sdnimanager.northbound.Sdn
  iNorthbound

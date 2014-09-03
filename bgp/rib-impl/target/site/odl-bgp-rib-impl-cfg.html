@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>odl-bgp-rib-impl-cfg</title>
+  </head>
+  <body>
+    <h1>odl-bgp-rib-impl-cfg</h1>
+    
+    <h2>Base Information</h2>
+    <table>
+        <tr>
+            <td><strong>prefix</strong></td>
+            <td>bgprib-impl</td>
+        </tr>
+        <tr>
+            <td><strong>namespace</strong></td>
+            <td>urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl</td>
+        </tr>
+        <tr>
+            <td><strong>revision</strong></td>
+            <td>2013-04-09</td>
+        </tr>
+        <tr>
+            <td><strong>description</strong></td>
+            <td>This module contains the base YANG definitions for
+                     BGP listener implementation.
+            
+                    Copyright (c)2013 Cisco Systems, Inc. All rights reserved.;
+            
+                    This program and the accompanying materials are made available
+                    under the terms of the Eclipse Public License v1.0 which
+                    accompanies this distribution, and is available at
+                    http://www.eclipse.org/legal/epl-v10.html</td>
+        </tr>
+        <tr>
+            <td><strong>yang-version</strong></td>
+            <td>1</td>
+        </tr>
+        <tr>
+    <td><strong>imports</strong></td><td>        pf:protocol-framework 2014-03-13;
+            bgpspi:odl-bgp-parser-spi-cfg 2013-11-15;
+            rib:bgp-rib 2013-09-25;
+            tcpmd5:odl-tcpmd5-cfg 2014-04-27;
+            ribspi:odl-bgp-rib-spi-cfg 2013-11-15;
+            netty:netty 2013-11-19;
+            inet:ietf-inet-types 2010-09-24;
+            bgp-t:bgp-types 2013-09-19;
+            mdsb:opendaylight-md-sal-binding 2013-10-28;
+            bgp-mp:bgp-multiprotocol 2013-09-19;
+            config:config 2013-04-05;
+            tcpmd5n:odl-tcpmd5-netty-cfg 2014-04-27;
+            bgprib:odl-bgp-rib-cfg 2013-07-01;
+    </td>    </tr>
+    </table>
+    
+    <h3>Identities Summary</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#base-bgp-parser"><strong>base-bgp-parser</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#base-bgp-rib"><strong>base-bgp-rib</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-application-peer"><strong>bgp-application-peer</strong></a>
+            </td>
+            <td>
+            Application peer handler which handles translation from custom RIB into local RIB
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-dispatcher"><strong>bgp-dispatcher</strong></a>
+            </td>
+            <td>
+            Service representing a BGP Dispatcher.
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-dispatcher-impl"><strong>bgp-dispatcher-impl</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-peer"><strong>bgp-peer</strong></a>
+            </td>
+            <td>
+            BGP peer instance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-peer-acceptor"><strong>bgp-peer-acceptor</strong></a>
+            </td>
+            <td>
+            BGP peer acceptor that handles incomming bgp connections. Uses BGP peer registry to accept or decline incomming connections
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-peer-registry"><strong>bgp-peer-registry</strong></a>
+            </td>
+            <td>
+            Registry of BGP peers. Every new BGP in/out connection looks for peers to handle bgp messages in this registry
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-table-type"><strong>bgp-table-type</strong></a>
+            </td>
+            <td>
+            Service representing a AFI/SAFI pair
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#bgp-table-type-impl"><strong>bgp-table-type-impl</strong></a>
+            </td>
+            <td>
+            Simple provider for bgp-table-type.
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#rib-impl"><strong>rib-impl</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#rib-instance"><strong>rib-instance</strong></a>
+            </td>
+            <td>
+            Service representing a RIB instance
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#strict-bgp-peer-registry"><strong>strict-bgp-peer-registry</strong></a>
+            </td>
+            <td>
+            Registry of BGP peers that allows only one connection per 2 peers. Uses IP address for Peer identification and BGP Ids to resolve duplicate connections
+            </td>
+        </tr>
+    </table>
+    <h3>Augmentations Summary</h3>
+    <table>
+        <tr>
+            <th>Target</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)base-bgp-parser"><strong>/config:modules/config:module/config:configuration/(case)base-bgp-parser</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)bgp-dispatcher-impl"><strong>/config:modules/config:module/config:configuration/(case)bgp-dispatcher-impl</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)base-bgp-rib"><strong>/config:modules/config:module/config:configuration/(case)base-bgp-rib</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)strict-bgp-peer-registry"><strong>/config:modules/config:module/config:configuration/(case)strict-bgp-peer-registry</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)bgp-peer-acceptor"><strong>/config:modules/config:module/config:configuration/(case)bgp-peer-acceptor</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)bgp-application-peer"><strong>/config:modules/config:module/config:configuration/(case)bgp-application-peer</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)bgp-table-type-impl"><strong>/config:modules/config:module/config:configuration/(case)bgp-table-type-impl</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)bgp-peer"><strong>/config:modules/config:module/config:configuration/(case)bgp-peer</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <a href="#/config:modules/config:module/config:configuration/(case)rib-impl"><strong>/config:modules/config:module/config:configuration/(case)rib-impl</strong></a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    
+    
+    <h2>Identities</h2>
+    <ul>
+    <li>
+        <h3 id="base-bgp-parser">base-bgp-parser</h3>
+        <ul>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="base-bgp-rib">base-bgp-rib</h3>
+        <ul>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-application-peer">bgp-application-peer</h3>
+        <ul>
+        <li>
+            Description: Application peer handler which handles translation from custom RIB into local RIB
+        </li>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-dispatcher">bgp-dispatcher</h3>
+        <ul>
+        <li>
+            Description: Service representing a BGP Dispatcher.
+        </li>
+        <li>
+            base: service-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-dispatcher-impl">bgp-dispatcher-impl</h3>
+        <ul>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-peer">bgp-peer</h3>
+        <ul>
+        <li>
+            Description: BGP peer instance.
+        </li>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-peer-acceptor">bgp-peer-acceptor</h3>
+        <ul>
+        <li>
+            Description: BGP peer acceptor that handles incomming bgp connections. Uses BGP peer registry to accept or decline incomming connections
+        </li>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-peer-registry">bgp-peer-registry</h3>
+        <ul>
+        <li>
+            Description: Registry of BGP peers. Every new BGP in/out connection looks for peers to handle bgp messages in this registry
+        </li>
+        <li>
+            base: service-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-table-type">bgp-table-type</h3>
+        <ul>
+        <li>
+            Description: Service representing a AFI/SAFI pair
+        </li>
+        <li>
+            base: service-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="bgp-table-type-impl">bgp-table-type-impl</h3>
+        <ul>
+        <li>
+            Description: Simple provider for bgp-table-type.
+        </li>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="rib-impl">rib-impl</h3>
+        <ul>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="rib-instance">rib-instance</h3>
+        <ul>
+        <li>
+            Description: Service representing a RIB instance
+        </li>
+        <li>
+            base: service-type
+        </li>
+        </ul>
+    </li>
+    <li>
+        <h3 id="strict-bgp-peer-registry">strict-bgp-peer-registry</h3>
+        <ul>
+        <li>
+            Description: Registry of BGP peers that allows only one connection per 2 peers. Uses IP address for Peer identification and BGP Ids to resolve duplicate connections
+        </li>
+        <li>
+            base: module-type
+        </li>
+        </ul>
+    </li>
+    </ul>
+    
+    
+    
+    
+    
+    <h2>Augmentations</h2>
+    
+    <ul>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)base-bgp-parser">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)base-bgp-parser]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/base-bgp-parser">
+            case: base-bgp-parser
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'base-bgp-parser'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)bgp-dispatcher-impl">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)bgp-dispatcher-impl]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-dispatcher-impl">
+            case: bgp-dispatcher-impl
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'bgp-dispatcher-impl'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-dispatcher-impl/bgp-extensions">
+            container: bgp-extensions
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-dispatcher-impl/boss-group">
+            container: boss-group
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-dispatcher-impl/worker-group">
+            container: worker-group
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-dispatcher-impl/md5-channel-factory">
+            container: md5-channel-factory
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-dispatcher-impl/md5-server-channel-factory">
+            container: md5-server-channel-factory
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)base-bgp-rib">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)base-bgp-rib]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/base-bgp-rib">
+            case: base-bgp-rib
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'base-bgp-rib'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)strict-bgp-peer-registry">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)strict-bgp-peer-registry]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/strict-bgp-peer-registry">
+            case: strict-bgp-peer-registry
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'strict-bgp-peer-registry'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)bgp-peer-acceptor">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)bgp-peer-acceptor]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer-acceptor">
+            case: bgp-peer-acceptor
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'bgp-peer-acceptor'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: binding-address
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: IP address to bind to
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ip-address
+        </li>
+        <li>
+            default: 0.0.0.0
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: binding-port
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Port to bind to
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)port-number
+        </li>
+        <li>
+            default: 179
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer-acceptor/accepting-bgp-dispatcher">
+            container: accepting-bgp-dispatcher
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer-acceptor/accepting-peer-registry">
+            container: accepting-peer-registry
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)bgp-application-peer">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)bgp-application-peer]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-application-peer">
+            case: bgp-application-peer
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'bgp-application-peer'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-application-peer/data-broker">
+            container: data-broker
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-application-peer/target-rib">
+            container: target-rib
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: application-rib-id
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-rib)application-rib-id
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: bgp-id
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)bgp-table-type-impl">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)bgp-table-type-impl]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-table-type-impl">
+            case: bgp-table-type-impl
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'bgp-table-type-impl'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: afi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: safi
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)identityref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)bgp-peer">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)bgp-peer]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer">
+            case: bgp-peer
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'bgp-peer'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: host
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Remote host IP address
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ip-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: port
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Remote host port
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)port-number
+        </li>
+        <li>
+            default: 179
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: holdtimer
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)int16
+        </li>
+        <li>
+            default: 180
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: initiate-connection
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: If true, connection will be initiated right away from current device.
+                                If not, the peer will only be registered to peer registry and available for incomming bgp connections.
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)boolean
+        </li>
+        <li>
+            default: true
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer/advertized-table">
+            list: advertized-table
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: remote-as
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Expected remote AS number. If not present, it is assumed
+                                to be the same as our local AS number.
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)uint32
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: password
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: RFC2385 shared secret
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:tcpmd5:cfg)rfc2385-key
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer/rib">
+            container: rib
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/bgp-peer/peer-registry">
+            container: peer-registry
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: BGP peer registry where current instance of BGP peer will be registered.
+        </li>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    <li>
+        <h3 id="/config:modules/config:module/config:configuration/(case)rib-impl">
+        Target [(urn:opendaylight:params:xml:ns:yang:controller:config)/config:modules/config:module/config:configuration/(case)rib-impl]</h3>
+            Status: <strong>CURRENT</strong>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl">
+            case: rib-impl
+        </li>
+        </strong>
+        <ul>
+        <li>
+            when condition: /config:modules/config:module/config:type = 'rib-impl'
+        </li>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl/extensions">
+            container: extensions
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl/bgp-dispatcher">
+            container: bgp-dispatcher
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl/session-reconnect-strategy">
+            container: session-reconnect-strategy
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl/tcp-reconnect-strategy">
+            container: tcp-reconnect-strategy
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl/data-provider">
+            container: data-provider
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: local-as
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Our local AS number. Needed by best selection path attribute.
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)uint32
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: bgp-id
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Our local BGP identifier. Needed by best selection path attribute.
+        </li>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:ietf-inet-types)ipv4-address
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong>
+        <li id="modules/module/configuration/rib-impl/local-table">
+            list: local-table
+        </li>
+        </strong>
+        <ul>
+        </ul>
+        <ul>
+        <strong><li>
+            uses: (urn:opendaylight:params:xml:ns:yang:controller:config)service-ref
+        </li>
+        </strong>
+        <ul>
+        <li>refines:
+            <ul>
+            <li>
+                node name: type
+            </li>
+            </ul>
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <ul>
+        <ul>
+        <strong><li>
+            leaf: type
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Type of the service being referenced. Users of this grouping
+                             should refine this leaf with required-identity pointing to
+                             the actual service-type which is actually required.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:controller:config)service-type-ref
+        </li>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: name
+        </li>
+        </strong>
+        <ul>
+        <li>
+            type: (urn:ietf:params:xml:ns:yang:1)leafref
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        <ul>
+        <strong><li>
+            leaf: rib-id
+        </li>
+        </strong>
+        <ul>
+        <li>
+            description: Identifier of this RIB in local data store.
+        </li>
+        <li>
+            type: (urn:opendaylight:params:xml:ns:yang:bgp-rib)rib-id
+        </li>
+        </ul>
+        </ul>
+        </ul>
+        </ul>
+        
+        <h3>Example</h3>
+        <pre>
+        </pre>
+    </li>
+    </ul>
+    
+    
+    
+    
+  </body>
+</html>

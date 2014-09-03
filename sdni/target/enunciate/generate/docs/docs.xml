@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api-docs title="SDNi REST API">
+  <data>
+    <schema namespace="" namespaceId="ns0" file="ns0.xsd">
+      <types>
+        <type name="networkCapabilities" id="org.opendaylight.controller.sdniaggregator.NetworkCapabilities" package="org.opendaylight.controller.sdniaggregator">
+          <facets>
+          </facets>
+          <elements>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="link">
+              <choice name="link" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="macAddressList">
+              <choice name="macAddressList" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="controller">
+              <choice name="controller" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="node">
+              <choice name="node" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="bandwidth">
+              <choice name="bandwidth" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="host">
+              <choice name="host" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="ipAddressList">
+              <choice name="ipAddressList" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="latency">
+              <choice name="latency" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+          </elements>
+        </type>
+      </types>
+      <elements>
+        <element name="networkCapabilities" type="org.opendaylight.controller.sdniaggregator.NetworkCapabilities" typeName="networkCapabilities" typeNamespace="" typeSchemaId="ns0">
+          <facets>
+          </facets>
+          <examplexml><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<networkCapabilities>
+  <link>...</link>
+  <link>...</link>
+  <!--...more "link" elements...-->
+  <macAddressList>...</macAddressList>
+  <macAddressList>...</macAddressList>
+  <!--...more "macAddressList" elements...-->
+  <controller>...</controller>
+  <controller>...</controller>
+  <!--...more "controller" elements...-->
+  <node>...</node>
+  <node>...</node>
+  <!--...more "node" elements...-->
+  <bandwidth>...</bandwidth>
+  <bandwidth>...</bandwidth>
+  <!--...more "bandwidth" elements...-->
+  <host>...</host>
+  <host>...</host>
+  <!--...more "host" elements...-->
+  <ipAddressList>...</ipAddressList>
+  <ipAddressList>...</ipAddressList>
+  <!--...more "ipAddressList" elements...-->
+  <latency>...</latency>
+  <latency>...</latency>
+  <!--...more "latency" elements...-->
+</networkCapabilities>]]></examplexml>
+        </element>
+      </elements>
+      <facets>
+      </facets>
+    </schema>
+  </data>
+  <soap>
+    <wsdls>
+    </wsdls>
+  </soap>
+  <rest baseAddress="http://localhost:8080/full" wadl="application.wadl">
+    <resources>
+      <resource name="/{containerName}/topology" subcontext="/controller/nb/v2/sdni">
+        <facets>
+          <facet>
+            <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+            <value>SdniNorthbound</value>
+            <documentation><![CDATA[The class provides Northbound SDNi REST APIs to access the nodes, node connectors
+and their properties.]]></documentation>
+          </facet>
+        </facets>
+        <additionalHeaderLabels>
+        </additionalHeaderLabels>
+        <operation name="GET">
+          <documentation>
+            <![CDATA[Retrieve the Network Capabilities information like links, bandwidth, node etc.,]]>
+          </documentation>
+          <contentType type="*/*" consumable="true" produceable="false"/>
+          <contentType type="application/xml" consumable="true" produceable="false"/>
+          <contentType type="application/json" consumable="false" produceable="true"/>
+          <parameter name="containerName" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[(no documentation provided)]]>
+          </parameter>
+          <outValue>
+            <xmlElement elementSchemaId="ns0" elementNamespace="" elementName="networkCapabilities" />
+            
+            <documentation><![CDATA[Return Links, Bandwidth, Latency, Node and its mac address, hosts and its IP address
+
+Example:
+
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/topology
+
+Response Body in XML:
+{"link":["(OF|2@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:03)",
+"(OF|3@OF|00:00:00:00:00:00:00:03->OF|2@OF|00:00:00:00:00:00:00:01)",
+"(OF|1@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:02)",
+"(OF|3@OF|00:00:00:00:00:00:00:02->OF|1@OF|00:00:00:00:00:00:00:01)"],
+"bandwidth":["10Gbps","10Gbps","10Gbps","10Gbps"],"latency":[],
+"macAddressList":["00:00:00:00:00:01","00:00:00:00:00:02","00:00:00:00:00:03"],
+"ipAddressList":["10.0.0.1","10.0.0.3"],"controller":["10.132.35.14"],
+"node":["00:00:00:00:00:00:00:01","00:00:00:00:00:00:00:02",
+"00:00:00:00:00:00:00:03"],"host":["1","1"]}]]></documentation>
+          </outValue>
+          <statusCode code="404 Not Found">
+            <condition><![CDATA[The Container Name was not found]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+        </operation>
+      </resource>
+    </resources>
+    <facets>
+      <facet>
+        <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+        <value>SdniNorthbound</value>
+        <documentation><![CDATA[The class provides Northbound SDNi REST APIs to access the nodes, node connectors
+and their properties.]]></documentation>
+      </facet>
+    </facets>
+  </rest>
+  <packages>
+    <package id="org.opendaylight.controller.sdnimanager.northbound">
+    </package>
+  </packages>
+</api-docs>

@@ -5,10 +5,20 @@ import java.math.BigInteger;
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)link-sdni-identifiers/link-sdni-identifiers]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping link-sdni-identifiers {
+ *     leaf sdni-identifier {
+ *         type string;
+ *     }
+ *     leaf sdni-parameter {
+ *         type uint64;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/link-sdni-identifiers</i>
  */
 public interface LinkSdniIdentifiers
     extends

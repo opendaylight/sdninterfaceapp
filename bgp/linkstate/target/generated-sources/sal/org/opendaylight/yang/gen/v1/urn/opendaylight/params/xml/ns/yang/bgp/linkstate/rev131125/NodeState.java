@@ -10,12 +10,32 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Reference:
- *     <a href = "http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.1">http://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.1</a>
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)node-state/node-state]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping node-state {
+ *     leaf-list topology-identifier {
+ *         type topology-identifier;
+ *     }
+ *     leaf node-flags {
+ *         type node-flag-bits;
+ *     }
+ *     leaf-list isis-area-id {
+ *         type isis-area-identifier;
+ *     }
+ *     leaf dynamic-hostname {
+ *         type string;
+ *     }
+ *     leaf ipv4-router-id {
+ *         type ipv4-router-identifier;
+ *     }
+ *     leaf ipv6-router-id {
+ *         type ipv6-router-identifier;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/node-state</i>
  */
 public interface NodeState
     extends

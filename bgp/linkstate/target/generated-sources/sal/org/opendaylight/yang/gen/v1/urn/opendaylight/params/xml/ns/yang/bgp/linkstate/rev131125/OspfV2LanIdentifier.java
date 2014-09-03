@@ -6,12 +6,20 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Reference:
- *     https://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.2.1.4
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)ospf-v2-lan-identifier/ospf-v2-lan-identifier]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping ospf-v2-lan-identifier {
+ *     leaf ospf-router-id {
+ *         type uint32;
+ *     }
+ *     leaf ipv4-address {
+ *         type ipv4-interface-identifier;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/ospf-v2-lan-identifier</i>
  */
 public interface OspfV2LanIdentifier
     extends

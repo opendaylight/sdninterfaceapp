@@ -7,18 +7,18 @@ import java.util.List;
 import java.beans.ConstructorProperties;
 
 
-/**
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)protocol-version/protocol-version]
- */
 public class ProtocolVersion
  implements Serializable {
     private static final long serialVersionUID = -7283574556842814269L; 
-    private static List<Range<BigInteger>> _range;
+    private static final List<Range<BigInteger>> _range;
     final private java.lang.Short _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.ONE, BigInteger.valueOf(7L)));
+        _range = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public ProtocolVersion(java.lang.Short _value) {
         if (_value != null) {
@@ -35,6 +35,7 @@ public class ProtocolVersion
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -43,9 +44,9 @@ public class ProtocolVersion
     public ProtocolVersion(ProtocolVersion source) {
         this._value = source._value;
     }
-    
+
     public static ProtocolVersion getDefaultInstance(String defaultValue) {
-        return new ProtocolVersion(new java.lang.Short(defaultValue));
+        return new ProtocolVersion(Short.valueOf(defaultValue));
     }
 
     public java.lang.Short getValue() {
@@ -84,7 +85,7 @@ public class ProtocolVersion
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("ProtocolVersion [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.ProtocolVersion.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -101,15 +102,6 @@ public class ProtocolVersion
 
 
     public static List<Range<BigInteger>> range() {
-        if (_range == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.ProtocolVersion.class) {
-                if (_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ONE, BigInteger.valueOf(7L)));
-                    _range = builder.build();
-                }
-            }
-        }
         return _range;
     }
 

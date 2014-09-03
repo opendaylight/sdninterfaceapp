@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1406700813037
-Build-Jdk: 1.7.0_15
+Bnd-LastModified: 1409641875441
+Build-Jdk: 1.7.0_65
 Built-By: root
-Bundle-Description: BGP with SDNi Wrapper
+Bundle-Description: BGP SDNiWrapper
 Bundle-License: http://www.eclipse.org/legal/epl-v10.html
 Bundle-ManifestVersion: 2
 Bundle-Name: org.opendaylight.bgpcep.bgp-sdniwrapper
@@ -10,8 +10,10 @@ Bundle-SymbolicName: org.opendaylight.bgpcep.bgp-sdniwrapper
 Bundle-Version: 0.3.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Export-Package: org.opendaylight.protocol.bgp.sdniwrapper;uses:="io.nett
- y.buffer";version="0.3.1.SNAPSHOT"
-Import-Package: com.sun.jersey.api.client,com.sun.jersey.api.client.conf
- ig,io.netty.buffer;version="[4.0,5)",javax.ws.rs.core,org.json.simple,o
- rg.json.simple.parser,org.slf4j;version="[1.7,2)"
+ y.buffer,javax.xml.bind.annotation";version="0.3.1.SNAPSHOT"
+Import-Package: com.sun.jersey.api.client;version="[1.17,2)",com.sun.jer
+ sey.api.client.config;version="[1.17,2)",io.netty.buffer;version="[4.0,
+ 5)",javax.ws.rs.core;version="[1.1,2)",javax.xml.bind.annotation,javax.
+ xml.parsers,org.json.simple,org.json.simple.parser,org.slf4j;version="[
+ 1.7,2)",org.xml.sax,org.xml.sax.helpers
 Tool: Bnd-2.1.0.20130426-122213

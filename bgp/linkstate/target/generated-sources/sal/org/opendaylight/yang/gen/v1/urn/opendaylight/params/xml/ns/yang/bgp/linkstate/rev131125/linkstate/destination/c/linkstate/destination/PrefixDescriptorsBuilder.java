@@ -14,17 +14,15 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-destination/linkstate-destination/c-linkstate-destination/prefix-descriptors]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors
  */
 public class PrefixDescriptorsBuilder {
 
+    private IpPrefix _ipReachabilityInformation;
     private TopologyIdentifier _multiTopologyId;
     private static List<Range<BigInteger>> _multiTopologyId_range;
     private OspfRouteType _ospfRouteType;
-    private IpPrefix _ipReachabilityInformation;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>> augmentation = new HashMap<>();
 
@@ -38,9 +36,9 @@ public class PrefixDescriptorsBuilder {
     }
 
     public PrefixDescriptorsBuilder(PrefixDescriptors base) {
+        this._ipReachabilityInformation = base.getIpReachabilityInformation();
         this._multiTopologyId = base.getMultiTopologyId();
         this._ospfRouteType = base.getOspfRouteType();
-        this._ipReachabilityInformation = base.getIpReachabilityInformation();
         if (base instanceof PrefixDescriptorsImpl) {
             PrefixDescriptorsImpl _impl = (PrefixDescriptorsImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -72,16 +70,16 @@ public class PrefixDescriptorsBuilder {
         }
     }
 
+    public IpPrefix getIpReachabilityInformation() {
+        return _ipReachabilityInformation;
+    }
+    
     public TopologyIdentifier getMultiTopologyId() {
         return _multiTopologyId;
     }
     
     public OspfRouteType getOspfRouteType() {
         return _ospfRouteType;
-    }
-    
-    public IpPrefix getIpReachabilityInformation() {
-        return _ipReachabilityInformation;
     }
     
     @SuppressWarnings("unchecked")
@@ -92,6 +90,11 @@ public class PrefixDescriptorsBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
+    public PrefixDescriptorsBuilder setIpReachabilityInformation(IpPrefix value) {
+        this._ipReachabilityInformation = value;
+        return this;
+    }
+    
     public PrefixDescriptorsBuilder setMultiTopologyId(TopologyIdentifier value) {
         if (value != null) {
             BigInteger _constraint = BigInteger.valueOf(value.getValue());
@@ -126,11 +129,6 @@ public class PrefixDescriptorsBuilder {
         return this;
     }
     
-    public PrefixDescriptorsBuilder setIpReachabilityInformation(IpPrefix value) {
-        this._ipReachabilityInformation = value;
-        return this;
-    }
-    
     public PrefixDescriptorsBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
@@ -146,16 +144,16 @@ public class PrefixDescriptorsBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors.class;
         }
 
+        private final IpPrefix _ipReachabilityInformation;
         private final TopologyIdentifier _multiTopologyId;
         private final OspfRouteType _ospfRouteType;
-        private final IpPrefix _ipReachabilityInformation;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>> augmentation = new HashMap<>();
 
         private PrefixDescriptorsImpl(PrefixDescriptorsBuilder base) {
+            this._ipReachabilityInformation = base.getIpReachabilityInformation();
             this._multiTopologyId = base.getMultiTopologyId();
             this._ospfRouteType = base.getOspfRouteType();
-            this._ipReachabilityInformation = base.getIpReachabilityInformation();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -170,6 +168,11 @@ public class PrefixDescriptorsBuilder {
         }
 
         @Override
+        public IpPrefix getIpReachabilityInformation() {
+            return _ipReachabilityInformation;
+        }
+        
+        @Override
         public TopologyIdentifier getMultiTopologyId() {
             return _multiTopologyId;
         }
@@ -177,11 +180,6 @@ public class PrefixDescriptorsBuilder {
         @Override
         public OspfRouteType getOspfRouteType() {
             return _ospfRouteType;
-        }
-        
-        @Override
-        public IpPrefix getIpReachabilityInformation() {
-            return _ipReachabilityInformation;
         }
         
         @SuppressWarnings("unchecked")
@@ -197,9 +195,9 @@ public class PrefixDescriptorsBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
+            result = prime * result + ((_ipReachabilityInformation == null) ? 0 : _ipReachabilityInformation.hashCode());
             result = prime * result + ((_multiTopologyId == null) ? 0 : _multiTopologyId.hashCode());
             result = prime * result + ((_ospfRouteType == null) ? 0 : _ospfRouteType.hashCode());
-            result = prime * result + ((_ipReachabilityInformation == null) ? 0 : _ipReachabilityInformation.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -209,40 +207,55 @@ public class PrefixDescriptorsBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            PrefixDescriptorsImpl other = (PrefixDescriptorsImpl) obj;
-            if (_multiTopologyId == null) {
-                if (other._multiTopologyId != null) {
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors)obj;
+            if (_ipReachabilityInformation == null) {
+                if (other.getIpReachabilityInformation() != null) {
                     return false;
                 }
-            } else if(!_multiTopologyId.equals(other._multiTopologyId)) {
+            } else if(!_ipReachabilityInformation.equals(other.getIpReachabilityInformation())) {
+                return false;
+            }
+            if (_multiTopologyId == null) {
+                if (other.getMultiTopologyId() != null) {
+                    return false;
+                }
+            } else if(!_multiTopologyId.equals(other.getMultiTopologyId())) {
                 return false;
             }
             if (_ospfRouteType == null) {
-                if (other._ospfRouteType != null) {
+                if (other.getOspfRouteType() != null) {
                     return false;
                 }
-            } else if(!_ospfRouteType.equals(other._ospfRouteType)) {
+            } else if(!_ospfRouteType.equals(other.getOspfRouteType())) {
                 return false;
             }
-            if (_ipReachabilityInformation == null) {
-                if (other._ipReachabilityInformation != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                PrefixDescriptorsImpl otherImpl = (PrefixDescriptorsImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!_ipReachabilityInformation.equals(other._ipReachabilityInformation)) {
-                return false;
-            }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
             }
             return true;
         }
@@ -252,6 +265,15 @@ public class PrefixDescriptorsBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("PrefixDescriptors [");
             boolean first = true;
         
+            if (_ipReachabilityInformation != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_ipReachabilityInformation=");
+                builder.append(_ipReachabilityInformation);
+             }
             if (_multiTopologyId != null) {
                 if (first) {
                     first = false;
@@ -269,15 +291,6 @@ public class PrefixDescriptorsBuilder {
                 }
                 builder.append("_ospfRouteType=");
                 builder.append(_ospfRouteType);
-             }
-            if (_ipReachabilityInformation != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_ipReachabilityInformation=");
-                builder.append(_ipReachabilityInformation);
              }
             if (first) {
                 first = false;

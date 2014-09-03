@@ -9,20 +9,18 @@ import java.beans.ConstructorProperties;
 import java.util.Arrays;
 
 
-/**
- * Reference:
- *     https://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.3.1.2
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)isis-area-identifier/isis-area-identifier]
- */
 public class IsisAreaIdentifier
  implements Serializable {
     private static final long serialVersionUID = -8523949719040349428L; 
-    private static List<Range<BigInteger>> _length;
+    private static final List<Range<BigInteger>> _length;
     final private byte[] _value;
-
+    
+    static {
+        ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+        builder.add(Range.closed(BigInteger.ONE, BigInteger.valueOf(20L)));
+        _length = builder.build();
+    }
+    
     @ConstructorProperties("value")
     public IsisAreaIdentifier(byte[] _value) {
         if (_value != null) {
@@ -39,6 +37,7 @@ public class IsisAreaIdentifier
         }
         this._value = _value;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -47,7 +46,7 @@ public class IsisAreaIdentifier
     public IsisAreaIdentifier(IsisAreaIdentifier source) {
         this._value = source._value;
     }
-    
+
     public static IsisAreaIdentifier getDefaultInstance(String defaultValue) {
         BaseEncoding baseEncoding = BaseEncoding.base64(); 
         return new IsisAreaIdentifier(baseEncoding.decode(defaultValue));
@@ -89,7 +88,7 @@ public class IsisAreaIdentifier
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("IsisAreaIdentifier [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.IsisAreaIdentifier.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {
@@ -105,15 +104,6 @@ public class IsisAreaIdentifier
     }
 
     public static List<Range<BigInteger>> length() {
-        if (_length == null) {
-            synchronized (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.IsisAreaIdentifier.class) {
-                if (_length == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ONE, BigInteger.valueOf(20L)));
-                    _length = builder.build();
-                }
-            }
-        }
         return _length;
     }
 

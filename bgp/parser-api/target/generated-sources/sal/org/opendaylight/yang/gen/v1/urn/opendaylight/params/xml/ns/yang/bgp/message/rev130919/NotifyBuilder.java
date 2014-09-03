@@ -2,6 +2,7 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mes
 import com.google.common.collect.Range;
 import java.util.Collections;
 import java.util.Map;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import java.util.HashMap;
 import com.google.common.collect.ImmutableList;
 import java.math.BigInteger;
@@ -11,21 +12,16 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Notification Message
- * Reference:
- *     <a href = "http://tools.ietf.org/html/rfc4271#section-4.5">http://tools.ietf.org/html/rfc4271#section-4.5</a>
- * Module name:
- *     bgp-message
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)notify/notify]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify
  */
 public class NotifyBuilder {
 
+    private byte[] _data;
     private java.lang.Short _errorCode;
     private static List<Range<BigInteger>> _errorCode_range;
     private java.lang.Short _errorSubcode;
     private static List<Range<BigInteger>> _errorSubcode_range;
-    private byte[] _data;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>> augmentation = new HashMap<>();
 
@@ -33,9 +29,9 @@ public class NotifyBuilder {
     } 
 
     public NotifyBuilder(Notify base) {
+        this._data = base.getData();
         this._errorCode = base.getErrorCode();
         this._errorSubcode = base.getErrorSubcode();
-        this._data = base.getData();
         if (base instanceof NotifyImpl) {
             NotifyImpl _impl = (NotifyImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -43,16 +39,16 @@ public class NotifyBuilder {
     }
 
 
+    public byte[] getData() {
+        return _data;
+    }
+    
     public java.lang.Short getErrorCode() {
         return _errorCode;
     }
     
     public java.lang.Short getErrorSubcode() {
         return _errorSubcode;
-    }
-    
-    public byte[] getData() {
-        return _data;
     }
     
     @SuppressWarnings("unchecked")
@@ -63,6 +59,11 @@ public class NotifyBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
+    public NotifyBuilder setData(byte[] value) {
+        this._data = value;
+        return this;
+    }
+    
     public NotifyBuilder setErrorCode(java.lang.Short value) {
         if (value != null) {
             BigInteger _constraint = BigInteger.valueOf(value);
@@ -121,11 +122,6 @@ public class NotifyBuilder {
         return _errorSubcode_range;
     }
     
-    public NotifyBuilder setData(byte[] value) {
-        this._data = value;
-        return this;
-    }
-    
     public NotifyBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
@@ -141,16 +137,16 @@ public class NotifyBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify.class;
         }
 
+        private final byte[] _data;
         private final java.lang.Short _errorCode;
         private final java.lang.Short _errorSubcode;
-        private final byte[] _data;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>> augmentation = new HashMap<>();
 
         private NotifyImpl(NotifyBuilder base) {
+            this._data = base.getData();
             this._errorCode = base.getErrorCode();
             this._errorSubcode = base.getErrorSubcode();
-            this._data = base.getData();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -165,6 +161,11 @@ public class NotifyBuilder {
         }
 
         @Override
+        public byte[] getData() {
+            return _data;
+        }
+        
+        @Override
         public java.lang.Short getErrorCode() {
             return _errorCode;
         }
@@ -172,11 +173,6 @@ public class NotifyBuilder {
         @Override
         public java.lang.Short getErrorSubcode() {
             return _errorSubcode;
-        }
-        
-        @Override
-        public byte[] getData() {
-            return _data;
         }
         
         @SuppressWarnings("unchecked")
@@ -192,9 +188,9 @@ public class NotifyBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
+            result = prime * result + ((_data == null) ? 0 : Arrays.hashCode(_data));
             result = prime * result + ((_errorCode == null) ? 0 : _errorCode.hashCode());
             result = prime * result + ((_errorSubcode == null) ? 0 : _errorSubcode.hashCode());
-            result = prime * result + ((_data == null) ? 0 : Arrays.hashCode(_data));
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -204,40 +200,55 @@ public class NotifyBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            NotifyImpl other = (NotifyImpl) obj;
-            if (_errorCode == null) {
-                if (other._errorCode != null) {
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify)obj;
+            if (_data == null) {
+                if (other.getData() != null) {
                     return false;
                 }
-            } else if(!_errorCode.equals(other._errorCode)) {
+            } else if(!Arrays.equals(_data, other.getData())) {
+                return false;
+            }
+            if (_errorCode == null) {
+                if (other.getErrorCode() != null) {
+                    return false;
+                }
+            } else if(!_errorCode.equals(other.getErrorCode())) {
                 return false;
             }
             if (_errorSubcode == null) {
-                if (other._errorSubcode != null) {
+                if (other.getErrorSubcode() != null) {
                     return false;
                 }
-            } else if(!_errorSubcode.equals(other._errorSubcode)) {
+            } else if(!_errorSubcode.equals(other.getErrorSubcode())) {
                 return false;
             }
-            if (_data == null) {
-                if (other._data != null) {
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                NotifyImpl otherImpl = (NotifyImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
                     return false;
                 }
-            } else if(!Arrays.equals(_data, other._data)) {
-                return false;
-            }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Notify>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
-                return false;
             }
             return true;
         }
@@ -247,6 +258,15 @@ public class NotifyBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("Notify [");
             boolean first = true;
         
+            if (_data != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_data=");
+                builder.append(Arrays.toString(_data));
+             }
             if (_errorCode != null) {
                 if (first) {
                     first = false;
@@ -264,15 +284,6 @@ public class NotifyBuilder {
                 }
                 builder.append("_errorSubcode=");
                 builder.append(_errorSubcode);
-             }
-            if (_data != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_data=");
-                builder.append(Arrays.toString(_data));
              }
             if (first) {
                 first = false;

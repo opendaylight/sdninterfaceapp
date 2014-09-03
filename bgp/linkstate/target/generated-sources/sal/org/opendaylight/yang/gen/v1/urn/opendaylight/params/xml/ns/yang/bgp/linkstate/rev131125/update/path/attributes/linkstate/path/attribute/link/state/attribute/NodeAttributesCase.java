@@ -7,10 +7,35 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-message?revision=2013-09-19)update/update/path-attributes/(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-path-attribute/link-state-attribute/node-attributes-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * case node-attributes-case {
+ *     container node-attributes {
+ *         leaf-list topology-identifier {
+ *             type topology-identifier;
+ *         }
+ *         leaf node-flags {
+ *             type node-flag-bits;
+ *         }
+ *         leaf-list isis-area-id {
+ *             type isis-area-identifier;
+ *         }
+ *         leaf dynamic-hostname {
+ *             type string;
+ *         }
+ *         leaf ipv4-router-id {
+ *             type ipv4-router-identifier;
+ *         }
+ *         leaf ipv6-router-id {
+ *             type ipv6-router-identifier;
+ *         }
+ *         uses node-state;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/update/path-attributes/(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-path-attribute/link-state-attribute/node-attributes-case</i>
  */
 public interface NodeAttributesCase
     extends

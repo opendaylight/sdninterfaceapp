@@ -14,23 +14,21 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-destination/linkstate-destination/c-linkstate-destination/link-descriptors]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors
  */
 public class LinkDescriptorsBuilder {
 
     private Ipv4InterfaceIdentifier _ipv4InterfaceAddress;
-    private Ipv6InterfaceIdentifier _ipv6InterfaceAddress;
     private Ipv4InterfaceIdentifier _ipv4NeighborAddress;
+    private Ipv6InterfaceIdentifier _ipv6InterfaceAddress;
     private Ipv6InterfaceIdentifier _ipv6NeighborAddress;
-    private TopologyIdentifier _multiTopologyId;
-    private static List<Range<BigInteger>> _multiTopologyId_range;
     private java.lang.Long _linkLocalIdentifier;
     private static List<Range<BigInteger>> _linkLocalIdentifier_range;
     private java.lang.Long _linkRemoteIdentifier;
     private static List<Range<BigInteger>> _linkRemoteIdentifier_range;
+    private TopologyIdentifier _multiTopologyId;
+    private static List<Range<BigInteger>> _multiTopologyId_range;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>> augmentation = new HashMap<>();
 
@@ -54,12 +52,12 @@ public class LinkDescriptorsBuilder {
 
     public LinkDescriptorsBuilder(LinkDescriptors base) {
         this._ipv4InterfaceAddress = base.getIpv4InterfaceAddress();
-        this._ipv6InterfaceAddress = base.getIpv6InterfaceAddress();
         this._ipv4NeighborAddress = base.getIpv4NeighborAddress();
+        this._ipv6InterfaceAddress = base.getIpv6InterfaceAddress();
         this._ipv6NeighborAddress = base.getIpv6NeighborAddress();
-        this._multiTopologyId = base.getMultiTopologyId();
         this._linkLocalIdentifier = base.getLinkLocalIdentifier();
         this._linkRemoteIdentifier = base.getLinkRemoteIdentifier();
+        this._multiTopologyId = base.getMultiTopologyId();
         if (base instanceof LinkDescriptorsImpl) {
             LinkDescriptorsImpl _impl = (LinkDescriptorsImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -103,20 +101,16 @@ public class LinkDescriptorsBuilder {
         return _ipv4InterfaceAddress;
     }
     
-    public Ipv6InterfaceIdentifier getIpv6InterfaceAddress() {
-        return _ipv6InterfaceAddress;
-    }
-    
     public Ipv4InterfaceIdentifier getIpv4NeighborAddress() {
         return _ipv4NeighborAddress;
     }
     
-    public Ipv6InterfaceIdentifier getIpv6NeighborAddress() {
-        return _ipv6NeighborAddress;
+    public Ipv6InterfaceIdentifier getIpv6InterfaceAddress() {
+        return _ipv6InterfaceAddress;
     }
     
-    public TopologyIdentifier getMultiTopologyId() {
-        return _multiTopologyId;
+    public Ipv6InterfaceIdentifier getIpv6NeighborAddress() {
+        return _ipv6NeighborAddress;
     }
     
     public java.lang.Long getLinkLocalIdentifier() {
@@ -125,6 +119,10 @@ public class LinkDescriptorsBuilder {
     
     public java.lang.Long getLinkRemoteIdentifier() {
         return _linkRemoteIdentifier;
+    }
+    
+    public TopologyIdentifier getMultiTopologyId() {
+        return _multiTopologyId;
     }
     
     @SuppressWarnings("unchecked")
@@ -140,48 +138,19 @@ public class LinkDescriptorsBuilder {
         return this;
     }
     
-    public LinkDescriptorsBuilder setIpv6InterfaceAddress(Ipv6InterfaceIdentifier value) {
-        this._ipv6InterfaceAddress = value;
+    public LinkDescriptorsBuilder setIpv4NeighborAddress(Ipv4InterfaceIdentifier value) {
+        this._ipv4NeighborAddress = value;
         return this;
     }
     
-    public LinkDescriptorsBuilder setIpv4NeighborAddress(Ipv4InterfaceIdentifier value) {
-        this._ipv4NeighborAddress = value;
+    public LinkDescriptorsBuilder setIpv6InterfaceAddress(Ipv6InterfaceIdentifier value) {
+        this._ipv6InterfaceAddress = value;
         return this;
     }
     
     public LinkDescriptorsBuilder setIpv6NeighborAddress(Ipv6InterfaceIdentifier value) {
         this._ipv6NeighborAddress = value;
         return this;
-    }
-    
-    public LinkDescriptorsBuilder setMultiTopologyId(TopologyIdentifier value) {
-        if (value != null) {
-            BigInteger _constraint = BigInteger.valueOf(value.getValue());
-            boolean isValidRange = false;
-            for (Range<BigInteger> r : _multiTopologyId_range()) {
-                if (r.contains(_constraint)) {
-                    isValidRange = true;
-                }
-            }
-            if (!isValidRange) {
-                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _multiTopologyId_range));
-            }
-        }
-        this._multiTopologyId = value;
-        return this;
-    }
-    public static List<Range<BigInteger>> _multiTopologyId_range() {
-        if (_multiTopologyId_range == null) {
-            synchronized (LinkDescriptorsBuilder.class) {
-                if (_multiTopologyId_range == null) {
-                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
-                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4095L)));
-                    _multiTopologyId_range = builder.build();
-                }
-            }
-        }
-        return _multiTopologyId_range;
     }
     
     public LinkDescriptorsBuilder setLinkLocalIdentifier(java.lang.Long value) {
@@ -242,6 +211,35 @@ public class LinkDescriptorsBuilder {
         return _linkRemoteIdentifier_range;
     }
     
+    public LinkDescriptorsBuilder setMultiTopologyId(TopologyIdentifier value) {
+        if (value != null) {
+            BigInteger _constraint = BigInteger.valueOf(value.getValue());
+            boolean isValidRange = false;
+            for (Range<BigInteger> r : _multiTopologyId_range()) {
+                if (r.contains(_constraint)) {
+                    isValidRange = true;
+                }
+            }
+            if (!isValidRange) {
+                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _multiTopologyId_range));
+            }
+        }
+        this._multiTopologyId = value;
+        return this;
+    }
+    public static List<Range<BigInteger>> _multiTopologyId_range() {
+        if (_multiTopologyId_range == null) {
+            synchronized (LinkDescriptorsBuilder.class) {
+                if (_multiTopologyId_range == null) {
+                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4095L)));
+                    _multiTopologyId_range = builder.build();
+                }
+            }
+        }
+        return _multiTopologyId_range;
+    }
+    
     public LinkDescriptorsBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
@@ -258,23 +256,23 @@ public class LinkDescriptorsBuilder {
         }
 
         private final Ipv4InterfaceIdentifier _ipv4InterfaceAddress;
-        private final Ipv6InterfaceIdentifier _ipv6InterfaceAddress;
         private final Ipv4InterfaceIdentifier _ipv4NeighborAddress;
+        private final Ipv6InterfaceIdentifier _ipv6InterfaceAddress;
         private final Ipv6InterfaceIdentifier _ipv6NeighborAddress;
-        private final TopologyIdentifier _multiTopologyId;
         private final java.lang.Long _linkLocalIdentifier;
         private final java.lang.Long _linkRemoteIdentifier;
+        private final TopologyIdentifier _multiTopologyId;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>> augmentation = new HashMap<>();
 
         private LinkDescriptorsImpl(LinkDescriptorsBuilder base) {
             this._ipv4InterfaceAddress = base.getIpv4InterfaceAddress();
-            this._ipv6InterfaceAddress = base.getIpv6InterfaceAddress();
             this._ipv4NeighborAddress = base.getIpv4NeighborAddress();
+            this._ipv6InterfaceAddress = base.getIpv6InterfaceAddress();
             this._ipv6NeighborAddress = base.getIpv6NeighborAddress();
-            this._multiTopologyId = base.getMultiTopologyId();
             this._linkLocalIdentifier = base.getLinkLocalIdentifier();
             this._linkRemoteIdentifier = base.getLinkRemoteIdentifier();
+            this._multiTopologyId = base.getMultiTopologyId();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -294,23 +292,18 @@ public class LinkDescriptorsBuilder {
         }
         
         @Override
-        public Ipv6InterfaceIdentifier getIpv6InterfaceAddress() {
-            return _ipv6InterfaceAddress;
-        }
-        
-        @Override
         public Ipv4InterfaceIdentifier getIpv4NeighborAddress() {
             return _ipv4NeighborAddress;
         }
         
         @Override
-        public Ipv6InterfaceIdentifier getIpv6NeighborAddress() {
-            return _ipv6NeighborAddress;
+        public Ipv6InterfaceIdentifier getIpv6InterfaceAddress() {
+            return _ipv6InterfaceAddress;
         }
         
         @Override
-        public TopologyIdentifier getMultiTopologyId() {
-            return _multiTopologyId;
+        public Ipv6InterfaceIdentifier getIpv6NeighborAddress() {
+            return _ipv6NeighborAddress;
         }
         
         @Override
@@ -321,6 +314,11 @@ public class LinkDescriptorsBuilder {
         @Override
         public java.lang.Long getLinkRemoteIdentifier() {
             return _linkRemoteIdentifier;
+        }
+        
+        @Override
+        public TopologyIdentifier getMultiTopologyId() {
+            return _multiTopologyId;
         }
         
         @SuppressWarnings("unchecked")
@@ -337,12 +335,12 @@ public class LinkDescriptorsBuilder {
             final int prime = 31;
             int result = 1;
             result = prime * result + ((_ipv4InterfaceAddress == null) ? 0 : _ipv4InterfaceAddress.hashCode());
-            result = prime * result + ((_ipv6InterfaceAddress == null) ? 0 : _ipv6InterfaceAddress.hashCode());
             result = prime * result + ((_ipv4NeighborAddress == null) ? 0 : _ipv4NeighborAddress.hashCode());
+            result = prime * result + ((_ipv6InterfaceAddress == null) ? 0 : _ipv6InterfaceAddress.hashCode());
             result = prime * result + ((_ipv6NeighborAddress == null) ? 0 : _ipv6NeighborAddress.hashCode());
-            result = prime * result + ((_multiTopologyId == null) ? 0 : _multiTopologyId.hashCode());
             result = prime * result + ((_linkLocalIdentifier == null) ? 0 : _linkLocalIdentifier.hashCode());
             result = prime * result + ((_linkRemoteIdentifier == null) ? 0 : _linkRemoteIdentifier.hashCode());
+            result = prime * result + ((_multiTopologyId == null) ? 0 : _multiTopologyId.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -352,68 +350,83 @@ public class LinkDescriptorsBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            LinkDescriptorsImpl other = (LinkDescriptorsImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors)obj;
             if (_ipv4InterfaceAddress == null) {
-                if (other._ipv4InterfaceAddress != null) {
+                if (other.getIpv4InterfaceAddress() != null) {
                     return false;
                 }
-            } else if(!_ipv4InterfaceAddress.equals(other._ipv4InterfaceAddress)) {
-                return false;
-            }
-            if (_ipv6InterfaceAddress == null) {
-                if (other._ipv6InterfaceAddress != null) {
-                    return false;
-                }
-            } else if(!_ipv6InterfaceAddress.equals(other._ipv6InterfaceAddress)) {
+            } else if(!_ipv4InterfaceAddress.equals(other.getIpv4InterfaceAddress())) {
                 return false;
             }
             if (_ipv4NeighborAddress == null) {
-                if (other._ipv4NeighborAddress != null) {
+                if (other.getIpv4NeighborAddress() != null) {
                     return false;
                 }
-            } else if(!_ipv4NeighborAddress.equals(other._ipv4NeighborAddress)) {
+            } else if(!_ipv4NeighborAddress.equals(other.getIpv4NeighborAddress())) {
+                return false;
+            }
+            if (_ipv6InterfaceAddress == null) {
+                if (other.getIpv6InterfaceAddress() != null) {
+                    return false;
+                }
+            } else if(!_ipv6InterfaceAddress.equals(other.getIpv6InterfaceAddress())) {
                 return false;
             }
             if (_ipv6NeighborAddress == null) {
-                if (other._ipv6NeighborAddress != null) {
+                if (other.getIpv6NeighborAddress() != null) {
                     return false;
                 }
-            } else if(!_ipv6NeighborAddress.equals(other._ipv6NeighborAddress)) {
-                return false;
-            }
-            if (_multiTopologyId == null) {
-                if (other._multiTopologyId != null) {
-                    return false;
-                }
-            } else if(!_multiTopologyId.equals(other._multiTopologyId)) {
+            } else if(!_ipv6NeighborAddress.equals(other.getIpv6NeighborAddress())) {
                 return false;
             }
             if (_linkLocalIdentifier == null) {
-                if (other._linkLocalIdentifier != null) {
+                if (other.getLinkLocalIdentifier() != null) {
                     return false;
                 }
-            } else if(!_linkLocalIdentifier.equals(other._linkLocalIdentifier)) {
+            } else if(!_linkLocalIdentifier.equals(other.getLinkLocalIdentifier())) {
                 return false;
             }
             if (_linkRemoteIdentifier == null) {
-                if (other._linkRemoteIdentifier != null) {
+                if (other.getLinkRemoteIdentifier() != null) {
                     return false;
                 }
-            } else if(!_linkRemoteIdentifier.equals(other._linkRemoteIdentifier)) {
+            } else if(!_linkRemoteIdentifier.equals(other.getLinkRemoteIdentifier())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_multiTopologyId == null) {
+                if (other.getMultiTopologyId() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_multiTopologyId.equals(other.getMultiTopologyId())) {
                 return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                LinkDescriptorsImpl otherImpl = (LinkDescriptorsImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -432,15 +445,6 @@ public class LinkDescriptorsBuilder {
                 builder.append("_ipv4InterfaceAddress=");
                 builder.append(_ipv4InterfaceAddress);
              }
-            if (_ipv6InterfaceAddress != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_ipv6InterfaceAddress=");
-                builder.append(_ipv6InterfaceAddress);
-             }
             if (_ipv4NeighborAddress != null) {
                 if (first) {
                     first = false;
@@ -450,6 +454,15 @@ public class LinkDescriptorsBuilder {
                 builder.append("_ipv4NeighborAddress=");
                 builder.append(_ipv4NeighborAddress);
              }
+            if (_ipv6InterfaceAddress != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_ipv6InterfaceAddress=");
+                builder.append(_ipv6InterfaceAddress);
+             }
             if (_ipv6NeighborAddress != null) {
                 if (first) {
                     first = false;
@@ -458,15 +471,6 @@ public class LinkDescriptorsBuilder {
                 }
                 builder.append("_ipv6NeighborAddress=");
                 builder.append(_ipv6NeighborAddress);
-             }
-            if (_multiTopologyId != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_multiTopologyId=");
-                builder.append(_multiTopologyId);
              }
             if (_linkLocalIdentifier != null) {
                 if (first) {
@@ -485,6 +489,15 @@ public class LinkDescriptorsBuilder {
                 }
                 builder.append("_linkRemoteIdentifier=");
                 builder.append(_linkRemoteIdentifier);
+             }
+            if (_multiTopologyId != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_multiTopologyId=");
+                builder.append(_multiTopologyId);
              }
             if (first) {
                 first = false;

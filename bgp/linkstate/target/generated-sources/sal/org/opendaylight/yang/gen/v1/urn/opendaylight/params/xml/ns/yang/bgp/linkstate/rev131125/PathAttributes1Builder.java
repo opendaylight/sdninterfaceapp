@@ -1,7 +1,12 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.LinkstatePathAttribute;
 
 
+/**
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.PathAttributes1} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.PathAttributes1
+ */
 public class PathAttributes1Builder {
 
     private LinkstatePathAttribute _linkstatePathAttribute;
@@ -59,18 +64,18 @@ public class PathAttributes1Builder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.PathAttributes1.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            PathAttributes1Impl other = (PathAttributes1Impl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.PathAttributes1 other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.PathAttributes1)obj;
             if (_linkstatePathAttribute == null) {
-                if (other._linkstatePathAttribute != null) {
+                if (other.getLinkstatePathAttribute() != null) {
                     return false;
                 }
-            } else if(!_linkstatePathAttribute.equals(other._linkstatePathAttribute)) {
+            } else if(!_linkstatePathAttribute.equals(other.getLinkstatePathAttribute())) {
                 return false;
             }
             return true;

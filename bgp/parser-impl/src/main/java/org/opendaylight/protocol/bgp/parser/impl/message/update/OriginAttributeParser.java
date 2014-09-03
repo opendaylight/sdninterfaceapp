@@ -7,14 +7,15 @@
  */
 package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
+import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedBytes;
-
 import io.netty.buffer.ByteBuf;
-
+import io.netty.buffer.Unpooled;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeParser;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeSerializer;
+import org.opendaylight.protocol.bgp.parser.spi.AttributeUtil;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.OriginBuilder;
@@ -28,7 +29,7 @@ public final class OriginAttributeParser implements AttributeParser, AttributeSe
 
     @Override
     public void parseAttribute(final ByteBuf buffer, final PathAttributesBuilder builder) throws BGPDocumentedException {
-        byte rawOrigin = buffer.readByte();
+        final byte rawOrigin = buffer.readByte();
         final BgpOrigin borigin = BgpOrigin.forValue(UnsignedBytes.toInt(rawOrigin));
         if (borigin == null) {
             throw new BGPDocumentedException("Unknown Origin type.", BGPError.ORIGIN_ATTR_NOT_VALID, new byte[] { (byte) 0x01, (byte) 0x01, rawOrigin} );
@@ -37,12 +38,12 @@ public final class OriginAttributeParser implements AttributeParser, AttributeSe
     }
 
     @Override
-    public void serializeAttribute(DataObject attribute, ByteBuf byteAggregator) {
-        PathAttributes pathAttributes = (PathAttributes) attribute;
-        Origin origin = pathAttributes.getOrigin();
+    public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
+        Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
+        final Origin origin = ((PathAttributes) attribute).getOrigin();
         if (origin == null) {
             return;
         }
-        byteAggregator.writeByte(origin.getValue().getIntValue());
+        AttributeUtil.formatAttribute(AttributeUtil.TRANSITIVE, TYPE, Unpooled.wrappedBuffer(new byte[] {UnsignedBytes.checkedCast(origin.getValue().getIntValue())}), byteAggregator);
     }
 }

@@ -8,10 +8,35 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)link-identifier/link-identifier]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping link-identifier {
+ *     leaf link-local-identifier {
+ *         type uint32;
+ *     }
+ *     leaf link-remote-identifier {
+ *         type uint32;
+ *     }
+ *     leaf ipv4-interface-address {
+ *         type ipv4-interface-identifier;
+ *     }
+ *     leaf ipv6-interface-address {
+ *         type ipv6-interface-identifier;
+ *     }
+ *     leaf ipv4-neighbor-address {
+ *         type ipv4-interface-identifier;
+ *     }
+ *     leaf ipv6-neighbor-address {
+ *         type ipv6-interface-identifier;
+ *     }
+ *     leaf multi-topology-id {
+ *         type topology-identifier;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/link-identifier</i>
  */
 public interface LinkIdentifier
     extends

@@ -7,10 +7,11 @@ public class UnreservedBandwidthKey
  implements Identifier<UnreservedBandwidth> {
     private static final long serialVersionUID = -3909703380187695318L; 
     final private java.lang.Short _priority;
-
+    
     public UnreservedBandwidthKey(java.lang.Short _priority) {
         this._priority = _priority;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -19,7 +20,7 @@ public class UnreservedBandwidthKey
     public UnreservedBandwidthKey(UnreservedBandwidthKey source) {
         this._priority = source._priority;
     }
-    
+
 
     public java.lang.Short getPriority() {
         return _priority;
@@ -57,7 +58,7 @@ public class UnreservedBandwidthKey
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("UnreservedBandwidthKey [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.link.state.UnreservedBandwidthKey.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_priority != null) {

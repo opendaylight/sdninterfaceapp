@@ -10,13 +10,11 @@ package org.opendaylight.protocol.bgp.rib.mock;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-
 import java.util.List;
 import java.util.Set;
-
-import org.opendaylight.protocol.bgp.parser.BGPSession;
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
 import org.opendaylight.protocol.bgp.parser.BgpTableTypeImpl;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Keepalive;
@@ -80,6 +78,8 @@ final class EventBusRegistration extends AbstractListenerRegistration<BGPSession
 
             listener.onSessionUp(new BGPSession() {
 
+                private static final long AS = 30L;
+
                 @Override
                 public void close() {
                     LOG.debug("Session {} closed", this);
@@ -97,7 +97,7 @@ final class EventBusRegistration extends AbstractListenerRegistration<BGPSession
 
                 @Override
                 public AsNumber getAsNumber() {
-                    return new AsNumber(30L);
+                    return new AsNumber(AS);
                 }
             });
         } else if (!(message instanceof Keepalive)) {

@@ -1,0 +1,12 @@
+{
+  "swaggerVersion": "1.1",
+  "basePath": "http://localhost:8080/full/ui",
+  "apis": [
+    {
+      "path": "/SdniNorthbound.json",
+      "description" : "The class provides Northbound SDNi REST APIs to access the nodes, node connectors\nand their properties.",
+      "nickname" : "SdniNorthbound",
+      "resourcePath" : "SdniNorthbound"
+    }
+  ]
+}

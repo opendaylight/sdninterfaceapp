@@ -8,10 +8,8 @@
 package org.opendaylight.protocol.bgp.parser.impl.message.open;
 
 import com.google.common.base.Preconditions;
-import com.google.common.primitives.UnsignedBytes;
-
 import io.netty.buffer.ByteBuf;
-
+import io.netty.buffer.Unpooled;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
 import org.opendaylight.protocol.bgp.parser.spi.AddressFamilyRegistry;
@@ -32,6 +30,8 @@ public final class MultiProtocolCapabilityHandler implements CapabilityParser, C
     private final AddressFamilyRegistry afiReg;
     private final SubsequentAddressFamilyRegistry safiReg;
 
+    private static final int RESERVED = 1;
+
     public MultiProtocolCapabilityHandler(final AddressFamilyRegistry afiReg, final SubsequentAddressFamilyRegistry safiReg) {
         this.afiReg = Preconditions.checkNotNull(afiReg);
         this.safiReg = Preconditions.checkNotNull(safiReg);
@@ -45,29 +45,32 @@ public final class MultiProtocolCapabilityHandler implements CapabilityParser, C
             throw new BGPParsingException("Address Family Identifier: '" + afiVal + "' not supported.");
         }
         // skip reserved
-        buffer.skipBytes(1);
-        final int safiVal = UnsignedBytes.toInt(buffer.readByte());
+        buffer.skipBytes(RESERVED);
+        final int safiVal = buffer.readUnsignedByte();
         final Class<? extends SubsequentAddressFamily> safi = this.safiReg.classForFamily(safiVal);
         if (safi == null) {
             throw new BGPParsingException("Subsequent Address Family Identifier: '" + safiVal + "' not supported.");
         }
         return new MultiprotocolCaseBuilder().setMultiprotocolCapability(
-                new MultiprotocolCapabilityBuilder().setAfi(afi).setSafi(safi).build()).build();
+            new MultiprotocolCapabilityBuilder().setAfi(afi).setSafi(safi).build()).build();
     }
 
     @Override
-    public byte[] serializeCapability(final CParameters capability) {
+    public void serializeCapability(final CParameters capability, final ByteBuf byteAggregator) {
+        Preconditions.checkArgument(capability instanceof MultiprotocolCase);
         final MultiprotocolCase mp = (MultiprotocolCase) capability;
-
+        final ByteBuf capBuffer = Unpooled.buffer();
         final Class<? extends AddressFamily> afi = mp.getMultiprotocolCapability().getAfi();
         final Integer afival = this.afiReg.numberForClass(afi);
         Preconditions.checkArgument(afival != null, "Unhandled address family " + afi);
+        capBuffer.writeShort(afival);
 
         final Class<? extends SubsequentAddressFamily> safi = mp.getMultiprotocolCapability().getSafi();
         final Integer safival = this.safiReg.numberForClass(safi);
         Preconditions.checkArgument(safival != null, "Unhandled subsequent address family " + safi);
+        capBuffer.writeZero(RESERVED);
+        capBuffer.writeByte(safival);
 
-        return CapabilityUtil.formatCapability(CODE, new byte[] { UnsignedBytes.checkedCast(afival / 256),
-            UnsignedBytes.checkedCast(afival % 256), 0, UnsignedBytes.checkedCast(safival) });
+        CapabilityUtil.formatCapability(CODE, capBuffer, byteAggregator);
     }
 }

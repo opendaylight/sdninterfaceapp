@@ -4,6 +4,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.
 import java.util.Collections;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.LocRib;
 import java.util.Map;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import java.util.HashMap;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.RibKey;
 import java.util.List;
@@ -11,17 +12,15 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-rib
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-rib?revision=2013-09-25)bgp-rib/bgp-rib/rib]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib
  */
 public class RibBuilder {
 
     private RibId _id;
-    private List<Peers> _peers;
-    private LocRib _locRib;
     private RibKey _key;
+    private LocRib _locRib;
+    private List<Peers> _peers;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib>> augmentation = new HashMap<>();
 
@@ -38,8 +37,8 @@ public class RibBuilder {
             this._key = base.getKey();
             this._id = _key.getId();
         }
-        this._peers = base.getPeers();
         this._locRib = base.getLocRib();
+        this._peers = base.getPeers();
         if (base instanceof RibImpl) {
             RibImpl _impl = (RibImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -51,16 +50,16 @@ public class RibBuilder {
         return _id;
     }
     
-    public List<Peers> getPeers() {
-        return _peers;
+    public RibKey getKey() {
+        return _key;
     }
     
     public LocRib getLocRib() {
         return _locRib;
     }
     
-    public RibKey getKey() {
-        return _key;
+    public List<Peers> getPeers() {
+        return _peers;
     }
     
     @SuppressWarnings("unchecked")
@@ -76,8 +75,8 @@ public class RibBuilder {
         return this;
     }
     
-    public RibBuilder setPeers(List<Peers> value) {
-        this._peers = value;
+    public RibBuilder setKey(RibKey value) {
+        this._key = value;
         return this;
     }
     
@@ -86,8 +85,8 @@ public class RibBuilder {
         return this;
     }
     
-    public RibBuilder setKey(RibKey value) {
-        this._key = value;
+    public RibBuilder setPeers(List<Peers> value) {
+        this._peers = value;
         return this;
     }
     
@@ -107,9 +106,9 @@ public class RibBuilder {
         }
 
         private final RibId _id;
-        private final List<Peers> _peers;
-        private final LocRib _locRib;
         private final RibKey _key;
+        private final LocRib _locRib;
+        private final List<Peers> _peers;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib>> augmentation = new HashMap<>();
 
@@ -123,8 +122,8 @@ public class RibBuilder {
                 this._key = base.getKey();
                 this._id = _key.getId();
             }
-            this._peers = base.getPeers();
             this._locRib = base.getLocRib();
+            this._peers = base.getPeers();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -144,8 +143,8 @@ public class RibBuilder {
         }
         
         @Override
-        public List<Peers> getPeers() {
-            return _peers;
+        public RibKey getKey() {
+            return _key;
         }
         
         @Override
@@ -154,8 +153,8 @@ public class RibBuilder {
         }
         
         @Override
-        public RibKey getKey() {
-            return _key;
+        public List<Peers> getPeers() {
+            return _peers;
         }
         
         @SuppressWarnings("unchecked")
@@ -172,9 +171,9 @@ public class RibBuilder {
             final int prime = 31;
             int result = 1;
             result = prime * result + ((_id == null) ? 0 : _id.hashCode());
-            result = prime * result + ((_peers == null) ? 0 : _peers.hashCode());
-            result = prime * result + ((_locRib == null) ? 0 : _locRib.hashCode());
             result = prime * result + ((_key == null) ? 0 : _key.hashCode());
+            result = prime * result + ((_locRib == null) ? 0 : _locRib.hashCode());
+            result = prime * result + ((_peers == null) ? 0 : _peers.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -184,47 +183,62 @@ public class RibBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            RibImpl other = (RibImpl) obj;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib)obj;
             if (_id == null) {
-                if (other._id != null) {
+                if (other.getId() != null) {
                     return false;
                 }
-            } else if(!_id.equals(other._id)) {
-                return false;
-            }
-            if (_peers == null) {
-                if (other._peers != null) {
-                    return false;
-                }
-            } else if(!_peers.equals(other._peers)) {
-                return false;
-            }
-            if (_locRib == null) {
-                if (other._locRib != null) {
-                    return false;
-                }
-            } else if(!_locRib.equals(other._locRib)) {
+            } else if(!_id.equals(other.getId())) {
                 return false;
             }
             if (_key == null) {
-                if (other._key != null) {
+                if (other.getKey() != null) {
                     return false;
                 }
-            } else if(!_key.equals(other._key)) {
+            } else if(!_key.equals(other.getKey())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_locRib == null) {
+                if (other.getLocRib() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_locRib.equals(other.getLocRib())) {
                 return false;
+            }
+            if (_peers == null) {
+                if (other.getPeers() != null) {
+                    return false;
+                }
+            } else if(!_peers.equals(other.getPeers())) {
+                return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                RibImpl otherImpl = (RibImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.Rib>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -243,14 +257,14 @@ public class RibBuilder {
                 builder.append("_id=");
                 builder.append(_id);
              }
-            if (_peers != null) {
+            if (_key != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_peers=");
-                builder.append(_peers);
+                builder.append("_key=");
+                builder.append(_key);
              }
             if (_locRib != null) {
                 if (first) {
@@ -261,14 +275,14 @@ public class RibBuilder {
                 builder.append("_locRib=");
                 builder.append(_locRib);
              }
-            if (_key != null) {
+            if (_peers != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_key=");
-                builder.append(_key);
+                builder.append("_peers=");
+                builder.append(_peers);
              }
             if (first) {
                 first = false;

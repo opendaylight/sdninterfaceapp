@@ -323,8 +323,8 @@ module bgp-linkstate {
 	    container link-sdni-descriptors{
                 when "../nlri-type = link";
                 uses link-sdni-identifiers;
-            }
-        }
+            }	
+	}
     }
 
     augment "/bgp-msg:update/bgp-msg:path-attributes/bgp-mp:mp-reach-nlri/bgp-mp:advertized-routes/bgp-mp:destination-type" {
@@ -499,7 +499,7 @@ module bgp-linkstate {
         }
 	leaf sdni-link-state {
             type string;
-        }
+        }    
     }
 
     typedef route-tag {

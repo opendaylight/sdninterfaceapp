@@ -5,15 +5,7 @@ import com.google.common.collect.Lists;
 
 
 /**
- * The bits built-in type represents a bit set. That is, a bits value is a set of 
- * flags identified by small integer position numbers starting at 0. Each bit 
- * number has an assigned name.
- * Reference:
- *     https://tools.ietf.org/html/rfc6020#section-9.7
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)node-flag-bits/node-flag-bits/(urn:ietf:params:xml:ns:yang:1)bits]
+ * The bits built-in type represents a bit set.  That is, a bits value is a set of flags identified by small integer position numbers starting at 0.  Each bit number has an assigned name.
  */
 public class NodeFlagBits
  implements Serializable {
@@ -22,13 +14,14 @@ public class NodeFlagBits
     final private java.lang.Boolean _attached;
     final private java.lang.Boolean _external;
     final private java.lang.Boolean _abr;
-
+    
     public NodeFlagBits(java.lang.Boolean _abr, java.lang.Boolean _attached, java.lang.Boolean _external, java.lang.Boolean _overload) {
         this._overload = _overload;
         this._attached = _attached;
         this._external = _external;
         this._abr = _abr;
     }
+    
     /**
      * Creates a copy from Source Object.
      *
@@ -40,7 +33,7 @@ public class NodeFlagBits
         this._external = source._external;
         this._abr = source._abr;
     }
-    
+
     public static NodeFlagBits getDefaultInstance(String defaultValue) {
         List<java.lang.String> properties = Lists.newArrayList("abr",
         "attached",
@@ -131,7 +124,7 @@ public class NodeFlagBits
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder("NodeFlagBits [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.NodeFlagBits.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_overload != null) {

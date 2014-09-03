@@ -3,12 +3,6 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.lin
 
 /**
  * The enumeration built-in type represents values from a set of assigned names.
- * Reference:
- *     https://tools.ietf.org/html/rfc6020#section-9.6
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)protocol-id/protocol-id/(urn:ietf:params:xml:ns:yang:1)enumeration]
  */
 public enum ProtocolId {
     Unknown(0),

@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.NlriType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.RouteDistinguisher;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors;
+import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LocalNodeDescriptors;
 import java.util.List;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.Identifier;
@@ -19,24 +20,22 @@ import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)linkstate-destination/linkstate-destination/c-linkstate-destination]
+ * Class that builds {@link org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination} instances.
+ * @see org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination
  */
 public class CLinkstateDestinationBuilder {
 
-    private NlriType _nlriType;
     private RouteDistinguisher _distinguisher;
     private static List<Range<BigInteger>> _distinguisher_range;
-    private ProtocolId _protocolId;
     private Identifier _identifier;
     private static List<Range<BigInteger>> _identifier_range;
-    private LocalNodeDescriptors _localNodeDescriptors;
-    private RemoteNodeDescriptors _remoteNodeDescriptors;
     private LinkDescriptors _linkDescriptors;
-    private PrefixDescriptors _prefixDescriptors;
     private LinkSdniDescriptors _linkSdniDescriptors;
+    private LocalNodeDescriptors _localNodeDescriptors;
+    private NlriType _nlriType;
+    private PrefixDescriptors _prefixDescriptors;
+    private ProtocolId _protocolId;
+    private RemoteNodeDescriptors _remoteNodeDescriptors;
 
     private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination>> augmentation = new HashMap<>();
 
@@ -44,15 +43,15 @@ public class CLinkstateDestinationBuilder {
     } 
 
     public CLinkstateDestinationBuilder(CLinkstateDestination base) {
-        this._nlriType = base.getNlriType();
         this._distinguisher = base.getDistinguisher();
-        this._protocolId = base.getProtocolId();
         this._identifier = base.getIdentifier();
-        this._localNodeDescriptors = base.getLocalNodeDescriptors();
-        this._remoteNodeDescriptors = base.getRemoteNodeDescriptors();
         this._linkDescriptors = base.getLinkDescriptors();
-        this._prefixDescriptors = base.getPrefixDescriptors();
         this._linkSdniDescriptors = base.getLinkSdniDescriptors();
+        this._localNodeDescriptors = base.getLocalNodeDescriptors();
+        this._nlriType = base.getNlriType();
+        this._prefixDescriptors = base.getPrefixDescriptors();
+        this._protocolId = base.getProtocolId();
+        this._remoteNodeDescriptors = base.getRemoteNodeDescriptors();
         if (base instanceof CLinkstateDestinationImpl) {
             CLinkstateDestinationImpl _impl = (CLinkstateDestinationImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -60,40 +59,40 @@ public class CLinkstateDestinationBuilder {
     }
 
 
-    public NlriType getNlriType() {
-        return _nlriType;
-    }
-    
     public RouteDistinguisher getDistinguisher() {
         return _distinguisher;
-    }
-    
-    public ProtocolId getProtocolId() {
-        return _protocolId;
     }
     
     public Identifier getIdentifier() {
         return _identifier;
     }
     
+    public LinkDescriptors getLinkDescriptors() {
+        return _linkDescriptors;
+    }
+    
+    public LinkSdniDescriptors getLinkSdniDescriptors() {
+        return _linkSdniDescriptors;
+    }
+    
     public LocalNodeDescriptors getLocalNodeDescriptors() {
         return _localNodeDescriptors;
     }
     
-    public RemoteNodeDescriptors getRemoteNodeDescriptors() {
-        return _remoteNodeDescriptors;
-    }
-    
-    public LinkDescriptors getLinkDescriptors() {
-        return _linkDescriptors;
+    public NlriType getNlriType() {
+        return _nlriType;
     }
     
     public PrefixDescriptors getPrefixDescriptors() {
         return _prefixDescriptors;
     }
     
-    public LinkSdniDescriptors getLinkSdniDescriptors() {
-        return _linkSdniDescriptors;
+    public ProtocolId getProtocolId() {
+        return _protocolId;
+    }
+    
+    public RemoteNodeDescriptors getRemoteNodeDescriptors() {
+        return _remoteNodeDescriptors;
     }
     
     @SuppressWarnings("unchecked")
@@ -104,11 +103,6 @@ public class CLinkstateDestinationBuilder {
         return (E) augmentation.get(augmentationType);
     }
 
-    public CLinkstateDestinationBuilder setNlriType(NlriType value) {
-        this._nlriType = value;
-        return this;
-    }
-    
     public CLinkstateDestinationBuilder setDistinguisher(RouteDistinguisher value) {
         if (value != null) {
             BigInteger _constraint = value.getValue();
@@ -136,11 +130,6 @@ public class CLinkstateDestinationBuilder {
             }
         }
         return _distinguisher_range;
-    }
-    
-    public CLinkstateDestinationBuilder setProtocolId(ProtocolId value) {
-        this._protocolId = value;
-        return this;
     }
     
     public CLinkstateDestinationBuilder setIdentifier(Identifier value) {
@@ -172,18 +161,23 @@ public class CLinkstateDestinationBuilder {
         return _identifier_range;
     }
     
+    public CLinkstateDestinationBuilder setLinkDescriptors(LinkDescriptors value) {
+        this._linkDescriptors = value;
+        return this;
+    }
+    
+    public CLinkstateDestinationBuilder setLinkSdniDescriptors(LinkSdniDescriptors value) {
+        this._linkSdniDescriptors = value;
+        return this;
+    }
+    
     public CLinkstateDestinationBuilder setLocalNodeDescriptors(LocalNodeDescriptors value) {
         this._localNodeDescriptors = value;
         return this;
     }
     
-    public CLinkstateDestinationBuilder setRemoteNodeDescriptors(RemoteNodeDescriptors value) {
-        this._remoteNodeDescriptors = value;
-        return this;
-    }
-    
-    public CLinkstateDestinationBuilder setLinkDescriptors(LinkDescriptors value) {
-        this._linkDescriptors = value;
+    public CLinkstateDestinationBuilder setNlriType(NlriType value) {
+        this._nlriType = value;
         return this;
     }
     
@@ -192,8 +186,13 @@ public class CLinkstateDestinationBuilder {
         return this;
     }
     
-    public CLinkstateDestinationBuilder setLinkSdniDescriptors(LinkSdniDescriptors value) {
-        this._linkSdniDescriptors = value;
+    public CLinkstateDestinationBuilder setProtocolId(ProtocolId value) {
+        this._protocolId = value;
+        return this;
+    }
+    
+    public CLinkstateDestinationBuilder setRemoteNodeDescriptors(RemoteNodeDescriptors value) {
+        this._remoteNodeDescriptors = value;
         return this;
     }
     
@@ -212,28 +211,28 @@ public class CLinkstateDestinationBuilder {
             return org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination.class;
         }
 
-        private final NlriType _nlriType;
         private final RouteDistinguisher _distinguisher;
-        private final ProtocolId _protocolId;
         private final Identifier _identifier;
-        private final LocalNodeDescriptors _localNodeDescriptors;
-        private final RemoteNodeDescriptors _remoteNodeDescriptors;
         private final LinkDescriptors _linkDescriptors;
-        private final PrefixDescriptors _prefixDescriptors;
         private final LinkSdniDescriptors _linkSdniDescriptors;
+        private final LocalNodeDescriptors _localNodeDescriptors;
+        private final NlriType _nlriType;
+        private final PrefixDescriptors _prefixDescriptors;
+        private final ProtocolId _protocolId;
+        private final RemoteNodeDescriptors _remoteNodeDescriptors;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination>> augmentation = new HashMap<>();
 
         private CLinkstateDestinationImpl(CLinkstateDestinationBuilder base) {
-            this._nlriType = base.getNlriType();
             this._distinguisher = base.getDistinguisher();
-            this._protocolId = base.getProtocolId();
             this._identifier = base.getIdentifier();
-            this._localNodeDescriptors = base.getLocalNodeDescriptors();
-            this._remoteNodeDescriptors = base.getRemoteNodeDescriptors();
             this._linkDescriptors = base.getLinkDescriptors();
-            this._prefixDescriptors = base.getPrefixDescriptors();
             this._linkSdniDescriptors = base.getLinkSdniDescriptors();
+            this._localNodeDescriptors = base.getLocalNodeDescriptors();
+            this._nlriType = base.getNlriType();
+            this._prefixDescriptors = base.getPrefixDescriptors();
+            this._protocolId = base.getProtocolId();
+            this._remoteNodeDescriptors = base.getRemoteNodeDescriptors();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -248,18 +247,8 @@ public class CLinkstateDestinationBuilder {
         }
 
         @Override
-        public NlriType getNlriType() {
-            return _nlriType;
-        }
-        
-        @Override
         public RouteDistinguisher getDistinguisher() {
             return _distinguisher;
-        }
-        
-        @Override
-        public ProtocolId getProtocolId() {
-            return _protocolId;
         }
         
         @Override
@@ -268,18 +257,23 @@ public class CLinkstateDestinationBuilder {
         }
         
         @Override
+        public LinkDescriptors getLinkDescriptors() {
+            return _linkDescriptors;
+        }
+        
+        @Override
+        public LinkSdniDescriptors getLinkSdniDescriptors() {
+            return _linkSdniDescriptors;
+        }
+        
+        @Override
         public LocalNodeDescriptors getLocalNodeDescriptors() {
             return _localNodeDescriptors;
         }
         
         @Override
-        public RemoteNodeDescriptors getRemoteNodeDescriptors() {
-            return _remoteNodeDescriptors;
-        }
-        
-        @Override
-        public LinkDescriptors getLinkDescriptors() {
-            return _linkDescriptors;
+        public NlriType getNlriType() {
+            return _nlriType;
         }
         
         @Override
@@ -288,8 +282,13 @@ public class CLinkstateDestinationBuilder {
         }
         
         @Override
-        public LinkSdniDescriptors getLinkSdniDescriptors() {
-            return _linkSdniDescriptors;
+        public ProtocolId getProtocolId() {
+            return _protocolId;
+        }
+        
+        @Override
+        public RemoteNodeDescriptors getRemoteNodeDescriptors() {
+            return _remoteNodeDescriptors;
         }
         
         @SuppressWarnings("unchecked")
@@ -305,15 +304,15 @@ public class CLinkstateDestinationBuilder {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((_nlriType == null) ? 0 : _nlriType.hashCode());
             result = prime * result + ((_distinguisher == null) ? 0 : _distinguisher.hashCode());
-            result = prime * result + ((_protocolId == null) ? 0 : _protocolId.hashCode());
             result = prime * result + ((_identifier == null) ? 0 : _identifier.hashCode());
-            result = prime * result + ((_localNodeDescriptors == null) ? 0 : _localNodeDescriptors.hashCode());
-            result = prime * result + ((_remoteNodeDescriptors == null) ? 0 : _remoteNodeDescriptors.hashCode());
             result = prime * result + ((_linkDescriptors == null) ? 0 : _linkDescriptors.hashCode());
-            result = prime * result + ((_prefixDescriptors == null) ? 0 : _prefixDescriptors.hashCode());
             result = prime * result + ((_linkSdniDescriptors == null) ? 0 : _linkSdniDescriptors.hashCode());
+            result = prime * result + ((_localNodeDescriptors == null) ? 0 : _localNodeDescriptors.hashCode());
+            result = prime * result + ((_nlriType == null) ? 0 : _nlriType.hashCode());
+            result = prime * result + ((_prefixDescriptors == null) ? 0 : _prefixDescriptors.hashCode());
+            result = prime * result + ((_protocolId == null) ? 0 : _protocolId.hashCode());
+            result = prime * result + ((_remoteNodeDescriptors == null) ? 0 : _remoteNodeDescriptors.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -323,82 +322,97 @@ public class CLinkstateDestinationBuilder {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (!org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            CLinkstateDestinationImpl other = (CLinkstateDestinationImpl) obj;
-            if (_nlriType == null) {
-                if (other._nlriType != null) {
-                    return false;
-                }
-            } else if(!_nlriType.equals(other._nlriType)) {
-                return false;
-            }
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination other = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination)obj;
             if (_distinguisher == null) {
-                if (other._distinguisher != null) {
+                if (other.getDistinguisher() != null) {
                     return false;
                 }
-            } else if(!_distinguisher.equals(other._distinguisher)) {
-                return false;
-            }
-            if (_protocolId == null) {
-                if (other._protocolId != null) {
-                    return false;
-                }
-            } else if(!_protocolId.equals(other._protocolId)) {
+            } else if(!_distinguisher.equals(other.getDistinguisher())) {
                 return false;
             }
             if (_identifier == null) {
-                if (other._identifier != null) {
+                if (other.getIdentifier() != null) {
                     return false;
                 }
-            } else if(!_identifier.equals(other._identifier)) {
-                return false;
-            }
-            if (_localNodeDescriptors == null) {
-                if (other._localNodeDescriptors != null) {
-                    return false;
-                }
-            } else if(!_localNodeDescriptors.equals(other._localNodeDescriptors)) {
-                return false;
-            }
-            if (_remoteNodeDescriptors == null) {
-                if (other._remoteNodeDescriptors != null) {
-                    return false;
-                }
-            } else if(!_remoteNodeDescriptors.equals(other._remoteNodeDescriptors)) {
+            } else if(!_identifier.equals(other.getIdentifier())) {
                 return false;
             }
             if (_linkDescriptors == null) {
-                if (other._linkDescriptors != null) {
+                if (other.getLinkDescriptors() != null) {
                     return false;
                 }
-            } else if(!_linkDescriptors.equals(other._linkDescriptors)) {
-                return false;
-            }
-            if (_prefixDescriptors == null) {
-                if (other._prefixDescriptors != null) {
-                    return false;
-                }
-            } else if(!_prefixDescriptors.equals(other._prefixDescriptors)) {
+            } else if(!_linkDescriptors.equals(other.getLinkDescriptors())) {
                 return false;
             }
             if (_linkSdniDescriptors == null) {
-                if (other._linkSdniDescriptors != null) {
+                if (other.getLinkSdniDescriptors() != null) {
                     return false;
                 }
-            } else if(!_linkSdniDescriptors.equals(other._linkSdniDescriptors)) {
+            } else if(!_linkSdniDescriptors.equals(other.getLinkSdniDescriptors())) {
                 return false;
             }
-            if (augmentation == null) {
-                if (other.augmentation != null) {
+            if (_localNodeDescriptors == null) {
+                if (other.getLocalNodeDescriptors() != null) {
                     return false;
                 }
-            } else if(!augmentation.equals(other.augmentation)) {
+            } else if(!_localNodeDescriptors.equals(other.getLocalNodeDescriptors())) {
                 return false;
+            }
+            if (_nlriType == null) {
+                if (other.getNlriType() != null) {
+                    return false;
+                }
+            } else if(!_nlriType.equals(other.getNlriType())) {
+                return false;
+            }
+            if (_prefixDescriptors == null) {
+                if (other.getPrefixDescriptors() != null) {
+                    return false;
+                }
+            } else if(!_prefixDescriptors.equals(other.getPrefixDescriptors())) {
+                return false;
+            }
+            if (_protocolId == null) {
+                if (other.getProtocolId() != null) {
+                    return false;
+                }
+            } else if(!_protocolId.equals(other.getProtocolId())) {
+                return false;
+            }
+            if (_remoteNodeDescriptors == null) {
+                if (other.getRemoteNodeDescriptors() != null) {
+                    return false;
+                }
+            } else if(!_remoteNodeDescriptors.equals(other.getRemoteNodeDescriptors())) {
+                return false;
+            }
+            if (getClass() == obj.getClass()) {
+                // Simple case: we are comparing against self
+                CLinkstateDestinationImpl otherImpl = (CLinkstateDestinationImpl) obj;
+                if (augmentation == null) {
+                    if (otherImpl.augmentation != null) {
+                        return false;
+                    }
+                } else if(!augmentation.equals(otherImpl.augmentation)) {
+                    return false;
+                }
+            } else {
+                // Hard case: compare our augments with presence there...
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination>>, Augmentation<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination>> e : augmentation.entrySet()) {
+                    if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
+                        return false;
+                    }
+                }
+                // .. and give the other one the chance to do the same
+                if (!obj.equals(this)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -408,15 +422,6 @@ public class CLinkstateDestinationBuilder {
             java.lang.StringBuilder builder = new java.lang.StringBuilder ("CLinkstateDestination [");
             boolean first = true;
         
-            if (_nlriType != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_nlriType=");
-                builder.append(_nlriType);
-             }
             if (_distinguisher != null) {
                 if (first) {
                     first = false;
@@ -425,15 +430,6 @@ public class CLinkstateDestinationBuilder {
                 }
                 builder.append("_distinguisher=");
                 builder.append(_distinguisher);
-             }
-            if (_protocolId != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_protocolId=");
-                builder.append(_protocolId);
              }
             if (_identifier != null) {
                 if (first) {
@@ -444,6 +440,24 @@ public class CLinkstateDestinationBuilder {
                 builder.append("_identifier=");
                 builder.append(_identifier);
              }
+            if (_linkDescriptors != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_linkDescriptors=");
+                builder.append(_linkDescriptors);
+             }
+            if (_linkSdniDescriptors != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_linkSdniDescriptors=");
+                builder.append(_linkSdniDescriptors);
+             }
             if (_localNodeDescriptors != null) {
                 if (first) {
                     first = false;
@@ -453,23 +467,14 @@ public class CLinkstateDestinationBuilder {
                 builder.append("_localNodeDescriptors=");
                 builder.append(_localNodeDescriptors);
              }
-            if (_remoteNodeDescriptors != null) {
+            if (_nlriType != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_remoteNodeDescriptors=");
-                builder.append(_remoteNodeDescriptors);
-             }
-            if (_linkDescriptors != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append("_linkDescriptors=");
-                builder.append(_linkDescriptors);
+                builder.append("_nlriType=");
+                builder.append(_nlriType);
              }
             if (_prefixDescriptors != null) {
                 if (first) {
@@ -480,14 +485,23 @@ public class CLinkstateDestinationBuilder {
                 builder.append("_prefixDescriptors=");
                 builder.append(_prefixDescriptors);
              }
-            if (_linkSdniDescriptors != null) {
+            if (_protocolId != null) {
                 if (first) {
                     first = false;
                 } else {
                     builder.append(", ");
                 }
-                builder.append("_linkSdniDescriptors=");
-                builder.append(_linkSdniDescriptors);
+                builder.append("_protocolId=");
+                builder.append(_protocolId);
+             }
+            if (_remoteNodeDescriptors != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_remoteNodeDescriptors=");
+                builder.append(_remoteNodeDescriptors);
              }
             if (first) {
                 first = false;

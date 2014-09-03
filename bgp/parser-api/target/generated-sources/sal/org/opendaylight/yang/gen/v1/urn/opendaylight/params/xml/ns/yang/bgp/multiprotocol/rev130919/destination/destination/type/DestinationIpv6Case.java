@@ -7,10 +7,19 @@ import org.opendaylight.yangtools.yang.binding.Augmentable;
 
 
 /**
- * Module name:
- *     bgp-multiprotocol
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol?revision=2013-09-19)destination/destination/destination-type/destination-ipv6-case]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-multiprotocol</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-multiprotocol.yang</i>):
+ * <pre>
+ * case destination-ipv6-case {
+ *     container destination-ipv6 {
+ *         leaf-list ipv6-prefixes {
+ *             type ipv6-prefix;
+ *         }
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-multiprotocol/destination/destination-type/destination-ipv6-case</i>
  */
 public interface DestinationIpv6Case
     extends

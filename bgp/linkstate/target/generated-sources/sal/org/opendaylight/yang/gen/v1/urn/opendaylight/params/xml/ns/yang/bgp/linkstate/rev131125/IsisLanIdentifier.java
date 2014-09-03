@@ -5,12 +5,23 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 
 
 /**
- * Reference:
- *     https://tools.ietf.org/html/draft-ietf-idr-ls-distribution-03#section-3.2.1.4
- * Module name:
- *     bgp-linkstate
- * Schema path:
- *     [(urn:opendaylight:params:xml:ns:yang:bgp-linkstate?revision=2013-11-25)isis-lan-identifier/isis-lan-identifier]
+ * <p>This class represents the following YANG schema fragment defined in module <b>bgp-linkstate</b>
+ * <br />(Source path: <i>META-INF/yang/bgp-linkstate.yang</i>):
+ * <pre>
+ * grouping isis-lan-identifier {
+ *     container is-is-router-identifier {
+ *         leaf iso-system-id {
+ *             type iso-system-identifier;
+ *         }
+ *         uses isis-router-identifier;
+ *     }
+ *     leaf psn {
+ *         type uint8;
+ *     }
+ * }
+ * </pre>
+ * The schema path to identify an instance is
+ * <i>bgp-linkstate/isis-lan-identifier</i>
  */
 public interface IsisLanIdentifier
     extends
