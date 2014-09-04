@@ -16,7 +16,9 @@
   </prerequisites>
   <modules>
     <module>sdniaggregator</module>
-   <module>sdni</module>
+    <module>sdni</module>
+    <module>features</module>
+    <module>distribution-karaf</module>
   </modules>
 
   <properties>
