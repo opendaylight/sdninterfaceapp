@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa82b9bf_65fd6a6e",
+        "filename": "distribution-karaf/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 226
+      },
+      "writtenOn": "2014-09-09T13:32:30Z",
+      "side": 1,
+      "message": "Does this work? Have you tested this with a clean .m2?  I think you\u0027re supposed to declare your feature bundle as a dependency.",
+      "revId": "27c00b8154436e62c333995a4ac232f7394a1979",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_8502ee6d",
+        "filename": "features/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 226
+      },
+      "writtenOn": "2014-09-09T13:32:30Z",
+      "side": 1,
+      "message": "Are you actually not using any of these dependencies?",
+      "revId": "27c00b8154436e62c333995a4ac232f7394a1979",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_a5037275",
+        "filename": "features/src/main/resources/features.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 226
+      },
+      "writtenOn": "2014-09-09T13:32:30Z",
+      "side": 1,
+      "message": "This confuses me -- there are two features declared here, but neither of the features declare any  bundles that they use/need. Why did you remove all of this?",
+      "revId": "27c00b8154436e62c333995a4ac232f7394a1979",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
