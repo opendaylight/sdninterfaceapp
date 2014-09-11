@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vi: set et smarttab sw=4 tabstop=4: -->
 <!--
- Copyright (c) 2014 TATA Consultancy Services.  All rights reserved. 
-
+ Copyright (c) 2014 TATA Consultancy Services.  All rights reserved.
  This program and the accompanying materials are made available under the
  terms of the Eclipse Public License v1.0 which accompanies this distribution,
  and is available at http://www.eclipse.org/legal/epl-v10.html
@@ -11,49 +10,22 @@
 <features name="odl-sdninterfaceapp-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
-    <!--
-        Necessary TODO: Please read the features guidelines:
-        https://wiki.opendaylight.org/view/Runtime:Karaf_Features_Guidelines#Feature_Best_Practices
-    -->
-    <!--
-    Necessary TODO: Add repo entries for the repositories of features you refer to
-        in this feature file but do not define here.
-        Examples:
-            <repository>mvn:org.opendaylight.yangtools/features-yangtools/0.6.2-SNAPSHOT/xml/features</repository>
-            <repository>mvn:org.opendaylight.controller/features-mdsal/1.1-SNAPSHOT/xml/features</repository>
-            <repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/0.0.3-SNAPSHOT/xml/features</repository>
-    -->
-	
+    <repository>mvn:org.opendaylight.controller/features-nsf/${nsf.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.controller/features-adsal/${sal.version}/xml/features</repository>
+
     <feature name="odl-sdninterfaceapp-all" version="1.4.2-SNAPSHOT" description="OpenDaylight :: sdninterfaceapp">
-	<feature version="1.4.2-SNAPSHOT">sdniaggregator</feature>
-	<feature version="1.4.2-SNAPSHOT">sdni</feature>
-    </feature>    
-
-	<feature name="sdniaggregator" version="1.4.2-SNAPSHOT">
-		<bundle>mvn:org.opendaylight.controller/clustering.services/0.5.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/containermanager/0.5.2-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/switchmanager/0.7.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/statisticsmanager/0.5.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/hosttracker/0.5.2-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/connectionmanager/0.1.2-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/topologymanager/0.4.2-SNAPSHOT</bundle>
-
-		<!--bundle>mvn:org.opendaylight.controller/sal-common-api/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/sal-binding-api/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/sal-binding-config/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/topologymanager/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/clustering-services/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/connectionmanager/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/hosttracker/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/statisticsmanager/1.1-SNAPSHOT</bundle>
-		<bundle>mvn:org.opendaylight.controller/switchmanager/1.1-SNAPSHOT</bundle>-->
-	</feature>
-
-	<feature name="sdni" version="1.4.2-SNAPSHOT">
-	<!--bundle>mvn:org.codehaus.jackson/jackson-core-asl/1.9.2</bundle>
-	<bundle>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.2</bundle>
-	<bundle>mvn:org.codehaus.jackson/jackson-jaxrs/1.9.2</bundle>
-	<bundle>mvn:org.codehaus.jackson/jackson-xc/1.9.2</bundle-->
-	</feature>
-
+        <feature version="${sal.version}">odl-adsal-all</feature>
+        <feature version="${nsf.version}">odl-adsal-northbound</feature>
+        <bundle start="true">mvn:com.fasterxml.jackson.core/jackson-annotations/${jackson.version}</bundle>
+        <bundle start="true">mvn:com.fasterxml.jackson.core/jackson-core/${jackson.version}</bundle>
+        <bundle start="true">mvn:com.fasterxml.jackson.core/jackson-databind/${jackson.version}</bundle>
+        <bundle>mvn:org.jboss.spec.javax.transaction/jboss-transaction-api_1.1_spec/1.0.1.Final</bundle>
+        <bundle>mvn:org.opendaylight.controller/clustering.services/0.5.1-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller/hosttracker/0.5.2-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller/switchmanager/0.7.1-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller/topologymanager/0.4.2-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller/containermanager/0.5.2-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.sdninterfaceapp/sdniaggregator/0.5.2-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.sdninterfaceapp/sdni/0.5.2-SNAPSHOT</bundle>
+    </feature>
 </features>

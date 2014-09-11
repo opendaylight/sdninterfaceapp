@@ -12,7 +12,7 @@
     will pick the pom.xml from the parent directory as the parent pom, which may or may
     not be correct.
   -->
-  <artifactId>distribution-karaf</artifactId>
+  <artifactId>org.opendaylight.sdninterfaceapp</artifactId>
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <version>1.4.2-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -28,20 +28,7 @@
   </properties>
 
   <dependencies>
-
-    
-
-<dependency>
-<artifactId>features-sdninterfaceapp</artifactId>
-<groupId>org.opendaylight.sdninterfaceapp</groupId>
-<classifier>features</classifier>
-<type>xml</type>
-<scope>runtime</scope>
-<version>1.4.2-SNAPSHOT</version>
-</dependency>
-
-
-  <!-- Basic Karaf dependencies -->
+    <!-- Basic Karaf dependencies -->
     <dependency>
       <groupId>org.apache.karaf.features</groupId>
       <artifactId>framework</artifactId>
@@ -72,6 +59,31 @@
       <version>${karaf.resources.version}</version>
     </dependency>
 
+    <!-- Project local feautures -->
+    <dependency>
+      <groupId>org.opendaylight.sdninterfaceapp</groupId>
+      <artifactId>features-sdninterfaceapp</artifactId>
+      <version>1.4.2-SNAPSHOT</version>
+      <classifier>features</classifier>
+      <type>xml</type>
+      <scope>runtime</scope>
+   </dependency>
+
+    <dependency>
+      <groupId>org.opendaylight.controller</groupId>
+      <artifactId>features-mdsal</artifactId>
+      <classifier>features</classifier>
+      <type>xml</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.openflowplugin</groupId>
+      <artifactId>features-openflowplugin</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+      <classifier>features</classifier>
+      <type>xml</type>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -165,15 +177,8 @@
         <configuration>
           <bootFeatures>
             <feature>standard</feature>
-            <!--
-              Optional TODO: Add entries here for the features you want in your local distro
-              Note: odl-restconf is a separate feature from odl-mdsal-broker.  If you want
-              restconf, you need to list it here explicitely.
-              Examples:
-              <feature>odl-openflowplugin-flow-services</feature>
-              <feature>odl-restconf</feature>
-            -->
-            <!-- Final TODO: Remove TODO Comments ;) -->
+            <feature>odl-sdninterfaceapp-all</feature>
+            <feature>odl-restconf</feature>
           </bootFeatures>
         </configuration>
         <executions>
@@ -267,5 +272,4 @@
     <tag>HEAD</tag>
     <url>https://git.opendaylight.org/gerrit/gitweb?p=sdninterfaceapp.git;a=summary</url>
   </scm>
-  <modules><module>../features</module></modules>
 </project>
