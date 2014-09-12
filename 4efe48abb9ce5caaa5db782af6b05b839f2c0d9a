@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa82b9bf_6136b7e9",
+        "filename": "distribution-karaf/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "please remove \\r from end of line in this file",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_01332bf7",
+        "filename": "distribution-karaf/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "please remove extra space",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_2130afe7",
+        "filename": "distribution-karaf/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "please use white space not tab",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_c14c6379",
+        "filename": "features/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "please remove \\r in the end of line for this file",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_e151670f",
+        "filename": "features/src/main/resources/features.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "remove extra space",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_81565b05",
+        "filename": "features/src/main/resources/features.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "remove tab and extra space",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_41405335",
+        "filename": "features/src/main/resources/features.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "use white space instead of tab for all lines below",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_a15b5f2d",
+        "filename": "features/src/main/resources/features.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "please remove white space at the end",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_613d57bb",
+        "filename": "sdniaggregator/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 2246
+      },
+      "writtenOn": "2014-09-12T02:13:10Z",
+      "side": 1,
+      "message": "use white space instead of tab",
+      "revId": "4efe48abb9ce5caaa5db782af6b05b839f2c0d9a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
