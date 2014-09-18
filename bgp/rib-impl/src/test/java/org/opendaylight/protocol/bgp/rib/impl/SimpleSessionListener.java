@@ -11,9 +11,9 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import org.opendaylight.protocol.bgp.parser.BGPSession;
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
-import org.opendaylight.protocol.bgp.parser.BGPTerminationReason;
+import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
+import org.opendaylight.protocol.bgp.rib.spi.BGPTerminationReason;
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Listener for the client.
  */
-public class SimpleSessionListener implements BGPSessionListener {
+public class SimpleSessionListener implements ReusableBGPPeer {
 
     private final List<Notification> listMsg = Lists.newArrayList();
 
@@ -56,5 +56,10 @@ public class SimpleSessionListener implements BGPSessionListener {
     @Override
     public void onSessionTerminated(final BGPSession session, final BGPTerminationReason cause) {
         LOG.debug("Session terminated. Cause : {}", cause.toString());
+    }
+
+    @Override
+    public void releaseConnection() {
+        LOG.debug("Releasing connection");
     }
 }

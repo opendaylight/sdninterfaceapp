@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2014 Tata Consultancy Services and others.  All rights reserved.
+ * Copyright (c) 2014 TATA Consultancy Services.  All rights  reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-
 
 package org.opendaylight.controller.sdniaggregator;
 
@@ -32,7 +31,7 @@ public class HostConfig implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-    public String dataLayerAddress;
+    private String dataLayerAddress;
     @XmlElement
     private String nodeType;
     @XmlElement
@@ -85,23 +84,23 @@ public class HostConfig implements Serializable {
     }
 
     public static HostConfig convert(HostNodeConnector hnc) {
-        if(hnc == null) {
+        if (hnc == null) {
             return null;
         }
         HostConfig hc = new HostConfig();
         DataLinkAddress dl = hnc.getDataLayerAddress();
-        if(dl instanceof EthernetAddress) {
+        if (dl instanceof EthernetAddress) {
             EthernetAddress et = (EthernetAddress) dl;
             hc.dataLayerAddress = et.getMacAddress();
         } else {
             hc.dataLayerAddress = dl.getName();
         }
         NodeConnector nc = hnc.getnodeConnector();
-        if(nc != null) {
+        if (nc != null) {
             hc.nodeConnectorType = nc.getType();
             hc.nodeConnectorId = nc.getNodeConnectorIDString();
             Node n = hnc.getnodeconnectorNode();
-            if(n != null) {
+            if (n != null) {
                 hc.nodeType = n.getType();
                 hc.nodeId = n.getNodeIDString();
             }

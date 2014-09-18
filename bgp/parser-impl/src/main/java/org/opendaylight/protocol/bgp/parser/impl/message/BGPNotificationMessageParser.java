@@ -7,9 +7,10 @@
  */
 package org.opendaylight.protocol.bgp.parser.impl.message;
 
-import com.google.common.primitives.UnsignedBytes;
+import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import java.util.Arrays;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
@@ -38,61 +39,47 @@ public final class BGPNotificationMessageParser implements MessageParser, Messag
      * Serializes BGP Notification message.
      *
      * @param msg to be serialized
-     * @return BGP Notification message converted to byte array
+     * @param ByteBuf where the message will be serialized
      */
     @Override
-    public void serializeMessage(final Notification msg, ByteBuf bytes) {
-        if (msg == null) {
-            throw new IllegalArgumentException("BGP Notification message cannot be null");
-        }
-
+    public void serializeMessage(final Notification msg, final ByteBuf bytes) {
+        Preconditions.checkArgument(msg instanceof Notify, "BGP Notification message cannot be null");
         final Notify ntf = (Notify) msg;
         LOG.trace("Started serializing Notification message: {}", ntf);
 
-        final byte[] msgBody = (ntf.getData() == null) ? new byte[ERROR_SIZE] : new byte[ERROR_SIZE + ntf.getData().length];
-
-        msgBody[0] = UnsignedBytes.checkedCast(ntf.getErrorCode());
-
-        msgBody[1] = UnsignedBytes.checkedCast(ntf.getErrorSubcode());
-
-        if (ntf.getData() != null) {
-            System.arraycopy(ntf.getData(), 0, msgBody, ERROR_SIZE, ntf.getData().length);
+        final byte[] data = ntf.getData();
+        final ByteBuf msgBody = Unpooled.buffer();
+        msgBody.writeByte(ntf.getErrorCode());
+        msgBody.writeByte(ntf.getErrorSubcode());
+        if (data != null) {
+            msgBody.writeBytes(data);
         }
-
-        bytes.writeBytes(MessageUtil.formatMessage(TYPE, msgBody));
         LOG.trace("Notification message serialized to: {}", ByteBufUtil.hexDump(bytes));
+        MessageUtil.formatMessage(TYPE, msgBody, bytes);
     }
 
     /**
      * Parses BGP Notification message to bytes.
      *
-     * @param body byte array to be parsed
+     * @param body ByteBuf to be parsed
      * @return BGPNotification message
-     * @throws BGPDocumentedException
+     * @throws BGPDocumentedException if parsing goes wrong
      */
     @Override
     public Notify parseMessageBody(final ByteBuf body, final int messageLength) throws BGPDocumentedException {
-        if (body == null) {
-            throw new IllegalArgumentException("Byte array cannot be null.");
-        }
-        LOG.trace("Started parsing of notification message: {}", Arrays.toString(ByteArray.getAllBytes(body)));
-
+        Preconditions.checkArgument(body != null, "Byte buffer cannot be null.");
+        LOG.trace("Started parsing of notification message: {}", ByteBufUtil.hexDump(body));
         if (body.readableBytes() < ERROR_SIZE) {
             throw BGPDocumentedException.badMessageLength("Notification message too small.", messageLength);
         }
-        final int errorCode = UnsignedBytes.toInt(body.readByte());
-        final int errorSubcode = UnsignedBytes.toInt(body.readByte());
-
-        byte[] data = null;
-        if (body.readableBytes() != 0) {
-            data = ByteArray.readAllBytes(body);
-        }
+        final int errorCode = body.readUnsignedByte();
+        final int errorSubcode = body.readUnsignedByte();
         final NotifyBuilder builder = new NotifyBuilder().setErrorCode((short) errorCode).setErrorSubcode((short) errorSubcode);
-        if (data != null) {
-            builder.setData(data);
+        if (body.isReadable()) {
+            builder.setData(ByteArray.readAllBytes(body));
         }
         LOG.debug("BGP Notification message was parsed: err = {}, data = {}.", BGPError.forValue(errorCode, errorSubcode),
-                Arrays.toString(data));
+            Arrays.toString(builder.getData()));
         return builder.build();
     }
 }

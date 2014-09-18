@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2014 Tata Consultancy Services and others.  All rights reserved.
+ * Copyright (c) 2014 TATA Consultancy Services.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -46,7 +45,7 @@ public class EdgeProperties {
         this.properties = properties;
     }
 
-    @JsonProperty(value="properties")
+    @JsonProperty(value = "properties")
     public Map<String, Property> getMapProperties() {
         Map<String, Property> map = new HashMap<String, Property>();
         for (Property p : properties) {
@@ -62,6 +61,7 @@ public class EdgeProperties {
     public Set<Property> getProperties() {
         return properties;
     }
+
     public void setProperties(Set<Property> properties) {
         this.properties = properties;
     }

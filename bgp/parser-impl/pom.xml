@@ -32,6 +32,10 @@
     </prerequisites>
 
     <dependencies>
+    	<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>bgp-sdniwrapper</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bgp-concepts</artifactId>
@@ -49,10 +53,6 @@
             <artifactId>bgp-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>concepts</artifactId>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>util</artifactId>

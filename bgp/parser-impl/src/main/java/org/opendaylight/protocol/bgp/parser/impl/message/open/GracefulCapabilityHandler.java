@@ -9,12 +9,10 @@ package org.opendaylight.protocol.bgp.parser.impl.message.open;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedBytes;
-
 import io.netty.buffer.ByteBuf;
-
+import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
 import org.opendaylight.protocol.bgp.parser.spi.AddressFamilyRegistry;
@@ -57,6 +55,8 @@ public final class GracefulCapabilityHandler implements CapabilityParser, Capabi
 
     private static final int AFI_FLAG_FORWARDING_STATE = 0x80;
 
+    private static final int MAX_RESTART_TIME = 4095;
+
     private final AddressFamilyRegistry afiReg;
     private final SubsequentAddressFamilyRegistry safiReg;
 
@@ -66,29 +66,27 @@ public final class GracefulCapabilityHandler implements CapabilityParser, Capabi
     }
 
     @Override
-    public byte[] serializeCapability(final CParameters capability) {
+    public void serializeCapability(final CParameters capability, final ByteBuf byteAggregator) {
+        Preconditions.checkArgument(capability instanceof GracefulRestartCase);
         final GracefulRestartCapability grace = ((GracefulRestartCase) capability).getGracefulRestartCapability();
         final List<Tables> tables = grace.getTables();
 
-        final byte[] bytes = new byte[HEADER_SIZE + PER_AFI_SAFI_SIZE * tables.size()];
+        final ByteBuf bytes = Unpooled.buffer(HEADER_SIZE + PER_AFI_SAFI_SIZE * tables.size());
 
         int flagBits = 0;
         final RestartFlags flags = grace.getRestartFlags();
-        if (flags != null) {
-            if (flags.isRestartState()) {
-                flagBits |= RESTART_FLAG_STATE;
-            }
+        if (flags != null && flags.isRestartState()) {
+            flagBits |= RESTART_FLAG_STATE;
         }
         int timeval = 0;
         final Integer time = grace.getRestartTime();
         if (time != null) {
-            Preconditions.checkArgument(time >= 0 && time <= 4095);
+            Preconditions.checkArgument(time >= 0 && time <= MAX_RESTART_TIME);
             timeval = time;
         }
-        bytes[0] = UnsignedBytes.checkedCast(flagBits + timeval / 256);
-        bytes[1] = UnsignedBytes.checkedCast(timeval % 256);
+        bytes.writeByte(flagBits + timeval / 256);
+        bytes.writeByte(timeval % 256);
 
-        int index = HEADER_SIZE;
         for (final Tables t : tables) {
             final Class<? extends AddressFamily> afi = t.getAfi();
             final Integer afival = this.afiReg.numberForClass(afi);
@@ -98,15 +96,14 @@ public final class GracefulCapabilityHandler implements CapabilityParser, Capabi
             final Integer safival = this.safiReg.numberForClass(safi);
             Preconditions.checkArgument(safival != null, "Unhandled subsequent address family " + safi);
 
-            bytes[index] = UnsignedBytes.checkedCast(afival / 256);
-            bytes[index + 1] = UnsignedBytes.checkedCast(afival % 256);
-            bytes[index + 2] = UnsignedBytes.checkedCast(safival);
+            bytes.writeByte(afival / 256);
+            bytes.writeByte(afival % 256);
+            bytes.writeByte(safival);
             if (t.getAfiFlags().isForwardingState()) {
-                bytes[index + 3] = UnsignedBytes.checkedCast(AFI_FLAG_FORWARDING_STATE);
+                bytes.writeByte(AFI_FLAG_FORWARDING_STATE);
             }
-            index += PER_AFI_SAFI_SIZE;
         }
-        return CapabilityUtil.formatCapability(CODE, bytes);
+        CapabilityUtil.formatCapability(CODE, bytes,byteAggregator);
     }
 
     @Override

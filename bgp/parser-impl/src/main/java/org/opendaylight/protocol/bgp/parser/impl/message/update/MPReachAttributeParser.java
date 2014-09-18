@@ -8,22 +8,30 @@
 package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
 import com.google.common.base.Preconditions;
-
 import io.netty.buffer.ByteBuf;
-
+import io.netty.buffer.Unpooled;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeParser;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeSerializer;
+import org.opendaylight.protocol.bgp.parser.spi.AttributeUtil;
 import org.opendaylight.protocol.bgp.parser.spi.NlriRegistry;
+import org.opendaylight.protocol.bgp.parser.spi.NlriSerializer;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1Builder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
 import org.opendaylight.yangtools.yang.binding.DataObject;
+import org.slf4j.Logger;
 
-public final class MPReachAttributeParser implements AttributeParser,AttributeSerializer {
+import org.slf4j.LoggerFactory;
 
+
+public final class MPReachAttributeParser implements AttributeParser, AttributeSerializer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MPReachAttributeParser.class);
     public static final int TYPE = 14;
 
     private final NlriRegistry reg;
@@ -34,7 +42,8 @@ public final class MPReachAttributeParser implements AttributeParser,AttributeSe
 
     @Override
     public void parseAttribute(final ByteBuf buffer, final PathAttributesBuilder builder) throws BGPDocumentedException {
-        try {
+       LOG.trace("inside parseAttribute of MPReachAttributeParser"); 
+	try {
             final PathAttributes1 a = new PathAttributes1Builder().setMpReachNlri(this.reg.parseMpReach(buffer)).build();
             builder.addAugmentation(PathAttributes1.class, a);
         } catch (final BGPParsingException e) {
@@ -43,7 +52,21 @@ public final class MPReachAttributeParser implements AttributeParser,AttributeSe
     }
 
     @Override
-    public void serializeAttribute(DataObject attribute, ByteBuf byteAggregator) {
-        //FIXME: implement this
+    public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
+       	LOG.trace("inside serializeAttribute of MPReachAttributeParser"); 
+	Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
+        final PathAttributes pathAttributes = (PathAttributes) attribute;
+        final PathAttributes1 pathAttributes1 = pathAttributes.getAugmentation(PathAttributes1.class);
+        if (pathAttributes1 == null) {
+            return;
+        }
+        final MpReachNlri mpReachNlri = pathAttributes1.getMpReachNlri();
+        final ByteBuf reachBuffer = Unpooled.buffer();
+        this.reg.serializeMpReach(mpReachNlri, reachBuffer);
+
+        for (final NlriSerializer nlriSerializer : this.reg.getSerializers()) {
+            nlriSerializer.serializeAttribute(attribute, reachBuffer);
+        }
+        AttributeUtil.formatAttribute(AttributeUtil.OPTIONAL, TYPE, reachBuffer, byteAggregator);
     }
 }

@@ -7,10 +7,12 @@
  */
 package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
+import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
-
+import io.netty.buffer.Unpooled;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeParser;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeSerializer;
+import org.opendaylight.protocol.bgp.parser.spi.AttributeUtil;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.MultiExitDisc;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.MultiExitDiscBuilder;
@@ -27,12 +29,12 @@ public final class MultiExitDiscriminatorAttributeParser implements AttributePar
     }
 
     @Override
-    public void serializeAttribute(DataObject attribute, ByteBuf byteAggregator) {
-        PathAttributes pathAttributes = (PathAttributes) attribute;
-        MultiExitDisc multiExitDisc = pathAttributes.getMultiExitDisc();
+    public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
+        Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
+        final MultiExitDisc multiExitDisc = ((PathAttributes) attribute).getMultiExitDisc();
         if (multiExitDisc == null) {
             return;
         }
-        byteAggregator.writeInt(multiExitDisc.getMed().intValue());
+        AttributeUtil.formatAttribute(AttributeUtil.OPTIONAL, TYPE, Unpooled.copyInt(multiExitDisc.getMed().intValue()), byteAggregator);
     }
 }

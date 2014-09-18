@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Copyright (c) 2014 Tata Consultancy Services.  All rights reserved.
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License v1.0 which accompanies this distribution,
-and is available at http://www.eclipse.org/legal/epl-v10.html
--->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-    <scm>
+  <modelVersion>4.0.0</modelVersion>
+  <scm>
         <connection>scm:git:ssh://git.opendaylight.org:29418/bgpcep.git</connection>
         <developerConnection>scm:git:ssh://git.opendaylight.org:29418/bgpcep.git</developerConnection>
         <url>https://wiki.opendaylight.org/view/BGP_LS_PCEP:Main</url>
@@ -21,88 +12,60 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <artifactId>bgp-parent</artifactId>
         <version>0.3.1-SNAPSHOT</version>
     </parent>
-
-    <artifactId>bgp-sdniwrapper</artifactId>
-    <description>BGP with SDNi Wrapper</description>
-    <packaging>bundle</packaging>
-    <name>${project.artifactId}</name>
+    
+  	<artifactId>bgp-sdniwrapper</artifactId>
+   	<description>BGP SDNiWrapper</description>
+ 	<packaging>bundle</packaging>
+   	<name>${project.artifactId}</name>
     <prerequisites>
         <maven>3.0.4</maven>
     </prerequisites>
+ 	
 
-    <dependencies>
-     <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
-        </dependency>
-     <dependency>
-		<groupId>com.sun.jersey</groupId>
-		<artifactId>jersey-client</artifactId>
-		<version>1.9.1</version>
-	 </dependency>
-	 
-      <dependency>
-         <groupId>org.opendaylight.controller</groupId>
-         <artifactId>config-api</artifactId>
-      </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-concepts</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-parser-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-parser-spi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-rib-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-rib-spi</artifactId>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-client</artifactId>
+    </dependency>
+    <dependency>
+       <groupId>io.netty</groupId>
+       <artifactId>netty-codec</artifactId>
+  	</dependency>
+  	<dependency>
+       <groupId>io.netty</groupId>
+       <artifactId>netty-common</artifactId>
+   	</dependency>
+  	<dependency>
+       <groupId>io.netty</groupId>
+       <artifactId>netty-transport</artifactId>
+   	</dependency>
+   	<dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+   	</dependency>
+  </dependencies>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>concepts</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>rsvp-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>util</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-         </dependency>
-    </dependencies>
-
-     <build>
+    <build>
         <plugins>
-           <plugin>
-               <groupId>org.apache.felix</groupId>
-               <artifactId>maven-bundle-plugin</artifactId>
-               <extensions>true</extensions>
-               <configuration>
-                   <instructions>
-                       <Bundle-Name>${project.groupId}.${project.artifactId}</Bundle-Name>
-                   </instructions>
-               </configuration>
-           </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Name>${project.groupId}.${project.artifactId}</Bundle-Name>
+                    </instructions>
+                    <Import-Package>
+                    	com.sun.jersey.api.client.*,
+						com.sun.jersey.api.client.config.*,
+						javax.ws.rs.core.*,
+                    </Import-Package>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
