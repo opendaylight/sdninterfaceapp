@@ -4,7 +4,7 @@
   <parent>
     <artifactId>sdninterfaceapp.project</artifactId>
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
-    <version>1.4.2-Helium</version>
+    <version>1.4.3-SNAPSHOT</version>
   </parent>
   <!--
     Necessary TODO: Hookup your parent pom here, else you will not get necessary versions,
@@ -14,7 +14,7 @@
   -->
   <artifactId>org.opendaylight.sdninterfaceapp</artifactId>
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
-  <version>1.4.2-Helium</version>
+  <version>1.4.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <prerequisites>
     <maven>3.0</maven>
@@ -22,8 +22,8 @@
   <properties>
     <!-- Optional TODO: Move these properties to your parent pom and possibly
             DependencyManagement section of your parent pom -->
-    <branding.version>1.0.0-Helium</branding.version>
-    <karaf.resources.version>1.4.2-Helium</karaf.resources.version>
+    <branding.version>1.0.1-SNAPSHOT</branding.version>
+    <karaf.resources.version>1.4.3-SNAPSHOT</karaf.resources.version>
     <karaf.version>3.0.1</karaf.version>
   </properties>
 
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>org.opendaylight.sdninterfaceapp</groupId>
       <artifactId>features-sdninterfaceapp</artifactId>
-      <version>1.4.2-Helium</version>
+      <version>1.4.3-SNAPSHOT</version>
       <classifier>features</classifier>
       <type>xml</type>
       <scope>runtime</scope>
@@ -79,7 +79,7 @@
     <dependency>
       <groupId>org.opendaylight.openflowplugin</groupId>
       <artifactId>features-openflowplugin</artifactId>
-      <version>0.0.3-Helium</version>
+      <version>0.0.4-SNAPSHOT</version>
       <classifier>features</classifier>
       <type>xml</type>
       <scope>runtime</scope>
