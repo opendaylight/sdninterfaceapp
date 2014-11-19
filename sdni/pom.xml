@@ -6,7 +6,7 @@
     <artifactId>commons.opendaylight</artifactId>
     <version>1.5.0-SNAPSHOT</version>
   </parent>
-<groupId>org.opendaylight.sdninterfaceapp</groupId>  
+<groupId>org.opendaylight.sdninterfaceapp</groupId>
 <artifactId>sdni</artifactId>
   <version>0.6.0-SNAPSHOT</version>
   <packaging>bundle</packaging>

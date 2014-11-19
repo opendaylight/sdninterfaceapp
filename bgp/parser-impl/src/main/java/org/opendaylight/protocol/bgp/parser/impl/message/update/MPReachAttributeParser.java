@@ -42,8 +42,8 @@ public final class MPReachAttributeParser implements AttributeParser, AttributeS
 
     @Override
     public void parseAttribute(final ByteBuf buffer, final PathAttributesBuilder builder) throws BGPDocumentedException {
-       LOG.trace("inside parseAttribute of MPReachAttributeParser"); 
-	try {
+       LOG.trace("inside parseAttribute of MPReachAttributeParser");
+        try {
             final PathAttributes1 a = new PathAttributes1Builder().setMpReachNlri(this.reg.parseMpReach(buffer)).build();
             builder.addAugmentation(PathAttributes1.class, a);
         } catch (final BGPParsingException e) {
@@ -53,8 +53,8 @@ public final class MPReachAttributeParser implements AttributeParser, AttributeS
 
     @Override
     public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
-       	LOG.trace("inside serializeAttribute of MPReachAttributeParser"); 
-	Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
+        LOG.trace("inside serializeAttribute of MPReachAttributeParser");
+        Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
         final PathAttributes pathAttributes = (PathAttributes) attribute;
         final PathAttributes1 pathAttributes1 = pathAttributes.getAugmentation(PathAttributes1.class);
         if (pathAttributes1 == null) {

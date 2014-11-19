@@ -9,23 +9,23 @@
 package org.opendaylight.controller.sdni.northbound;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+//import java.util.ArrayList;
+//import java.util.HashSet;
+//import java.util.List;
+//import java.util.Set;
 
-import org.junit.Assert;
+//import org.junit.Assert;
 import org.junit.Test;
-import org.opendaylight.controller.sal.core.Node;
-import org.opendaylight.controller.sal.core.NodeConnector;
-import org.opendaylight.controller.sal.core.Property;
-import org.opendaylight.controller.sal.utils.NodeConnectorCreator;
-import org.opendaylight.controller.sal.utils.NodeCreator;
+//import org.opendaylight.controller.sal.core.Node;
+//import org.opendaylight.controller.sal.core.NodeConnector;
+//import org.opendaylight.controller.sal.core.Property;
+//import org.opendaylight.controller.sal.utils.NodeConnectorCreator;
+//import org.opendaylight.controller.sal.utils.NodeCreator;
 
 public class SdniNorthboundTest {
 
         @Test
         public void testNodes() {
-                
+
         }
 }

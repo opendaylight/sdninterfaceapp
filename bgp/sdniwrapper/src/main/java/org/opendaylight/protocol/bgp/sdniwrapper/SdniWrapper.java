@@ -17,7 +17,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.PasswordAuthentication;
 import java.net.SocketException;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,203 +42,203 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 public class SdniWrapper {
 
-	private static Logger LOG = LoggerFactory.getLogger(SdniWrapper.class);
-	private static final NetworkCapabilities networkData = new NetworkCapabilities();
-	private final String CONTROLLER_URL = "http://localhost:8080/controller/nb/v2/sdni/default/topology";
-	public static Map peer_information = new HashMap();
+        private static Logger LOG = LoggerFactory.getLogger(SdniWrapper.class);
+        private static final NetworkCapabilities networkData = new NetworkCapabilities();
+        private final String CONTROLLER_URL = "http://localhost:8080/controller/nb/v2/sdni/default/topology";
+        public static Map peer_information = new HashMap();
 
-	/**
-	 * Finds IPv4 address of the local VM TODO: This method is
-	 * non-deterministic. There may be more than one IPv4 address. Cant say
-	 * which address will be returned. Read IP from a property file or enhance
-	 * the code to make it deterministic.
-	 * 
-	 * @return String
-	 */
-	public String findIpAddress() {
-		Enumeration e = null;
-		try {
-			e = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e1) {
-			LOG.warn("Failed to get list of interfaces" + e1);
-			return null;
-		}
-		while (e.hasMoreElements()) {
+        /**
+         * Finds IPv4 address of the local VM TODO: This method is
+         * non-deterministic. There may be more than one IPv4 address. Cant say
+         * which address will be returned. Read IP from a property file or enhance
+         * the code to make it deterministic.
+         *
+         * @return String
+         */
+        public String findIpAddress() {
+                Enumeration e = null;
+                try {
+                        e = NetworkInterface.getNetworkInterfaces();
+                } catch (SocketException e1) {
+                        LOG.warn("Failed to get list of interfaces" + e1);
+                        return null;
+                }
+                while (e.hasMoreElements()) {
 
-			NetworkInterface n = (NetworkInterface) e.nextElement();
+                        NetworkInterface n = (NetworkInterface) e.nextElement();
 
-			Enumeration ee = n.getInetAddresses();
-			while (ee.hasMoreElements()) {
-				InetAddress i = (InetAddress) ee.nextElement();
-				if ((i instanceof Inet4Address) && (!i.isLoopbackAddress())) {
-					String hostAddress = i.getHostAddress();
-					return hostAddress;
-				}
-			}
-		}
-		LOG.debug("Failed to find a suitable host address");
-		return null;
-	}
+                        Enumeration ee = n.getInetAddresses();
+                        while (ee.hasMoreElements()) {
+                                InetAddress i = (InetAddress) ee.nextElement();
+                                if ((i instanceof Inet4Address) && (!i.isLoopbackAddress())) {
+                                        String hostAddress = i.getHostAddress();
+                                        return hostAddress;
+                                }
+                        }
+                }
+                LOG.debug("Failed to find a suitable host address");
+                return null;
+        }
 
-	/*public void printPeerInformation() {
-		LOG.info("inside printPeerInformation");
-		Iterator<Map.Entry<Integer, Integer>> entries = peer_information
-				.entrySet().iterator();
-		while (entries.hasNext()) {
-			Map.Entry<Integer, Integer> entry = entries.next();
-			LOG.info("Key = " + entry.getKey() + ", Value = "
-					+ entry.getValue());
-		}
-	}*/
+        /*public void printPeerInformation() {
+                LOG.info("inside printPeerInformation");
+                Iterator<Map.Entry<Integer, Integer>> entries = peer_information
+                                .entrySet().iterator();
+                while (entries.hasNext()) {
+                        Map.Entry<Integer, Integer> entry = entries.next();
+                        LOG.info("Key = " + entry.getKey() + ", Value = "
+                                        + entry.getValue());
+                }
+        }*/
 
-	public ByteBuf getSDNIMessage() {
-		byte[] defaultBytes = null;
-		String topologyDetails = null;
-		ByteBuf sdniBytes = null;
+        public ByteBuf getSDNIMessage() {
+                byte[] defaultBytes = null;
+                String topologyDetails = null;
+                ByteBuf sdniBytes = null;
 
-		// Read the message/topology details from the controller's Rest API
-		topologyDetails = callRestAPI(CONTROLLER_URL);
+                // Read the message/topology details from the controller's Rest API
+                topologyDetails = callRestAPI(CONTROLLER_URL);
 
-		// Convert the message from string to byte array
-		defaultBytes = topologyDetails.getBytes();
-		sdniBytes = Unpooled.copiedBuffer(defaultBytes);
-		LOG.trace("Convert sdni message into ByteBuf:" + sdniBytes);
-		return sdniBytes;
-	}
+                // Convert the message from string to byte array
+                defaultBytes = topologyDetails.getBytes();
+                sdniBytes = Unpooled.copiedBuffer(defaultBytes);
+                LOG.trace("Convert sdni message into ByteBuf:" + sdniBytes);
+                return sdniBytes;
+        }
 
-	public String parseSDNIMessage(ByteBuf msg) {
-		String result = "";
-		byte[] bytes = new byte[msg.readableBytes()];
-		int readerIndex = msg.readerIndex();
-		msg.getBytes(readerIndex, bytes);
-		String sdniMsg = new String(bytes);
-		
-		LOG.trace("After parsing sdni message from ByteBuf to String: " + sdniMsg);
-		result = parseSDNIMessage(sdniMsg);
-		return result;
+        public String parseSDNIMessage(ByteBuf msg) {
+                String result = "";
+                byte[] bytes = new byte[msg.readableBytes()];
+                int readerIndex = msg.readerIndex();
+                msg.getBytes(readerIndex, bytes);
+                String sdniMsg = new String(bytes);
 
-	}
+                LOG.trace("After parsing sdni message from ByteBuf to String: " + sdniMsg);
+                result = parseSDNIMessage(sdniMsg);
+                return result;
 
-	@SuppressWarnings("unchecked")
-	public String parseSDNIMessage(String sdnimsg) {
+        }
 
-		try {
-			JsonFactory jfactory = new JsonFactory();
+        @SuppressWarnings("unchecked")
+        public String parseSDNIMessage(String sdnimsg) {
 
-			String message = sdnimsg.replace('"', '\"');
+                try {
+                        JsonFactory jfactory = new JsonFactory();
 
-			JsonParser jParser = jfactory.createJsonParser(message);
+                        String message = sdnimsg.replace('"', '\"');
 
-			LOG.trace("Started parsing sdni message to NetworkCapabilities " + message);
-			while (jParser.nextToken() != JsonToken.END_OBJECT) {
+                        JsonParser jParser = jfactory.createJsonParser(message);
 
-				String fieldname = jParser.getCurrentName();
-				if ("link".equals(fieldname)) {
-					jParser.nextToken();
-					String links = jParser.getText();
-					List<String> tempList = new ArrayList<String>();	
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						System.out.println("link:"+jParser.getText());
-						tempList.add(jParser.getText());
-			                }
-					networkData.setLinks(tempList);
-				}
-				if ("bandwidth".equals(fieldname)) {
-					jParser.nextToken();
-					String bandwidth = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-	                		}
-					networkData.setBandwidths(tempList);
-				}
-				if ("latency".equals(fieldname)) {
-					jParser.nextToken();
-					String latency = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-	                		}
-					networkData.setLatencies(tempList);
-				}
-				if ("macAddressList".equals(fieldname)) {
-					jParser.nextToken();
-					String macAddressList = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-	                		}
-					networkData.setMacAddressList(tempList);	
-				}
-				if ("ipAddressList".equals(fieldname)) {
-					jParser.nextToken();
-					String ipAddressList = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-	                		}
-					networkData.setIpAddressList(tempList);
-				}
-				if ("controller".equals(fieldname)) {
-					jParser.nextToken();
-					String controller = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-	        		        }
-					networkData.setControllers(tempList);
-				}
-				if ("node".equals(fieldname)) {
-					jParser.nextToken();
-					String node = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-	        		        }
-					networkData.setNodes(tempList);
-				}
-				if ("host".equals(fieldname)) {
-					jParser.nextToken();
-					String host = jParser.getText();
-					List<String> tempList = new ArrayList<String>();
-					while (jParser.nextToken() != JsonToken.END_ARRAY) {
-						tempList.add(jParser.getText());
-			                }
-					networkData.setHosts(tempList);
-				}
-			}
-			jParser.close();
-		} catch (JsonGenerationException e) {
-			LOG.trace("JsonGenerationException:" + e);
-			return "JsonGenerationException";
-		} catch (JsonMappingException e) {
-			LOG.trace("JsonMappingException:" + e);
-			return "JsonMappingException";
-		} catch (IOException e) {
-			LOG.trace("IOException:" + e);
-			return "IOException";
-		}
-		peer_information.put(networkData.getControllers().toString(),
-				networkData);
-		LOG.trace("After storing sdni message in peer_info:"
-				+ peer_information.get(networkData.getControllers().toString()));
-		return "success";
-	}
+                        LOG.trace("Started parsing sdni message to NetworkCapabilities " + message);
+                        while (jParser.nextToken() != JsonToken.END_OBJECT) {
 
-	public String callRestAPI(String url) {
-		final String admin = "admin";
-		Authenticator.setDefault(new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(admin, admin.toCharArray());
-			}
-		});
-		ClientConfig config = new DefaultClientConfig();
-		Client client = Client.create(config);
-		WebResource service = client.resource(UriBuilder.fromUri(url).build());
-		String data = service.accept(MediaType.APPLICATION_JSON).get(
-				String.class);
-		LOG.trace("Read sdni message from rest api:" + data);
-		return data;
-	}
+                                String fieldname = jParser.getCurrentName();
+                                if ("link".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String links = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                System.out.println("link:"+jParser.getText());
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setLinks(tempList);
+                                }
+                                if ("bandwidth".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String bandwidth = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setBandwidths(tempList);
+                                }
+                                if ("latency".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String latency = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setLatencies(tempList);
+                                }
+                                if ("macAddressList".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String macAddressList = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setMacAddressList(tempList);
+                                }
+                                if ("ipAddressList".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String ipAddressList = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setIpAddressList(tempList);
+                                }
+                                if ("controller".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String controller = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setControllers(tempList);
+                                }
+                                if ("node".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String node = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setNodes(tempList);
+                                }
+                                if ("host".equals(fieldname)) {
+                                        jParser.nextToken();
+                                        String host = jParser.getText();
+                                        List<String> tempList = new ArrayList<String>();
+                                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                                                tempList.add(jParser.getText());
+                                        }
+                                        networkData.setHosts(tempList);
+                                }
+                        }
+                        jParser.close();
+                } catch (JsonGenerationException e) {
+                        LOG.trace("JsonGenerationException:" + e);
+                        return "JsonGenerationException";
+                } catch (JsonMappingException e) {
+                        LOG.trace("JsonMappingException:" + e);
+                        return "JsonMappingException";
+                } catch (IOException e) {
+                        LOG.trace("IOException:" + e);
+                        return "IOException";
+                }
+                peer_information.put(networkData.getControllers().toString(),
+                                networkData);
+                LOG.trace("After storing sdni message in peer_info:"
+                                + peer_information.get(networkData.getControllers().toString()));
+                return "success";
+        }
+
+        public String callRestAPI(String url) {
+                final String admin = "admin";
+                Authenticator.setDefault(new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(admin, admin.toCharArray());
+                        }
+                });
+                ClientConfig config = new DefaultClientConfig();
+                Client client = Client.create(config);
+                WebResource service = client.resource(UriBuilder.fromUri(url).build());
+                String data = service.accept(MediaType.APPLICATION_JSON).get(
+                                String.class);
+                LOG.trace("Read sdni message from rest api:" + data);
+                return data;
+        }
 
 }

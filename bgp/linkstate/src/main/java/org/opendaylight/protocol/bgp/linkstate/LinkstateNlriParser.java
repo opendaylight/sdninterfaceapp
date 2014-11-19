@@ -118,15 +118,15 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
             buffer.skipBytes(length);
         }
         builder.setLinkDescriptors(parseLinkDescriptors(buffer.slice()));
-	if(isSdniOn){
-        	//	Sdni layer in LinkState NLRI
-        	builder.setLinkSdniDescriptors(parseLinkSdniDescriptors(buffer.slice()));
+        if(isSdniOn){
+                //      Sdni layer in LinkState NLRI
+                builder.setLinkSdniDescriptors(parseLinkSdniDescriptors(buffer.slice()));
         }
         return remote;
     }
 
     private static LinkSdniDescriptors parseLinkSdniDescriptors(final ByteBuf buffer) throws BGPParsingException {
-    	LOG.debug("parse Link SDNI descriptors: "+buffer);
+        LOG.debug("parse Link SDNI descriptors: "+buffer);
         final LinkSdniDescriptorsBuilder builder = new LinkSdniDescriptorsBuilder();
         while (buffer.isReadable()) {
             final int type = buffer.readUnsignedShort();
@@ -135,11 +135,11 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
             LOG.debug("Parsing Link Sdni Descriptor: {}", new String(value));
             switch (type) {
             case TlvCode.SDNI_LINK_STATE:
-            	SdniWrapper sdni = new SdniWrapper();
-            	String sdniData = new String(value);
-            	builder.setSdniIdentifier(sdniData);
-            	sdni.parseSDNIMessage(sdniData);
-            	LOG.trace("SDNI wrapper data to be parsed: ",sdniData);
+                SdniWrapper sdni = new SdniWrapper();
+                String sdniData = new String(value);
+                builder.setSdniIdentifier(sdniData);
+                sdni.parseSDNIMessage(sdniData);
+                LOG.trace("SDNI wrapper data to be parsed: ",sdniData);
             default:
                 throw new BGPParsingException("Link Sdni Descriptor not recognized, type: " + type);
             }
@@ -429,13 +429,13 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
             if (destination.getLinkDescriptors() != null) {
                 serializeLinkDescriptors(destination.getLinkDescriptors(), nlriByteBuf);
             }
-	    //Serialize Link-Sdni descriptors
+            //Serialize Link-Sdni descriptors
             if(isSdniOn){
-	            final byte[] sdniData = serializeLinkSdniDescriptors();
-	            buffer.writeShort(TlvCode.SDNI_LINK_STATE);
-	            buffer.writeShort(sdniData.length);
-	            buffer.writeBytes(sdniData);
-	           // serializeLinkSdniDescriptors(buffer, destination.getLinkSdniDescriptors());
+                    final byte[] sdniData = serializeLinkSdniDescriptors();
+                    buffer.writeShort(TlvCode.SDNI_LINK_STATE);
+                    buffer.writeShort(sdniData.length);
+                    buffer.writeBytes(sdniData);
+                   // serializeLinkSdniDescriptors(buffer, destination.getLinkSdniDescriptors());
             }
             break;
         case Node:
@@ -556,11 +556,11 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
     }
 
     private static byte[] serializeLinkSdniDescriptors() {
-	SdniWrapper sdniWrapper = new SdniWrapper();
-   	ByteBuf buffer = Unpooled.buffer();
-   	 
-   	buffer = sdniWrapper.getSDNIMessage();
-   	LOG.debug("serialise sdni: "+ByteArray.readAllBytes(buffer) +" buffer: "+buffer);
-   	return ByteArray.readAllBytes(buffer);
+        SdniWrapper sdniWrapper = new SdniWrapper();
+        ByteBuf buffer = Unpooled.buffer();
+
+        buffer = sdniWrapper.getSDNIMessage();
+        LOG.debug("serialise sdni: "+ByteArray.readAllBytes(buffer) +" buffer: "+buffer);
+        return ByteArray.readAllBytes(buffer);
     }
 }
