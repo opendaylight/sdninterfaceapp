@@ -58,7 +58,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
     private static final Logger LOG = LoggerFactory.getLogger(BGPSessionImpl.class);
 
     private static final Notification KEEP_ALIVE = new KeepaliveBuilder().build();
-    
+
     private static final Notification UPDATE = new UpdateBuilder().build();
 
     /**
@@ -184,14 +184,14 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
                 ((Notify) msg).getErrorSubcode())));
         } else if (msg instanceof Keepalive) {
             // Keepalives are handled internally
-           	LOG.trace("Received KeepAlive messsage.");
+            LOG.trace("Received KeepAlive messsage.");
             this.kaCounter++;
             if (this.kaCounter >= 2) {
                 this.sync.kaReceived();
             }
         } else {
-        	LOG.trace("Received Update message.");
-        	//All others are passed up
+            LOG.trace("Received Update message.");
+            //All others are passed up
             this.listener.onMessage(this, msg);
             this.sync.updReceived((Update) msg);
         }
@@ -206,7 +206,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
 
     synchronized void sendMessage(final Notification msg) {
         try {
-        	
+
             this.channel.writeAndFlush(msg).addListener(
                 new ChannelFutureListener() {
                     @Override
@@ -286,12 +286,12 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
         long nextKeepalive = this.lastMessageSentAt + TimeUnit.SECONDS.toNanos(this.keepAlive);
 
         if (ct >= nextKeepalive) {
-        	LOG.trace("inside handleKeepaliveTimer");
-        	this.sendMessage(KEEP_ALIVE);
-  
-          	//Send Update message with sdni message
-        	this.sendMessage(UPDATE);
-        
+            LOG.trace("inside handleKeepaliveTimer");
+            this.sendMessage(KEEP_ALIVE);
+
+            //Send Update message with sdni message
+            this.sendMessage(UPDATE);
+
             nextKeepalive = this.lastMessageSentAt + TimeUnit.SECONDS.toNanos(this.keepAlive);
         }
         this.channel.eventLoop().schedule(new Runnable() {
