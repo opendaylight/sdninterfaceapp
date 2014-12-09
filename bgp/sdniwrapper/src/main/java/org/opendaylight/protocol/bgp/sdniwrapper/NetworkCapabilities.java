@@ -39,7 +39,7 @@ public class NetworkCapabilities {
     private List<String> host = new ArrayList<String>();
     @XmlElement
     private String timeStamp = new String();
-    
+
 
     public String getTimeStamp() {
         return timeStamp;

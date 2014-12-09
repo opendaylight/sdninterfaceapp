@@ -8,10 +8,6 @@
 
 package org.opendaylight.protocol.bgp.sdniwrapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -113,7 +109,7 @@ public class NetworkCapabilitiesQOS {
         sb.append(", transmitPackets ").append(transmitPackets);
         sb.append(", collisionCount ").append(collisionCount);
         sb.append(", receiveFrameError ").append(receiveFrameError);
-	sb.append(", receiveOverRunError ").append(receiveOverRunError);
+        sb.append(", receiveOverRunError ").append(receiveOverRunError);
         sb.append(", receiveCrcError ").append(receiveCrcError);
         sb.append(", node ").append(node);
         sb.append(", port ").append(port);
