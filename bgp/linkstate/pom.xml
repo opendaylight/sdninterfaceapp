@@ -32,7 +32,7 @@
     </prerequisites>
 
     <dependencies>
-	<dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bgp-sdniwrapper</artifactId>
         </dependency>
