@@ -126,7 +126,7 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
     }
 
     private static LinkSdniDescriptors parseLinkSdniDescriptors(final ByteBuf buffer) throws BGPParsingException {
-        LOG.debug("parse Link SDNI descriptors: "+buffer);
+        LOG.debug("parse Link SDNI descriptors: {0}", buffer);
         final LinkSdniDescriptorsBuilder builder = new LinkSdniDescriptorsBuilder();
         while (buffer.isReadable()) {
             final int type = buffer.readUnsignedShort();
@@ -556,11 +556,11 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
     }
 
     private static byte[] serializeLinkSdniDescriptors() {
-    SdniWrapper sdniWrapper = new SdniWrapper();
-    ByteBuf buffer = Unpooled.buffer();
+        SdniWrapper sdniWrapper = new SdniWrapper();
+        ByteBuf buffer = Unpooled.buffer();
 
-    buffer = sdniWrapper.getSDNIMessage();
-    LOG.debug("serialise sdni: "+ByteArray.readAllBytes(buffer) +" buffer: "+buffer);
-    return ByteArray.readAllBytes(buffer);
+        buffer = sdniWrapper.getSDNIMessage();
+        LOG.debug("serialise sdni: {0} buffer: {1}", ByteArray.readAllBytes(buffer), buffer);
+        return ByteArray.readAllBytes(buffer);
     }
 }
