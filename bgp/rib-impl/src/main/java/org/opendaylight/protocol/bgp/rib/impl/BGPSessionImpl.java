@@ -31,7 +31,6 @@ import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionStatistics;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
 import org.opendaylight.protocol.bgp.rib.spi.BGPTerminationReason;
-import org.opendaylight.protocol.bgp.sdniwrapper.SdniWrapper;
 import org.opendaylight.protocol.framework.AbstractProtocolSession;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
@@ -334,8 +333,8 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
 
         if (ct >= nextKeepalive) {
             this.writeAndFlush(KEEP_ALIVE);
-           //Send Update message with sdni message
-        	this.writeAndFlush(UPDATE);
+            // Send Update message with sdni message
+            this.writeAndFlush(UPDATE);
             nextKeepalive = this.lastMessageSentAt + TimeUnit.SECONDS.toNanos(this.keepAlive);
             this.sessionStats.updateSentMsgKA();
         }
