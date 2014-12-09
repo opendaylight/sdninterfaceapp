@@ -6,7 +6,7 @@
     <artifactId>commons.opendaylight</artifactId>
     <version>1.4.2-Helium</version>
   </parent>
-<groupId>org.opendaylight.sdninterfaceapp</groupId>  
+<groupId>org.opendaylight.sdninterfaceapp</groupId>
 <artifactId>sdni</artifactId>
   <version>0.5.2-Helium</version>
   <packaging>bundle</packaging>
