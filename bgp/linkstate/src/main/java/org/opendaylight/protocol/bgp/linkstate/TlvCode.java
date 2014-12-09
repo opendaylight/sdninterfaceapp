@@ -103,6 +103,6 @@ final class TlvCode {
     static final int ISIS_AREA_IDENTIFIER = 1027;
 
     /* SDNi Attribute TLVs */
-    
+
     static final int SDNI_LINK_STATE = 256;
 }

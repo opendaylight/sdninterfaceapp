@@ -321,7 +321,7 @@ module bgp-linkstate {
                 when "../nlri-type = 'ipv4-prefix' or ../nlri-type = 'ipv6-prefix'";
                 uses prefix-identifiers;
             }
-	    container link-sdni-descriptors{
+            container link-sdni-descriptors{
                 when "../nlri-type = link";
                 uses link-sdni-identifiers;
             }
@@ -498,7 +498,7 @@ module bgp-linkstate {
         leaf admin-group {
             type administrative-group;
         }
-	leaf sdni-link-state {
+        leaf sdni-link-state {
             type string;
         }
     }
