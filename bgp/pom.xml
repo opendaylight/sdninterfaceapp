@@ -45,7 +45,7 @@
         <module>testtool</module>
         <module>topology-provider</module>
         <module>util</module>
-	<module>sdniwrapper</module>
+        <module>sdniwrapper</module>
         <module>controller-config</module>
     </modules>
 </project>
