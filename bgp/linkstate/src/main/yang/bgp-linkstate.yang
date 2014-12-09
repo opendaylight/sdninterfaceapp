@@ -322,7 +322,7 @@ module bgp-linkstate {
                 container link-descriptors {
                     uses link-identifier;
                 }
-				container link-sdni-descriptors{
+                container link-sdni-descriptors{
                     uses link-sdni-identifiers;
             }
             }
@@ -528,7 +528,7 @@ module bgp-linkstate {
         container sr-lan-adj-id {
             uses bgp-sr:lan-adjacency-segment-identifier;
         }
-	    leaf sdni-link-state {
+        leaf sdni-link-state {
             type string;
         }
     }

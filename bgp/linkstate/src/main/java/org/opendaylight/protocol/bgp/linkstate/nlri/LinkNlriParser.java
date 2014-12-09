@@ -11,12 +11,12 @@ import com.google.common.annotations.VisibleForTesting;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import org.opendaylight.protocol.bgp.sdniwrapper.SdniWrapper;
 import org.opendaylight.protocol.bgp.linkstate.spi.TlvUtil;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
+import org.opendaylight.protocol.bgp.sdniwrapper.SdniWrapper;
+import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.protocol.util.Ipv4Util;
 import org.opendaylight.protocol.util.Ipv6Util;
-import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.Ipv4InterfaceIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.Ipv6InterfaceIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.TopologyIdentifier;
@@ -114,32 +114,32 @@ public final class LinkNlriParser {
             TlvUtil.writeTLV(TlvUtil.MULTI_TOPOLOGY_ID, Unpooled.copyShort(descriptors.getMultiTopologyId().getValue()), buffer);
         }
     }
-    
+
     static LinkSdniDescriptors parseLinkSdniDescriptors(final ByteBuf buffer) throws BGPParsingException {
-        LOG.debug("parse Link SDNI descriptors: "+buffer);
+        LOG.debug("parse Link SDNI descriptors: {0}", buffer);
         final LinkSdniDescriptorsBuilder builder = new LinkSdniDescriptorsBuilder();
         while (buffer.isReadable()) {
             final int type = buffer.readUnsignedShort();
             final int length = buffer.readUnsignedShort();
             final byte[] value = ByteArray.readBytes(buffer, length);
-	    SdniWrapper sdni = new SdniWrapper(); 
+            SdniWrapper sdni = new SdniWrapper();
             LOG.debug("Parsing Link Sdni Descriptor: {}", new String(value));
             switch (type) {
             case SDNI_LINK_STATE:
                 String sdniData = new String(value);
                 builder.setSdniIdentifier(sdniData);
-		sdni.parseSDNIMessage(sdniData);
+                sdni.parseSDNIMessage(sdniData);
                 LOG.trace("SDNI wrapper data to be parsed: ",sdniData);
-	
-		final int qostype = buffer.readUnsignedShort();
-		if(qostype == SDNI_QOS_STATE){
-	            	final int qoslength = buffer.readUnsignedShort();
-        	    	final byte[] qosvalue = ByteArray.readBytes(buffer, qoslength);
-                	String sdniqosData = new String(qosvalue);
-	                builder.setSdniIdentifier(sdniqosData);
-			sdni.parseSDNIQOSMessage(sdniqosData);
-			LOG.trace("SDNI-QOS wrapper data to be parsed: ",sdniqosData);
-		}
+
+                final int qostype = buffer.readUnsignedShort();
+                if (qostype == SDNI_QOS_STATE) {
+                    final int qoslength = buffer.readUnsignedShort();
+                    final byte[] qosvalue = ByteArray.readBytes(buffer, qoslength);
+                    String sdniqosData = new String(qosvalue);
+                    builder.setSdniIdentifier(sdniqosData);
+                    sdni.parseSDNIQOSMessage(sdniqosData);
+                    LOG.trace("SDNI-QOS wrapper data to be parsed: ",sdniqosData);
+                }
             default:
                 throw new BGPParsingException("Link Sdni Descriptor not recognized, type: " + type);
             }
@@ -147,13 +147,13 @@ public final class LinkNlriParser {
         LOG.trace("Finished parsing Link descriptors.");
         return builder.build();
     }
-   
+
     static byte[] serializeLinkSdniDescriptors() {
         SdniWrapper sdniWrapper = new SdniWrapper();
         ByteBuf buffer = Unpooled.buffer();
 
         buffer = sdniWrapper.getSDNIMessage();
-        LOG.debug("serialise sdni: "+ByteArray.readAllBytes(buffer) +" buffer: "+buffer);
+        LOG.debug("serialise sdni: {0} buffer: {1}", ByteArray.readAllBytes(buffer), buffer);
         return ByteArray.readAllBytes(buffer);
     }
 
@@ -162,7 +162,7 @@ public final class LinkNlriParser {
         ByteBuf buffer = Unpooled.buffer();
 
         buffer = sdniWrapper.getSDNIQOSMessage();
-        LOG.debug("serialise sdni qos: "+ByteArray.readAllBytes(buffer) +" buffer: "+buffer);
+        LOG.debug("serialise sdni qos: {0} buffer: {1}", ByteArray.readAllBytes(buffer), buffer);
         return ByteArray.readAllBytes(buffer);
     }
 }
