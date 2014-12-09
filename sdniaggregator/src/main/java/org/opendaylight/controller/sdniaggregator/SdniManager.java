@@ -212,7 +212,7 @@ public class SdniManager {
         }
         return SUCCESS;
     }
-    
+
      /**
      * Retrieve the QOS parameters for node and port using StatisticsManager
      * @param containerName
@@ -240,7 +240,7 @@ public class SdniManager {
             PortStatistics portStat = new PortStatistics(node, stat);
             statistics.add(portStat);
         }
-	
+
 	NodeConnector nodeConnector;
 	String port;
         long receivePackets;
@@ -254,7 +254,7 @@ public class SdniManager {
 		Node node = ps.getNode();
 		String nodeName = "";
             	nodeName = node.toString().replace("OF|", "");
-		
+
 		List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
 		for(NodeConnectorStatistics nc : nodeConnectorStats ) {
 			nodeConnector = nc.getNodeConnector();
@@ -265,7 +265,7 @@ public class SdniManager {
                 	receiveOverRunError = nc.getReceiveOverRunErrorCount();
                 	receiveCrcError = nc.getReceiveCRCErrorCount();
                 	collisionCount = nc.getCollisionCount();
-			
+
 			NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
 
 		        ncq.setNode(nodeName);
@@ -276,7 +276,7 @@ public class SdniManager {
                 	ncq.setReceiveOverRunError(receiveOverRunError);
                 	ncq.setReceiveCrcError(receiveCrcError);
      			ncq.setCollisionCount(collisionCount);
-                	list.add(ncq);    
+                	list.add(ncq);
             	}
 	   }
          log.info("Inside Statistics manager - Node Connector Statistics List:" +list);
@@ -323,7 +323,7 @@ public class SdniManager {
         return this.nwCapabilities;
 
     }
-   
+
     public List<NetworkCapabilitiesQOS> getQOSDetails(String containerName) {
 
         // Retrieve Controller's IP address
@@ -334,7 +334,7 @@ public class SdniManager {
         log.info("system property: " + clustering);
         if (clustering.equals("127.0.0.1")) {
             log.info("inside accessing individual manager");
-  
+
             // Retrieve QOS information
             result = accessStatisticsManager(containerName);
             if (result == null) {
@@ -355,7 +355,7 @@ public class SdniManager {
      * @return List<ClusterBean>
      */
 	public String getClusteredControllersQOS(String containerName) {
-        
+
         IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
                 .getGlobalInstance(IClusterGlobalServices.class, this);
         if (clusterServices == null) {
@@ -401,7 +401,7 @@ public class SdniManager {
 			Node node = ps.getNode();
 			String nodeName = "";
             		nodeName = node.toString().replace("OF|", "");
-		
+
 			List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
 			for(NodeConnectorStatistics nc : nodeConnectorStats ) {
 				nodeConnector = nc.getNodeConnector();
@@ -412,7 +412,7 @@ public class SdniManager {
                 		receiveOverRunError = nc.getReceiveOverRunErrorCount();
                 		receiveCrcError = nc.getReceiveCRCErrorCount();
                 		collisionCount = nc.getCollisionCount();
-			
+
 				NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
 
 		      		ncq.setNode(nodeName);
@@ -423,7 +423,7 @@ public class SdniManager {
                 		ncq.setReceiveOverRunError(receiveOverRunError);
                 		ncq.setReceiveCrcError(receiveCrcError);
      				ncq.setCollisionCount(collisionCount);
-                		list.add(ncq);    
+                		list.add(ncq);
             		}
 	   	}
 	    }
@@ -437,7 +437,7 @@ public class SdniManager {
      * @return List<ClusterBean>
      */
 	public String getClusteredControllers(String containerName) {
-        
+
         IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
                 .getGlobalInstance(IClusterGlobalServices.class, this);
         if (clusterServices == null) {
@@ -466,7 +466,7 @@ public class SdniManager {
         }
         Map<Edge, Set<Property>> topo = topologyManager.getEdges();
         List<String> macAddressList = new ArrayList<String>();
-        
+
         List<InetAddress> controllers = clusterServices
                 .getClusteredControllers();
         for (InetAddress controller : controllers) {
@@ -480,12 +480,12 @@ public class SdniManager {
                     return "not success";
                 }
                 for (Node node : connectedNodes) {
-                    
+
                     // Start to switchmanager
                     String nodeName = "";
                     String macAddress = "";
                     nodeName = node.toString().replace("OF|", "");
-                    
+
                     Map<String, Property> propMap = switchManager
                             .getNodeProps(node);
                     Object[] array = propMap.keySet().toArray();
