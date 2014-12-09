@@ -138,7 +138,7 @@ public class SdniWrapper {
                     String links = jParser.getText();
                     List<String> tempList = new ArrayList<String>();
                     while (jParser.nextToken() != JsonToken.END_ARRAY) {
-                        System.out.println("link:"+jParser.getText());
+                        LOG.trace("link: {0}", jParser.getText());
                         tempList.add(jParser.getText());
                     }
                     networkData.setLinks(tempList);
