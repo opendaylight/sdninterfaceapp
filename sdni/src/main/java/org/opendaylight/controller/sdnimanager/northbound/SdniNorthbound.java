@@ -59,6 +59,7 @@ public class SdniNorthbound {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SdniNorthbound.class);
     private SdniManager sdnimanager = new SdniManager();
+    private NetworkCapabilities nc = new NetworkCapabilities();
     private static final int OPERATION_SUCCESSFUL = 201;
     private static final int INVALID_CONFIGURATION = 400;
     private static final int USER_NOT_AUTHORIZED = 401;
@@ -172,6 +173,73 @@ public class SdniNorthbound {
             @PathParam("containerName") String containerName) {
 
         LOGGER.debug("inside getTopologyDetails of sdni northbound");
+     	LOGGER.info("inside getTopologyDetails of sdni northbound");
+	if (!isValidContainer(containerName)) {
+            throw new ResourceNotFoundException(CONTAINER + containerName
+                    + " does not exist.");
+        }
+        if (!NorthboundUtils.isAuthorized(getUserName(), containerName,
+                Privilege.WRITE, this)) {
+	    LOGGER.info("not authorized");
+            throw new UnauthorizedException(NOT_AUTHORIZED_MESSAGE + containerName);
+        }
+        ISwitchManager switchManager = getIfSwitchManagerService(containerName);
+        if (switchManager == null) {
+	    LOGGER.info("switchManager not availbale");
+            throw new ServiceUnavailableException("Switch Manager "
+                    + RestMessages.SERVICEUNAVAILABLE.toString());
+        }
+        IfIptoHost hostTracker = (IfIptoHost) ServiceHelper.getInstance(
+                IfIptoHost.class, containerName, this);
+        if (hostTracker == null) {
+	    LOGGER.info("hostTracker not available");
+            throw new ServiceUnavailableException("Host Tracker "
+                    + RestMessages.SERVICEUNAVAILABLE.toString());
+        }
+	LOGGER.info("after populated NetworkCapabilities data");
+	nc = sdnimanager.getTopologyDetails(containerName);
+	LOGGER.info("nc property"+ nc.getIpAddressList());
+	return nc;
+}
+
+/**
+     * Update the available bandwidth property. This method returns a
+     * non-successful response if the bandwidth is not updated.
+     * @param containerName
+     *            Name of the Container (Eg. 'default')
+     * @param propertyName
+     *            Name of the Property. Properties that can be configured are:
+     *            description, forwarding(only for default container) and tier
+     * @param propertyValue
+     *            Value of the Property. Description can be any string (Eg.
+     *            'Node1'), valid values for tier are non negative numbers, and
+     *            valid values for forwarding are 0 for reactive and 1 for
+     *            proactive forwarding.
+     * @return Response as dictated by the HTTP Response Status code
+     *         <pre>
+     * Example:
+     * Request URL:
+     * http://localhost:8080/controller/nb/v2/sdni/default/property/bandwidth/5
+     * </pre>
+     */
+
+    @Path("/{containerName}/property/{propertyName}/{propertyValue}")
+    @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @TypeHint(Response.class)
+    @StatusCodes({
+            @ResponseCode(code = OPERATION_SUCCESSFUL, condition = "Operation successful"),
+            @ResponseCode(code = INVALID_CONFIGURATION, condition = "The nodeId or configuration is invalid"),
+            @ResponseCode(code = USER_NOT_AUTHORIZED, condition = "User not authorized to perform this operation"),
+            @ResponseCode(code = CONTAINER_NOT_FOUND, condition = "The Container Name or node or configuration name is not found"),
+            @ResponseCode(code = NON_DEFAULT_CONTAINER, condition = "The property cannot be configured in non-default container"),
+            @ResponseCode(code = CLUSTER_CONFLICT, condition = "Unable to update configuration due to cluster conflict or conflicting description property"),
+            @ResponseCode(code = SERVICES_UNAVAILABLE, condition = "One or more of Controller services are unavailable") })
+    public Response updateBandwidthProperty(@Context UriInfo uriInfo,
+            @PathParam("containerName") String containerName,
+            @PathParam("propertyName") String propertyName,
+            @PathParam("propertyValue") String propertyValue) {
+
         if (!isValidContainer(containerName)) {
             throw new ResourceNotFoundException(CONTAINER + containerName
                     + " does not exist.");
@@ -180,22 +248,61 @@ public class SdniNorthbound {
                 Privilege.WRITE, this)) {
             throw new UnauthorizedException(NOT_AUTHORIZED_MESSAGE + containerName);
         }
-        ISwitchManager switchManager = getIfSwitchManagerService(containerName);
-        if (switchManager == null) {
-            throw new ServiceUnavailableException("Switch Manager "
-                    + RestMessages.SERVICEUNAVAILABLE.toString());
-        }
-        IfIptoHost hostTracker = (IfIptoHost) ServiceHelper.getInstance(
-                IfIptoHost.class, containerName, this);
-        if (hostTracker == null) {
-            throw new ServiceUnavailableException("Host Tracker "
-                    + RestMessages.SERVICEUNAVAILABLE.toString());
-        }
-        NetworkCapabilities nwCapabilities = new NetworkCapabilities();
-
-        nwCapabilities = (NetworkCapabilities) sdnimanager
-                .getTopologyDetails(containerName);
-        return nwCapabilities;
+        long bandwidth = Long.parseLong(propertyValue);
+        Status status = sdnimanager.updateBandwidth(containerName, bandwidth);
+        return NorthboundUtils.getResponse(status);
     }
+
+    /**
+     * Update the available bandwidth property by its link name. Set of linkname
+     * with different bandwidth can be updated here. This method returns a
+     * non-successful response if the bandwidth is not updated.
+     * @param containerName
+     *            Name of the Container (Eg. 'default')
+     * @param propertyName
+     *            Name of the Property. Properties that can be configured are:
+     *            description, forwarding(only for default container) and tier
+     * @param propertyValue
+     *            Value of the Property. Description can be any string (Eg.
+     *            'Node1'), valid values for tier are non negative numbers, and
+     *            valid values for forwarding are 0 for reactive and 1 for
+     *            proactive forwarding.
+     * @return Response as dictated by the HTTP Response Status code
+     *         <pre>
+     * Example:
+     * Request URL:
+     * http://localhost:8080/controller/nb/v2/sdni/default/property/linkbandwidth/JSONObject
+     * </pre>
+     */
+
+    @Path("/{containerName}/property/linkbandwidth/{propertyValue}")
+    @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @TypeHint(Response.class)
+    @StatusCodes({
+            @ResponseCode(code = OPERATION_SUCCESSFUL, condition = "Operation successful"),
+            @ResponseCode(code = INVALID_CONFIGURATION, condition = "The nodeId or configuration is invalid"),
+            @ResponseCode(code = USER_NOT_AUTHORIZED, condition = "User not authorized to perform this operation"),
+            @ResponseCode(code = CONTAINER_NOT_FOUND, condition = "The Container Name or node or configuration name is not found"),
+            @ResponseCode(code = NON_DEFAULT_CONTAINER, condition = "The property cannot be configured in non-default container"),
+            @ResponseCode(code = CLUSTER_CONFLICT, condition = "Unable to update configuration due to cluster conflict or conflicting description property"),
+            @ResponseCode(code = SERVICES_UNAVAILABLE, condition = "One or more of Controller services are unavailable") })
+    public Response updateLinkBandwidthProperty(@Context UriInfo uriInfo,
+            @PathParam("containerName") String containerName,
+            @PathParam("propertyValue") String propertyValue) {
+
+        if (!isValidContainer(containerName)) {
+            throw new ResourceNotFoundException(CONTAINER + containerName
+                    + " does not exist.");
+        }
+        if (!NorthboundUtils.isAuthorized(getUserName(), containerName,
+                Privilege.WRITE, this)) {
+            throw new UnauthorizedException(NOT_AUTHORIZED_MESSAGE + containerName);
+        }
+        Status status = sdnimanager.updateLinkBandwidth(containerName,
+                propertyValue);
+        return NorthboundUtils.getResponse(status);
+    }
+
 
 }

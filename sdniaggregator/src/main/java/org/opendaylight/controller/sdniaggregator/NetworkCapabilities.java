@@ -39,38 +39,37 @@ public class NetworkCapabilities {
     private List<String> host = new ArrayList<String>();
 
     public NetworkCapabilities() {
-
     }
 
-    public List<String> getLinks() {
+    public List<String> getLink() {
         return link;
     }
 
-    public void setLinks(List<String> links) {
-        this.link = links;
+    public void setLink(List<String> link) {
+        this.link = link;
     }
 
-    public void addLink(String links) {
-        link.add(links);
+    public void addLink(String link) {
+        this.link.add(link);
     }
 
-    public List<String> getBandwidths() {
+    public List<String> getBandwidth() {
         return bandwidth;
     }
 
-    public void setBandwidths(List<String> bandwidths) {
-        this.bandwidth = bandwidths;
+    public void setBandwidth(List<String> bandwidth) {
+        this.bandwidth = bandwidth;
     }
 
     public void addBandwidth(String bandwidth) {
         this.bandwidth.add(bandwidth);
     }
 
-    public List<String> getLatencies() {
+    public List<String> getLatency() {
         return latency;
     }
 
-    public void setLatencies(List<String> latencies) {
+    public void setLatency(List<String> latencies) {
         this.latency = latencies;
     }
 
@@ -91,27 +90,27 @@ public class NetworkCapabilities {
         this.host.add(host);
     }
 
-    public List<String> getControllers() {
+    public List<String> getController() {
         return controller;
     }
 
-    public void setControllers(List<String> controllers) {
+    public void setController(List<String> controllers) {
         this.controller = controllers;
     }
 
-    public List<String> getNodes() {
+    public List<String> getNode() {
         return node;
     }
 
-    public void setNodes(List<String> nodes) {
+    public void setNode(List<String> nodes) {
         this.node = nodes;
     }
 
-    public List<String> getHosts() {
+    public List<String> getHost() {
         return host;
     }
 
-    public void setHosts(List<String> hosts) {
+    public void setHost(List<String> hosts) {
         this.host = hosts;
     }
 
@@ -143,12 +142,12 @@ public class NetworkCapabilities {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Controllers ").append(controller);
-        sb.append(", Links ").append(link);
-        sb.append(", Nodes ").append(node);
-        sb.append(", Hosts ").append(host);
-        sb.append(", Bandwidths ").append(bandwidth);
-        sb.append(", Latencies ").append(latency);
+        sb.append("Controller ").append(controller);
+        sb.append(", Link ").append(link);
+        sb.append(", Node ").append(node);
+        sb.append(", Host ").append(host);
+        sb.append(", Bandwidth ").append(bandwidth);
+        sb.append(", Latency ").append(latency);
         sb.append(", MacAddressList ").append(macAddressList);
         sb.append(", IpAddressList ").append(ipAddressList);
         return sb.toString();

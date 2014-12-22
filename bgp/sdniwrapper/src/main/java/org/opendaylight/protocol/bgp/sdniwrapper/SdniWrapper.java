@@ -17,12 +17,20 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.PasswordAuthentication;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +54,12 @@ public class SdniWrapper {
 	private static final NetworkCapabilities networkData = new NetworkCapabilities();
 	private final String CONTROLLER_URL = "http://localhost:8080/controller/nb/v2/sdni/default/topology";
 	public static Map peer_information = new HashMap();
+	private static int peer_count = 0;
+
+        private static final String JDBC_DRIVER = "org.sqlite.JDBC";
+        private static final String DB_URL = "jdbc:sqlite:/home/lte/sdni/database/CONTROLLER_TOPOLOGY_DATABASE";
+
+
 
 	/**
 	 * Finds IPv4 address of the local VM TODO: This method is
@@ -103,6 +117,10 @@ public class SdniWrapper {
 		defaultBytes = topologyDetails.getBytes();
 		sdniBytes = Unpooled.copiedBuffer(defaultBytes);
 		LOG.trace("Convert sdni message into ByteBuf:" + sdniBytes);
+
+		//Parse rest api content and populate TOPOLOGY_DATABASE data in sqlite
+                parseSDNIMessage(topologyDetails);
+
 		return sdniBytes;
 	}
 
@@ -121,6 +139,7 @@ public class SdniWrapper {
 
 	@SuppressWarnings("unchecked")
 	public String parseSDNIMessage(String sdnimsg) {
+		 boolean peer = true;
 
 		try {
 			JsonFactory jfactory = new JsonFactory();
@@ -141,7 +160,7 @@ public class SdniWrapper {
 						System.out.println("link:"+jParser.getText());
 						tempList.add(jParser.getText());
 			                }
-					networkData.setLinks(tempList);
+					networkData.setLink(tempList);
 				}
 				if ("bandwidth".equals(fieldname)) {
 					jParser.nextToken();
@@ -150,7 +169,7 @@ public class SdniWrapper {
 					while (jParser.nextToken() != JsonToken.END_ARRAY) {
 						tempList.add(jParser.getText());
 	                		}
-					networkData.setBandwidths(tempList);
+					networkData.setBandwidth(tempList);
 				}
 				if ("latency".equals(fieldname)) {
 					jParser.nextToken();
@@ -159,7 +178,7 @@ public class SdniWrapper {
 					while (jParser.nextToken() != JsonToken.END_ARRAY) {
 						tempList.add(jParser.getText());
 	                		}
-					networkData.setLatencies(tempList);
+					networkData.setLatency(tempList);
 				}
 				if ("macAddressList".equals(fieldname)) {
 					jParser.nextToken();
@@ -186,7 +205,7 @@ public class SdniWrapper {
 					while (jParser.nextToken() != JsonToken.END_ARRAY) {
 						tempList.add(jParser.getText());
 	        		        }
-					networkData.setControllers(tempList);
+					networkData.setController(tempList);
 				}
 				if ("node".equals(fieldname)) {
 					jParser.nextToken();
@@ -195,7 +214,7 @@ public class SdniWrapper {
 					while (jParser.nextToken() != JsonToken.END_ARRAY) {
 						tempList.add(jParser.getText());
 	        		        }
-					networkData.setNodes(tempList);
+					networkData.setNode(tempList);
 				}
 				if ("host".equals(fieldname)) {
 					jParser.nextToken();
@@ -204,7 +223,7 @@ public class SdniWrapper {
 					while (jParser.nextToken() != JsonToken.END_ARRAY) {
 						tempList.add(jParser.getText());
 			                }
-					networkData.setHosts(tempList);
+					networkData.setHost(tempList);
 				}
 			}
 			jParser.close();
@@ -218,13 +237,375 @@ public class SdniWrapper {
 			LOG.trace("IOException:" + e);
 			return "IOException";
 		}
-		peer_information.put(networkData.getControllers().toString(),
-				networkData);
-		LOG.trace("After storing sdni message in peer_info:"
-				+ peer_information.get(networkData.getControllers().toString()));
-		return "success";
-	}
+	 //Check the IP address for controller or not
+                String controllerIP = networkData.getController().toString().replace("[", "").replace("]", "");
+                if(controllerIP.equals(findIpAddress())){
+                        peer = false;
+                }
 
+                //Update peer/controller table in database
+        if(peer){
+                peer_information.put(networkData.getController().toString(),networkData);
+                LOG.trace("Before calling updatePeerTable");
+                updatePeerTable(networkData);
+                LOG.trace("After storing sdni message in peer_info:"
+                    + peer_information.get(networkData.getController().toString()));
+        }else {
+                updateControllerTable(networkData);
+        }
+        return "success";
+        }
+
+	public void updateControllerTable(NetworkCapabilities networkData){
+
+                Connection conn = null;
+        Statement stmt = null;
+        int peer_count = 0;
+
+        LOG.trace("inside updateControllerTable PeerCount:0");
+
+        try {
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL);
+
+            LOG.trace("sql connection established");
+
+            stmt = conn.createStatement();
+            String sql = "drop table if exists TOPOLOGY_DATABASE ";
+            stmt.executeUpdate(sql);
+            LOG.trace("SQL query to delete controller table:"+sql);
+
+            sql = "create table TOPOLOGY_DATABASE (controller bigint(20), links int(11), nodes int(11), hosts int(11), link_bandwidths bigint(20) , latencies int(11), macAddressList bigint(20), ipAddressList bigint(20));";
+            stmt.executeUpdate(sql);
+            LOG.trace("SQL query to create controller table:"+sql);
+
+            String insertQueries = formInsertQuery(networkData, peer_count);
+            String[] insertQuery = insertQueries.split("--");
+            for(int j = 0; j< insertQuery.length;j++){
+                LOG.trace("insertQuery:"+insertQuery[j]);
+                stmt.executeUpdate(insertQuery[j]);
+            }
+        } catch (SQLException se) {
+                        LOG.trace("SQLException:"+se);
+            return;
+        } catch (Exception e) {
+                LOG.trace("Exception:"+e);
+            return;
+        } finally {
+		 try {
+                        if (stmt != null)
+                                stmt.close();
+                } catch (SQLException se2) {
+                                LOG.trace("SQLException2:"+se2);
+                                return;
+                }
+
+                try {
+                if (conn != null)
+                        conn.close();
+            } catch (SQLException se) {
+                LOG.trace("SQLException3:"+se);
+                return;
+            }
+        }
+        }
+    public void updatePeerTable(NetworkCapabilities networkData){
+        String ipAddress = networkData.getController().toString().replace("[","").replace("]","");
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean tableExist = false;
+        LOG.trace("inside updatePeerTable PeerCount:"+peer_count);
+
+        try {
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL);
+                stmt = conn.createStatement();
+
+            LOG.trace("sql connection established");
+            LOG.trace("ipAddress:"+ipAddress+" findIpAddress():"+findIpAddress());
+
+            //check for the self controller ip
+            if(ipAddress != findIpAddress()){
+                //if not, get the peercount and loop it
+                for(int i=1;i<=peer_count;i++){
+			//check for the exist of peer controller 1 table
+                    String tableName = "TOPOLOGY_DATABASE_PEER_"+i;
+                    String sql = "SELECT controller FROM "+tableName +" LIMIT 1";
+                    rs = stmt.executeQuery(sql);
+                    long peerIP = 0L;
+                    while(rs.next()){
+                        peerIP = rs.getLong("controller");
+                    }
+                         String peerIPAddress =ntoa(peerIP);
+                         if(ipAddress.equals(peerIPAddress)){
+                                 sql = "drop table TOPOLOGY_DATABASE_PEER_"+i;
+                             stmt.executeUpdate(sql);
+
+                             sql = "create table TOPOLOGY_DATABASE_PEER_"+i+" (controller bigint(20), links int(11), nodes int(11), hosts int(11), link_bandwidths bigint(20) , latencies int(11), macAddressList bigint(20), ipAddressList bigint(20));";
+                             LOG.trace("SQL query to delete/create peer table:"+sql);
+                             stmt.executeUpdate(sql);
+
+                             String insertQueries = formInsertQuery(networkData, i);
+                             String[] insertQuery = insertQueries.split("--");
+                             for(int j = 0; j< insertQuery.length;j++){
+                                 LOG.trace("insertQUery:"+insertQuery[j]);
+                                 stmt.executeUpdate(insertQuery[j]);
+                             }
+                     tableExist = true;
+                         }
+                }
+
+                if(!tableExist){
+                        peer_count++;
+                    LOG.trace("now peerCount:"+peer_count);
+			 //create a new table TOPOLOGY_DATABASE_PEER + count
+                    String sql = "create table TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller bigint(20), links int(11), nodes int(11), hosts int(11), link_bandwidths bigint(20) , latencies int(11), macAddressList bigint(20), ipAddressList bigint(20));";
+                    LOG.trace("SQL query to create peer table:"+sql);
+                    stmt = conn.createStatement();
+                    stmt.executeUpdate(sql);
+
+                    String insertQueries = formInsertQuery(networkData, peer_count);
+                    String[] insertQuery = insertQueries.split("--");
+                    for(int i = 0; i< insertQuery.length-1;i++){
+                        LOG.trace("insertQUery:"+insertQuery[i]);
+                        stmt.executeUpdate(insertQuery[i]);
+                    }
+                }
+        }else {
+                //update self controller table
+                LOG.trace("inside update self controller table ie topology_database");
+        }
+                } catch (SQLException se) {
+                        LOG.trace("SQLException:"+se);
+            return;
+        } catch (Exception e) {
+                LOG.trace("Exception:"+e);
+            return;
+        } finally {
+                try {
+                        if (stmt != null)
+                                stmt.close();
+                } catch (SQLException se2) {
+                                LOG.trace("SQLException2:"+se2);
+                                return;
+                }
+
+                try {
+                if (conn != null)
+                        conn.close();
+            } catch (SQLException se) {
+		 LOG.trace("SQLException3:"+se);
+                return;
+            }
+        }
+    }
+
+    public String formInsertQuery(NetworkCapabilities networkData, int peer_count){
+        LOG.trace("inside formInsertQuery");
+        String insertQuery = "";
+        List<String> uniqueLinks =  new ArrayList<String>();
+        List<String> uniqueBandwidth = new ArrayList<String>();
+        int i=0;
+
+        List<String> hosts = networkData.getHost();
+        List<String> hostIpAddress = networkData.getIpAddressList();
+        List<String> macAddress = networkData.getMacAddressList();
+        List<String> nodes = networkData.getNode();
+        List<String> bandwidth = networkData.getBandwidth();
+        Iterator<String> lt = networkData.getLink().iterator();
+
+        String IpAddress  = networkData.getController().toString().replace("[","").replace("]","");
+        long controllerIP = ipToLong(IpAddress);
+        LOG.trace("ipAddress:"+IpAddress+" After long conversion:"+controllerIP);
+
+        while(lt.hasNext()){
+                String linkname = lt.next().toString();
+
+            int breakpoint1 = linkname.indexOf("->");
+                String first1 = linkname.substring(0, breakpoint1);
+                String second1 = linkname.substring(breakpoint1);
+
+            int firstStr=1;
+	    String digitCheck = first1.substring(first1.lastIndexOf(':') + 1, first1.lastIndexOf(':') + 2);
+            if(digitCheck.equals("0")){firstStr=2;}
+
+            int secondStr=1;
+                String digitSecCheck = second1.substring(second1.lastIndexOf(':') + 1, second1.length() - 2);
+                if(digitSecCheck.equals("0")){secondStr=2;}
+
+            String finalLink = first1.substring(first1.lastIndexOf(':') + firstStr, breakpoint1)
+                        + second1.substring(second1.lastIndexOf(':') + secondStr,second1.length() - 1);
+
+                String reverseLink = second1.substring(second1.lastIndexOf(':') + secondStr, second1.length() - 1)
+                        + first1.substring(first1.lastIndexOf(':') + firstStr,breakpoint1);
+
+            LOG.trace("final:"+finalLink+" reverse:"+reverseLink);
+
+            if(!uniqueLinks.contains(finalLink) && !uniqueLinks.contains(reverseLink)){
+                        uniqueLinks.add(finalLink);
+                        if(bandwidth.size()>0){
+	              	    try{
+                                String bandwidthTemp = bandwidth.get(i).substring(0,bandwidth.get(i).indexOf("Gbps"));
+                                LOG.trace("bandwidthTemp:"+ bandwidthTemp);
+                                uniqueBandwidth.add(bandwidthTemp);
+                            }catch(java.lang.IndexOutOfBoundsException e){
+                                uniqueBandwidth.add("0");
+                            }catch(Exception e){
+                                uniqueBandwidth.add("0");
+                            }
+
+                        }
+                }
+            i++;
+        }
+
+        LOG.trace("size of uniqueLInks"+uniqueLinks.size());
+            int linkSize = uniqueLinks.size();
+
+                if(linkSize == 0){
+                        if(peer_count == 0){
+                                insertQuery +=  "insert into TOPOLOGY_DATABASE (controller) values (" + controllerIP + "); -- ";
+                        }else {
+                                insertQuery +=  "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller) values ( "
+                                                        + controllerIP + "); -- ";
+                        }
+                } else {
+			if(peer_count == 0){
+                                for(int j=0;j<uniqueLinks.size();j++){
+                                        if(uniqueBandwidth.size()==uniqueLinks.size()){
+                                                        if(nodes.size()>j && macAddress.size()>j){
+                                                                String nodeList = nodes.get(j).toString();
+                                                                LOG.trace("nodeList"+nodeList);
+                                                                String node = nodeList.substring(nodes.get(j).lastIndexOf(":")+2);
+                                                                LOG.trace("node:"+node);
+                                                                String macList = macAddress.get(j).toString();
+                                                                LOG.trace("macList:"+macList);
+                                                                String mac = macList.substring(macAddress.get(j).lastIndexOf(":")+2);
+                                                                LOG.trace("mac:"+mac);
+                                                                LOG.trace("mac:"+mac+"node:"+node);
+                                                                if(hosts.size()>j&& hostIpAddress.size()>j){
+                                                                        long hostIP = ipToLong(hostIpAddress.get(j));
+                                                                        LOG.trace("mac:"+mac+"node:"+node+"hostIP:"+hostIP);
+                                                                        insertQuery += "insert into TOPOLOGY_DATABASE (controller, links, link_bandwidths, nodes, macAddressList, hosts, ipAddressList) values ( "
+                                                + controllerIP + "," + uniqueLinks.get(j) + "," + uniqueBandwidth.get(j) + "," + node + "," + mac + "," + hosts.get(j) + "," + hostIP + "); -- ";
+                                                                }else{
+                                                                        insertQuery += "insert into TOPOLOGY_DATABASE (controller, links, link_bandwidths, nodes, macAddressList) values ( "
+                                                + controllerIP + "," + uniqueLinks.get(j) + "," + uniqueBandwidth.get(j) + "," + node + "," + mac + "); -- ";
+                                                                }
+                                                        }else{
+                                                                insertQuery += "insert into TOPOLOGY_DATABASE (controller, links, link_bandwidths) values ( "
+                                        + controllerIP + "," + uniqueLinks.get(j) + "," + uniqueBandwidth.get(j) + "); -- ";
+                                                        }
+
+                                        }else{
+                                                if(nodes.size()>j && macAddress.size()>j){
+                                                        String nodeList = nodes.get(j).toString();
+							LOG.trace("nodeList"+nodeList);
+                                                        String node = nodeList.substring(nodes.get(j).lastIndexOf(":")+2);
+                                                        LOG.trace("node:"+node);
+                                                        String macList = macAddress.get(j).toString();
+                                                        LOG.trace("macList:"+macList);
+                                                        String mac = macList.substring(macAddress.get(j).lastIndexOf(":")+2);
+                                                        LOG.trace("mac:"+mac);
+                                                        LOG.trace("mac:"+mac+"node:"+node);
+                                                        if(hosts.size()>j&& hostIpAddress.size()>j){
+                                                                long hostIP = ipToLong(hostIpAddress.get(j));
+                                                                LOG.trace("mac:"+mac+"node:"+node+"hostIP:"+hostIP);
+                                                                insertQuery += "insert into TOPOLOGY_DATABASE (controller, links, nodes, macAddressList, hosts, ipAddressList) values ("
+                                                                                + controllerIP + "," + uniqueLinks.get(j)  + "," + node + "," + mac + "," + hosts.get(j) + "," + hostIP  +"); -- ";
+                                                        }else {
+                                                                insertQuery += "insert into TOPOLOGY_DATABASE (controller, links, nodes, macAddressList) values ("
+                                                                        + controllerIP + "," + uniqueLinks.get(j) + "," + node + "," +mac +"); -- ";
+                                                        }
+                                                } else {
+                                                        insertQuery += "insert into TOPOLOGY_DATABASE (controller, links) values ("
+                                                                + controllerIP + "," + uniqueLinks.get(j) +"); -- ";
+                                                }
+                                        }
+                    }
+                        }else {
+                                for(int j=0;j<uniqueLinks.size();j++){
+                                        if(uniqueBandwidth.size()==uniqueLinks.size()){
+                                                        if(nodes.size()>j && macAddress.size()>j){
+                                                                String nodeList = nodes.get(j).toString();
+                                                                LOG.trace("nodeList"+nodeList);
+                                                                String node = nodeList.substring(nodes.get(j).lastIndexOf(":")+2);
+                                                                LOG.trace("node:"+node);
+                                                                String macList = macAddress.get(j).toString();
+                                                                LOG.trace("macList:"+macList);
+								 String mac = macList.substring(macAddress.get(j).lastIndexOf(":")+2);
+                                                                LOG.trace("mac:"+mac);
+                                                                LOG.trace("mac:"+mac+"node:"+node);
+                                                                if(hosts.size()>j&& hostIpAddress.size()>j){
+                                                                        long hostIP = ipToLong(hostIpAddress.get(j));
+                                                                        LOG.trace("mac:"+mac+"node:"+node+"hostIP:"+hostIP);
+
+                                                                        insertQuery += "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller, links, link_bandwidths, nodes, macAddressList, hosts, ipAddressList) values ( "
+                                                + controllerIP + "," + uniqueLinks.get(j) + "," + uniqueBandwidth.get(j) + "," + node + "," + mac + "," + hosts.get(j) + "," + hostIP + "); -- ";
+                                                                }else{
+                                                                        insertQuery += "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller, links, link_bandwidths, nodes, macAddressList) values ( "
+                                                + controllerIP + "," + uniqueLinks.get(j) + "," + uniqueBandwidth.get(j) + "," + node + "," + mac + "); -- ";
+                                                                }
+                                                        }else{
+                                                                insertQuery += "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller, links, link_bandwidths) values ( "
+                                        + controllerIP + "," + uniqueLinks.get(j) + "," + uniqueBandwidth.get(j) + "); -- ";
+                                                        }
+
+                                        }else{
+                                                if(nodes.size()>j && macAddress.size()>j){
+                                                        String nodeList = nodes.get(j).toString();
+                                                        LOG.trace("nodeList"+nodeList);
+                                                        String node = nodeList.substring(nodes.get(j).lastIndexOf(":")+2);
+                                                        LOG.trace("node:"+node);
+                                                        String macList = macAddress.get(j).toString();
+                                                        LOG.trace("macList:"+macList);
+                                                        String mac = macList.substring(macAddress.get(j).lastIndexOf(":")+2);
+                                                        LOG.trace("mac:"+mac);
+                                                        LOG.trace("mac:"+mac+"node:"+node);
+                                                        if(hosts.size()>j&& hostIpAddress.size()>j){
+                                                                long hostIP = ipToLong(hostIpAddress.get(j));
+                                                                LOG.trace("mac:"+mac+"node:"+node+"hostIP:"+hostIP);
+								insertQuery += "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller, links, nodes, macAddressList, hosts, ipAddressList) values ("
+                                                                                + controllerIP + "," + uniqueLinks.get(j)  + "," + node + "," + mac + "," + hosts.get(j) + "," + hostIP  +"); -- ";
+                                                        }else {
+                                                                insertQuery += "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller, links, nodes, macAddressList) values ("
+                                                                        + controllerIP + "," + uniqueLinks.get(j) + "," + node + "," + mac +"); -- ";
+                                                        }
+                                                } else {
+                                                        insertQuery += "insert into TOPOLOGY_DATABASE_PEER_"+peer_count+" (controller, links) values ("
+                                                                + controllerIP + "," + uniqueLinks.get(j) +"); -- ";
+                                                }
+                                        }
+                    }
+                        }
+                }
+                LOG.trace("insertQuery at the end of formInsertQuery() method:"+insertQuery);
+                return insertQuery;
+    }
+
+    public static String ntoa(long raw) {
+        byte[] b = new byte[] {(byte)(raw >> 24), (byte)(raw >> 16), (byte)(raw >> 8), (byte)raw};
+        try {
+            return InetAddress.getByAddress(b).getHostAddress();
+        } catch (UnknownHostException e) {
+            //No way here
+		   return null;
+        }
+    }
+
+    public static long ipToLong(String ipAddress) {
+        long result = 0;
+        String[] atoms = ipAddress.split("\\.");
+
+        for (int i = 3; i >= 0; i--) {
+            result |= (Long.parseLong(atoms[3 - i]) << (i * 8));
+        }
+
+        return result & 0xFFFFFFFF;
+      }
+
+                                                        
 	public String callRestAPI(String url) {
 		final String admin = "admin";
 		Authenticator.setDefault(new Authenticator() {

@@ -49,11 +49,11 @@ public class NetworkCapabilities {
         this.timeStamp = timeStamp;
     }
 
-    public List<String> getLinks() {
+    public List<String> getLink() {
         return link;
     }
 
-    public void setLinks(List<String> links) {
+    public void setLink(List<String> links) {
         this.link = links;
     }
 
@@ -61,11 +61,11 @@ public class NetworkCapabilities {
         link.add(links);
     }
 
-    public List<String> getBandwidths() {
+    public List<String> getBandwidth() {
         return bandwidth;
     }
 
-    public void setBandwidths(List<String> bandwidths) {
+    public void setBandwidth(List<String> bandwidths) {
         this.bandwidth = bandwidths;
     }
 
@@ -77,7 +77,7 @@ public class NetworkCapabilities {
         return latency;
     }
 
-    public void setLatencies(List<String> latencies) {
+    public void setLatency(List<String> latencies) {
         this.latency = latencies;
     }
 
@@ -98,27 +98,27 @@ public class NetworkCapabilities {
         this.host.add(host);
     }
 
-    public List<String> getControllers() {
+    public List<String> getController() {
         return controller;
     }
 
-    public void setControllers(List<String> controllers) {
+    public void setController(List<String> controllers) {
         this.controller = controllers;
     }
 
-    public List<String> getNodes() {
+    public List<String> getNode() {
         return node;
     }
 
-    public void setNodes(List<String> nodes) {
+    public void setNode(List<String> nodes) {
         this.node = nodes;
     }
 
-    public List<String> getHosts() {
+    public List<String> getHost() {
         return host;
     }
 
-    public void setHosts(List<String> hosts) {
+    public void setHost(List<String> hosts) {
         this.host = hosts;
     }
 
