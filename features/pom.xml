@@ -10,23 +10,23 @@
    <parent>
     <artifactId>sdninterfaceapp.project</artifactId>
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
-    <version>1.4.3-Helium-SR1</version>
+    <version>1.4.3-Helium-SR1.1</version>
   </parent>
    <artifactId>features-sdninterfaceapp</artifactId>
    <groupId>org.opendaylight.sdninterfaceapp</groupId>
-   <version>1.4.3-Helium-SR1</version>
+   <version>1.4.3-Helium-SR1.1</version>
    <packaging>jar</packaging>
    <properties>
       <features.file>features.xml</features.file>
-      <branding.version>1.0.1-Helium-SR1</branding.version>
-      <karaf.resources.version>1.4.3-Helium-SR1</karaf.resources.version>
+      <branding.version>1.0.1-Helium-SR1.1</branding.version>
+      <karaf.resources.version>1.4.3-Helium-SR1.1</karaf.resources.version>
       <karaf.version>3.0.1</karaf.version>
-      <feature.test.version>0.6.3-Helium-SR1</feature.test.version>
-      <karaf.empty.version>1.4.3-Helium-SR1</karaf.empty.version>
+      <feature.test.version>0.6.3-Helium-SR1.1</feature.test.version>
+      <karaf.empty.version>1.4.3-Helium-SR1.1</karaf.empty.version>
       <surefire.version>2.16</surefire.version>
-      <yangtools.version>0.6.3-Helium-SR1</yangtools.version>
+      <yangtools.version>0.6.3-Helium-SR1.1</yangtools.version>
       <jackson.version>2.3.0</jackson.version>
-      <odl.karaf.base.version>1.4.3-Helium-SR1</odl.karaf.base.version>
+      <odl.karaf.base.version>1.4.3-Helium-SR1.1</odl.karaf.base.version>
     </properties>
 
     <dependencies>
@@ -62,43 +62,43 @@
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>clustering.services</artifactId>
-      <version>0.5.2-Helium-SR1</version>
+      <version>0.5.2-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>hosttracker</artifactId>
-      <version>0.5.3-Helium-SR1</version>
+      <version>0.5.3-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>switchmanager</artifactId>
-      <version>0.7.2-Helium-SR1</version>
+      <version>0.7.2-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>topologymanager</artifactId>
-      <version>0.4.3-Helium-SR1</version>
+      <version>0.4.3-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>containermanager</artifactId>
-      <version>0.5.3-Helium-SR1</version>
+      <version>0.5.3-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.sdninterfaceapp</groupId>
       <artifactId>sdniaggregator</artifactId>
-      <version>0.5.3-Helium-SR1</version>
+      <version>0.5.3-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.sdninterfaceapp</groupId>
       <artifactId>sdni</artifactId>
-      <version>0.5.3-Helium-SR1</version>
+      <version>0.5.3-Helium-SR1.1</version>
     </dependency>
 
     <dependency>
