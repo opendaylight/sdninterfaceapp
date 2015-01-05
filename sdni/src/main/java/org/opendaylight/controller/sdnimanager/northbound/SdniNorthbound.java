@@ -9,6 +9,7 @@
 package org.opendaylight.controller.sdnimanager.northbound;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -39,8 +40,10 @@ import org.opendaylight.controller.sal.utils.GlobalConstants;
 import org.opendaylight.controller.sal.utils.ServiceHelper;
 import org.opendaylight.controller.sal.utils.Status;
 import org.opendaylight.controller.sdniaggregator.NetworkCapabilities;
+import org.opendaylight.controller.sdniaggregator.NetworkCapabilitiesQOS;
 import org.opendaylight.controller.sdniaggregator.SdniManager;
 import org.opendaylight.controller.switchmanager.ISwitchManager;
+import org.opendaylight.controller.statisticsmanager.IStatisticsManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,7 @@ public class SdniNorthbound {
             .getLogger(SdniNorthbound.class);
     private SdniManager sdnimanager = new SdniManager();
     private NetworkCapabilities nc = new NetworkCapabilities();
+    private List<NetworkCapabilitiesQOS> list = new ArrayList();
     private static final int OPERATION_SUCCESSFUL = 201;
     private static final int INVALID_CONFIGURATION = 400;
     private static final int USER_NOT_AUTHORIZED = 401;
@@ -200,6 +204,64 @@ public class SdniNorthbound {
 	nc = sdnimanager.getTopologyDetails(containerName);
 	LOGGER.info("nc property"+ nc.getIpAddressList());
 	return nc;
+}
+
+  /**
+     * Retrieve the Network Capabilities QOS Data like node, port, receive packets etc.,
+     * from SDNiAggregator
+     * @param containerName
+     * @return NetworkCapabilitiesQOS Example: Request URL:
+     *         http://localhost:8080/controller/nb/v2/sdni/default/qos
+     *         Response Body in JSON:        	      
+     *		[{"node":"00:00:00:00:00:00:00:04","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},          
+     *		{"node":"00:00:00:00:00:00:00:04","port":"1","receivePackets":61,"transmitPackets":63,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},	                 
+     *		{"node":"00:00:00:00:00:00:00:04","port":"2","receivePackets":47,"transmitPackets":47,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0}, 
+     *		{"node":"00:00:00:00:00:00:00:04","port":"3","receivePackets":62,"transmitPackets":64,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:06","port":"4","receivePackets":70,"transmitPackets":72,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:06","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:06","port":"1","receivePackets":27,"transmitPackets":290,"collisionCount":0,
+     *		"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:06","port":"2","receivePackets":23,"transmitPackets":285,"collisionCount":0,
+     *		"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:06","port":"3","receivePackets":61,"transmitPackets":55,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:05","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},
+     *		"node":"00:00:00:00:00:00:00:05","port":"1","receivePackets":51,"transmitPackets":51,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0},
+     *		{"node":"00:00:00:00:00:00:00:05","port":"2","receivePackets":52,"transmitPackets":54,"collisionCount":0,"receiveFrameError":0,
+     *		"receiveOverRunError":0,"receiveCrcError":0}]
+  **/
+
+    @Path("/{containerName}/qos")
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    @StatusCodes({ @ResponseCode(code = CONTAINER_NOT_FOUND, condition = "The Container Name was not found") })
+    public List<NetworkCapabilitiesQOS> getQOSDetails(
+            @PathParam("containerName") String containerName) {
+
+        LOGGER.debug("inside getQOSDetails of sdni northbound");
+     	LOGGER.info("inside getQOSDetails of sdni northbound");
+	if (!isValidContainer(containerName)) {
+            throw new ResourceNotFoundException(CONTAINER + containerName
+                    + " does not exist.");
+        }
+        if (!NorthboundUtils.isAuthorized(getUserName(), containerName,
+                Privilege.WRITE, this)) {
+	    LOGGER.info("not authorized");
+            throw new UnauthorizedException(NOT_AUTHORIZED_MESSAGE + containerName);
+        }
+        
+	LOGGER.info("after populated NetworkCapabilitiesQOS data");
+	list = sdnimanager.getQOSDetails(containerName);
+	LOGGER.info("list property"+ list);
+	return list;
 }
 
 /**
