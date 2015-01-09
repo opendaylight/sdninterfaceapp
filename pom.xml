@@ -10,6 +10,7 @@
 
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <artifactId>sdninterfaceapp.project</artifactId>
+  <name>sdninterfaceapp</name> <!-- Used by Sonar to set project name -->
   <packaging>pom</packaging>
 
   <prerequisites>
