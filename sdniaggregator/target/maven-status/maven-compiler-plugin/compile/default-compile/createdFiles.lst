@@ -1,0 +1,7 @@
+org/opendaylight/controller/sdniaggregator/HostConfig.class
+org/opendaylight/controller/sdniaggregator/NetworkCapabilitiesQOS.class
+org/opendaylight/controller/sdniaggregator/EdgeProperties.class
+org/opendaylight/controller/sdniaggregator/SDNiBandwidth.class
+org/opendaylight/controller/sdniaggregator/NetworkCapabilities.class
+org/opendaylight/controller/sdniaggregator/PortStatistics.class
+org/opendaylight/controller/sdniaggregator/SdniManager.class

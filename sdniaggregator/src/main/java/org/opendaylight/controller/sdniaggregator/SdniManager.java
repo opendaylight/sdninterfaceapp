@@ -29,8 +29,10 @@ import org.opendaylight.controller.hosttracker.hostAware.HostNodeConnector;
 import org.opendaylight.controller.sal.core.Bandwidth;
 import org.opendaylight.controller.sal.core.Edge;
 import org.opendaylight.controller.sal.core.Node;
+import org.opendaylight.controller.sal.core.NodeConnector;
 import org.opendaylight.controller.sal.core.Property;
 import org.opendaylight.controller.sal.core.UpdateType;
+import org.opendaylight.controller.sal.reader.NodeConnectorStatistics;
 import org.opendaylight.controller.sal.topology.IListenTopoUpdates;
 import org.opendaylight.controller.sal.topology.TopoEdgeUpdate;
 import org.opendaylight.controller.sal.utils.ServiceHelper;
@@ -38,6 +40,7 @@ import org.opendaylight.controller.sal.utils.Status;
 import org.opendaylight.controller.sal.utils.StatusCode;
 import org.opendaylight.controller.switchmanager.ISwitchManager;
 import org.opendaylight.controller.topologymanager.ITopologyManager;
+import org.opendaylight.controller.statisticsmanager.IStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +51,7 @@ import org.slf4j.LoggerFactory;
 public class SdniManager {
     private static Logger log = LoggerFactory.getLogger(SdniManager.class);
     private NetworkCapabilities nwCapabilities = new NetworkCapabilities();
+    private List<NetworkCapabilitiesQOS> list = new ArrayList();
     private static String loopbackAddress = InetAddress.getLoopbackAddress()
             .getHostAddress();
     private static final String SUCCESS = "success";
@@ -208,6 +212,76 @@ public class SdniManager {
         }
         return SUCCESS;
     }
+    
+     /**
+     * Retrieve the QOS parameters for node and port using StatisticsManager
+     * @param containerName
+     * @return
+     */
+    private String accessStatisticsManager(String containerName) {
+
+        log.info("inside accessStatisticsManager");
+        IStatisticsManager statisticsManager = (IStatisticsManager) ServiceHelper
+                .getInstance(IStatisticsManager.class, containerName, this);
+        if (statisticsManager == null) {
+            return null;
+        }
+
+        ISwitchManager switchManager = (ISwitchManager) ServiceHelper
+                .getInstance(ISwitchManager.class, containerName, this);
+        if (switchManager == null) {
+            return null;
+        }
+
+        List<PortStatistics> statistics = new ArrayList<PortStatistics>();
+        for (Node node : switchManager.getNodes()) {
+            List<NodeConnectorStatistics> stat = statisticsManager
+                    .getNodeConnectorStatistics(node);
+            PortStatistics portStat = new PortStatistics(node, stat);
+            statistics.add(portStat);
+        }
+	
+	NodeConnector nodeConnector;
+	String port;
+        long receivePackets;
+        long transmitPackets;
+        long receiveFrameError;
+        long receiveOverRunError;
+        long receiveCrcError;
+        long collisionCount;
+
+	for (PortStatistics ps : statistics) {
+		Node node = ps.getNode();
+		String nodeName = "";
+            	nodeName = node.toString().replace("OF|", "");
+		
+		List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
+		for(NodeConnectorStatistics nc : nodeConnectorStats ) {
+			nodeConnector = nc.getNodeConnector();
+			port = nodeConnector.getNodeConnectorIDString();
+                	receivePackets = nc.getReceivePacketCount();
+                	transmitPackets = nc.getTransmitPacketCount();
+               		receiveFrameError = nc.getReceiveFrameErrorCount();
+                	receiveOverRunError = nc.getReceiveOverRunErrorCount();
+                	receiveCrcError = nc.getReceiveCRCErrorCount();
+                	collisionCount = nc.getCollisionCount();
+			
+			NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
+
+		        ncq.setNode(nodeName);
+                	ncq.setPort(port);
+                	ncq.setReceivePackets(receivePackets);
+                	ncq.setTransmitPackets(transmitPackets);
+               		ncq.setReceiveFrameError(receiveFrameError);
+                	ncq.setReceiveOverRunError(receiveOverRunError);
+                	ncq.setReceiveCrcError(receiveCrcError);
+     			ncq.setCollisionCount(collisionCount);
+                	list.add(ncq);    
+            	}
+	   }
+         log.info("Inside Statistics manager - Node Connector Statistics List:" +list);
+         return SUCCESS;
+       }
 
     /**
      * Return the network capability data of SDNi
@@ -219,7 +293,7 @@ public class SdniManager {
         // Retrieve Controller's IP address
         this.nwCapabilities.addController(findIpAddress());
         String result = "";
-
+	String result1 = "";
         String clustering = System.getProperty("supernodes", loopbackAddress);
 
         log.info("system property: " + clustering);
@@ -240,6 +314,7 @@ public class SdniManager {
             if (result == null) {
                 return null;
             }
+
 	log.info("this.nwCapabilities"+this.nwCapabilities.getController());
         } else {
             log.info("inside accessing clustering and connection manager");
@@ -248,14 +323,120 @@ public class SdniManager {
         return this.nwCapabilities;
 
     }
+   
+    public List<NetworkCapabilitiesQOS> getQOSDetails(String containerName) {
 
+        // Retrieve Controller's IP address
+        this.nwCapabilities.addController(findIpAddress());
+        String result = "";
+	String clustering = System.getProperty("supernodes", loopbackAddress);
+
+        log.info("system property: " + clustering);
+        if (clustering.equals("127.0.0.1")) {
+            log.info("inside accessing individual manager");
+  
+            // Retrieve QOS information
+            result = accessStatisticsManager(containerName);
+            if (result == null) {
+                return null;
+            }
+
+            log.info("this.nwCapabilities"+this.nwCapabilities.getController());
+        } else {
+            log.info("inside accessing clustering and connection manager");
+            result = getClusteredControllersQOS(containerName);
+        }
+        return list;
+
+    }
     /**
      * Returns list of clustered controllers. Highlights "this" controller and
      * if controller is coordinator
      * @return List<ClusterBean>
      */
+	public String getClusteredControllersQOS(String containerName) {
+        
+        IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
+                .getGlobalInstance(IClusterGlobalServices.class, this);
+        if (clusterServices == null) {
+            return null;
+        }
+        IConnectionManager connectionManager = (IConnectionManager) ServiceHelper
+                .getGlobalInstance(IConnectionManager.class, this);
+        if (connectionManager == null) {
+            return null;
+        }
+	IStatisticsManager statisticsManager = (IStatisticsManager) ServiceHelper
+                .getInstance(IStatisticsManager.class, containerName, this);
+        if (statisticsManager == null) {
+            return null;
+        }
 
-    public String getClusteredControllers(String containerName) {
+        NodeConnector nodeConnector;
+	String port;
+        long receivePackets;
+        long transmitPackets;
+        long receiveFrameError;
+        long receiveOverRunError;
+        long receiveCrcError;
+        long collisionCount;
+
+        List<InetAddress> controllers = clusterServices.getClusteredControllers();
+        for (InetAddress controller : controllers) {
+            log.info("inside controller loop:" + controller.getHostAddress()+ " controller_ip:" + findIpAddress());
+            if (controller.getHostAddress().toString().equals(findIpAddress())) {
+                // get number of connected nodes
+                Set<Node> connectedNodes = connectionManager.getNodes(controller);
+
+                if (connectedNodes == null) {
+                    return "not success";
+                }
+		List<PortStatistics> statistics = new ArrayList<PortStatistics>();
+       		for (Node node : connectedNodes) {
+            		List<NodeConnectorStatistics> stat = statisticsManager.getNodeConnectorStatistics(node);
+            		PortStatistics portStat = new PortStatistics(node, stat);
+            		statistics.add(portStat);
+        	}
+		for (PortStatistics ps : statistics) {
+			Node node = ps.getNode();
+			String nodeName = "";
+            		nodeName = node.toString().replace("OF|", "");
+		
+			List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
+			for(NodeConnectorStatistics nc : nodeConnectorStats ) {
+				nodeConnector = nc.getNodeConnector();
+				port = nodeConnector.getNodeConnectorIDString();
+                		receivePackets = nc.getReceivePacketCount();
+                		transmitPackets = nc.getTransmitPacketCount();
+               			receiveFrameError = nc.getReceiveFrameErrorCount();
+                		receiveOverRunError = nc.getReceiveOverRunErrorCount();
+                		receiveCrcError = nc.getReceiveCRCErrorCount();
+                		collisionCount = nc.getCollisionCount();
+			
+				NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
+
+		      		ncq.setNode(nodeName);
+                		ncq.setPort(port);
+                		ncq.setReceivePackets(receivePackets);
+                		ncq.setTransmitPackets(transmitPackets);
+               			ncq.setReceiveFrameError(receiveFrameError);
+                		ncq.setReceiveOverRunError(receiveOverRunError);
+                		ncq.setReceiveCrcError(receiveCrcError);
+     				ncq.setCollisionCount(collisionCount);
+                		list.add(ncq);    
+            		}
+	   	}
+	    }
+        }
+        return SUCCESS;
+     }
+
+     /**
+     * Returns list of clustered controllers. Highlights "this" controller and
+     * if controller is coordinator
+     * @return List<ClusterBean>
+     */
+	public String getClusteredControllers(String containerName) {
         
         IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
                 .getGlobalInstance(IClusterGlobalServices.class, this);

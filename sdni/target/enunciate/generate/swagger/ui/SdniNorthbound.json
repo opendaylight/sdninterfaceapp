@@ -1,0 +1,299 @@
+{
+  "swaggerVersion": "1.1",
+  "basePath": "http://localhost:8080/full",
+  "resourcePath": "SdniNorthbound",
+  "apis" : [
+    {
+      "path" : "/controller/nb/v2/sdni/{containerName}/property/linkbandwidth/{propertyValue}",
+      "description" : "This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.\nAnd also Update the available bandwidth based on the parameters Its queries\nSDNiAggregator to fetch/modify the data. Totally 3 API calls - Network\nCapabilities Data, Update",
+      "operations" : [
+        {
+          "httpMethod" : "PUT",
+          "nickname" : "updateLinkBandwidthProperty",
+          "responseClass" : "string",
+          "parameters" : [
+            {
+              "name" : "containerName",
+              "paramType" : "path",
+              "description" : "Name of the Container (Eg. 'default')",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+            ,
+            {
+              "name" : "propertyValue",
+              "paramType" : "path",
+              "description" : "Value of the Property. Description can be any string (Eg.\n'Node1'), valid values for tier are non negative numbers, and\nvalid values for forwarding are 0 for reactive and 1 for\nproactive forwarding.",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+        ],
+        "summary" : "Update the available bandwidth property by its link name. S…",
+        "notes" : "Update the available bandwidth property by its link name. Set of linkname\nwith different bandwidth can be updated here. This method returns a\nnon-successful response if the bandwidth is not updated.",
+        "errorResponses" : [
+          {
+            "code" : 201,
+            "reason" : "Operation successful"
+          },
+          {
+            "code" : 400,
+            "reason" : "The nodeId or configuration is invalid"
+          },
+          {
+            "code" : 401,
+            "reason" : "User not authorized to perform this operation"
+          },
+          {
+            "code" : 404,
+            "reason" : "The Container Name or node or configuration name is not found"
+          },
+          {
+            "code" : 406,
+            "reason" : "The property cannot be configured in non-default container"
+          },
+          {
+            "code" : 409,
+            "reason" : "Unable to update configuration due to cluster conflict or conflicting description property"
+          },
+          {
+            "code" : 503,
+            "reason" : "One or more of Controller services are unavailable"
+          }
+        ],
+        "produces" : [
+          "*/*"
+          ,"application/xml"
+          
+        ],
+        "consumes" : [
+          
+          "application/xml"
+          ,"application/json"
+        ]
+      }
+      ]
+    },
+    {
+      "path" : "/controller/nb/v2/sdni/{containerName}/property/{propertyName}/{propertyValue}",
+      "description" : "This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.\nAnd also Update the available bandwidth based on the parameters Its queries\nSDNiAggregator to fetch/modify the data. Totally 3 API calls - Network\nCapabilities Data, Update",
+      "operations" : [
+        {
+          "httpMethod" : "PUT",
+          "nickname" : "updateBandwidthProperty",
+          "responseClass" : "string",
+          "parameters" : [
+            {
+              "name" : "containerName",
+              "paramType" : "path",
+              "description" : "Name of the Container (Eg. 'default')",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+            ,
+            {
+              "name" : "propertyName",
+              "paramType" : "path",
+              "description" : "Name of the Property. Properties that can be configured are:\ndescription, forwarding(only for default container) and tier",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+            ,
+            {
+              "name" : "propertyValue",
+              "paramType" : "path",
+              "description" : "Value of the Property. Description can be any string (Eg.\n'Node1'), valid values for tier are non negative numbers, and\nvalid values for forwarding are 0 for reactive and 1 for\nproactive forwarding.",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+        ],
+        "summary" : "Update the available bandwidth property. This method return…",
+        "notes" : "Update the available bandwidth property. This method returns a\nnon-successful response if the bandwidth is not updated.",
+        "errorResponses" : [
+          {
+            "code" : 201,
+            "reason" : "Operation successful"
+          },
+          {
+            "code" : 400,
+            "reason" : "The nodeId or configuration is invalid"
+          },
+          {
+            "code" : 401,
+            "reason" : "User not authorized to perform this operation"
+          },
+          {
+            "code" : 404,
+            "reason" : "The Container Name or node or configuration name is not found"
+          },
+          {
+            "code" : 406,
+            "reason" : "The property cannot be configured in non-default container"
+          },
+          {
+            "code" : 409,
+            "reason" : "Unable to update configuration due to cluster conflict or conflicting description property"
+          },
+          {
+            "code" : 503,
+            "reason" : "One or more of Controller services are unavailable"
+          }
+        ],
+        "produces" : [
+          "*/*"
+          ,"application/xml"
+          
+        ],
+        "consumes" : [
+          
+          "application/xml"
+          ,"application/json"
+        ]
+      }
+      ]
+    },
+    {
+      "path" : "/controller/nb/v2/sdni/{containerName}/qos",
+      "description" : "This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.\nAnd also Update the available bandwidth based on the parameters Its queries\nSDNiAggregator to fetch/modify the data. Totally 3 API calls - Network\nCapabilities Data, Update",
+      "operations" : [
+        {
+          "httpMethod" : "GET",
+          "nickname" : "getQOSDetails",
+          "responseClass" : "string",
+          "parameters" : [
+            {
+              "name" : "containerName",
+              "paramType" : "path",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+        ],
+        "summary" : "Retrieve the Network Capabilities QOS Data like node, port,…",
+        "notes" : "Retrieve the Network Capabilities QOS Data like node, port, receive packets etc.,\nfrom SDNiAggregator",
+        "errorResponses" : [
+          {
+            "code" : 404,
+            "reason" : "The Container Name was not found"
+          }
+        ],
+        "produces" : [
+          
+          
+          "application/json"
+        ],
+        "consumes" : [
+          "*/*"
+          ,"application/xml"
+          
+        ]
+      }
+      ]
+    },
+    {
+      "path" : "/controller/nb/v2/sdni/{containerName}/topology",
+      "description" : "This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.\nAnd also Update the available bandwidth based on the parameters Its queries\nSDNiAggregator to fetch/modify the data. Totally 3 API calls - Network\nCapabilities Data, Update",
+      "operations" : [
+        {
+          "httpMethod" : "GET",
+          "nickname" : "getTopologyDetails",
+          "responseClass" : "ns0_networkCapabilities",
+          "parameters" : [
+            {
+              "name" : "containerName",
+              "paramType" : "path",
+              "dataType" : "string",
+              "allowMultiple" : false
+            }
+        ],
+        "summary" : "Retrieve the Network Capabilities Data like links, bandwidt…",
+        "notes" : "Retrieve the Network Capabilities Data like links, bandwidth, node etc.,\nfrom SDNiAggregator",
+        "errorResponses" : [
+          {
+            "code" : 404,
+            "reason" : "The Container Name was not found"
+          }
+        ],
+        "produces" : [
+          
+          
+          "application/json"
+        ],
+        "consumes" : [
+          "*/*"
+          ,"application/xml"
+          
+        ]
+      }
+      ]
+    }
+  ],
+  "models" : {
+    "ns0_networkCapabilities" : {
+      "properties" : {
+        "latency" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "link" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "ipAddressList" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "macAddressList" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "host" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "node" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "bandwidth" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+        ,
+        "controller" : {
+          "required" : false,
+          "type" : "List",
+          "items" : {
+            "$ref" : "string"
+          }
+        }
+      },
+      "id" : "ns0_networkCapabilities"
+    }
+  }
+}

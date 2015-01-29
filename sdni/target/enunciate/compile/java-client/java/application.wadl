@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wadl:application xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <wadl:doc xmlns:enunciate="http://enunciate.codehaus.org/" enunciate:generatedBy="Enunciate-1.28"/>
+  <wadl:grammars>
+    <wadl:include href="ns0.xsd"/>
+  </wadl:grammars>
+  <wadl:resources base="http://localhost:8080/full">
+    <wadl:resource path="/controller/nb/v2/sdni/{containerName}/qos">
+      <wadl:param name="containerName" style="template"/>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Retrieve the Network Capabilities QOS Data like node, port, receive packets etc.,
+from SDNiAggregator]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[NetworkCapabilitiesQOS Example: Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/qos
+Response Body in JSON:
+[{"node":"00:00:00:00:00:00:00:04","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"1","receivePackets":61,"transmitPackets":63,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"2","receivePackets":47,"transmitPackets":47,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"3","receivePackets":62,"transmitPackets":64,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"4","receivePackets":70,"transmitPackets":72,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"1","receivePackets":27,"transmitPackets":290,"collisionCount":0,
+"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"2","receivePackets":23,"transmitPackets":285,"collisionCount":0,
+"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"3","receivePackets":61,"transmitPackets":55,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:05","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+"node":"00:00:00:00:00:00:00:05","port":"1","receivePackets":51,"transmitPackets":51,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:05","port":"2","receivePackets":52,"transmitPackets":54,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0}]]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/controller/nb/v2/sdni/{containerName}/topology">
+      <wadl:param name="containerName" style="template"/>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Retrieve the Network Capabilities Data like links, bandwidth, node etc.,
+from SDNiAggregator]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[NetworkCapabilities Example: Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/topology
+Response Body in XML: {"link":[
+"(OF|2@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:03)"
+,
+"(OF|3@OF|00:00:00:00:00:00:00:03->OF|2@OF|00:00:00:00:00:00:00:01)"
+,
+"(OF|1@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:02)"
+,
+"(OF|3@OF|00:00:00:00:00:00:00:02->OF|1@OF|00:00:00:00:00:00:00:01)"
+],
+"bandwidth":["10Gbps","10Gbps","10Gbps","10Gbps"],"latency":[],
+"macAddressList"
+:["00:00:00:00:00:01","00:00:00:00:00:02","00:00:00:00:00:03"],
+"ipAddressList"
+:["10.0.0.1","10.0.0.3"],"controller":["10.132.35.14"],
+"node":["00:00:00:00:00:00:00:01","00:00:00:00:00:00:00:02",
+"00:00:00:00:00:00:00:03"],"host":["1","1"]}]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/controller/nb/v2/sdni/{containerName}/property/linkbandwidth/{propertyValue}">
+      <wadl:param name="containerName" style="template">
+        <wadl:doc>
+          <![CDATA[Name of the Container (Eg. 'default')]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:param name="propertyValue" style="template">
+        <wadl:doc>
+          <![CDATA[Value of the Property. Description can be any string (Eg.
+'Node1'), valid values for tier are non negative numbers, and
+valid values for forwarding are 0 for reactive and 1 for
+proactive forwarding.]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="PUT">
+        <wadl:doc>
+          <![CDATA[Update the available bandwidth property by its link name. Set of linkname
+with different bandwidth can be updated here. This method returns a
+non-successful response if the bandwidth is not updated.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[Response as dictated by the HTTP Response Status code
+<pre>
+Example:
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/property/linkbandwidth/JSONObject
+</pre>]]>
+          </wadl:doc>
+          <wadl:representation mediaType="*/*"/>
+          <wadl:representation mediaType="application/xml"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/controller/nb/v2/sdni/{containerName}/property/{propertyName}/{propertyValue}">
+      <wadl:param name="containerName" style="template">
+        <wadl:doc>
+          <![CDATA[Name of the Container (Eg. 'default')]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:param name="propertyName" style="template">
+        <wadl:doc>
+          <![CDATA[Name of the Property. Properties that can be configured are:
+description, forwarding(only for default container) and tier]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:param name="propertyValue" style="template">
+        <wadl:doc>
+          <![CDATA[Value of the Property. Description can be any string (Eg.
+'Node1'), valid values for tier are non negative numbers, and
+valid values for forwarding are 0 for reactive and 1 for
+proactive forwarding.]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="PUT">
+        <wadl:doc>
+          <![CDATA[Update the available bandwidth property. This method returns a
+non-successful response if the bandwidth is not updated.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[Response as dictated by the HTTP Response Status code
+<pre>
+Example:
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/property/bandwidth/5
+</pre>]]>
+          </wadl:doc>
+          <wadl:representation mediaType="*/*"/>
+          <wadl:representation mediaType="application/xml"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+  </wadl:resources>
+</wadl:application>

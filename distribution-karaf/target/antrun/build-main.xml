@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <chmod perm="755">
+    <fileset dir="/home/tcs/sdninterfaceapp/distribution-karaf/target/assembly/bin">
+      <include name="karaf"/>
+      <include name="instance"/>
+      <include name="start"/>
+      <include name="stop"/>
+      <include name="status"/>
+      <include name="client"/>
+      <include name="shell"/>
+    </fileset>
+  </chmod>
+</target>
+</project>

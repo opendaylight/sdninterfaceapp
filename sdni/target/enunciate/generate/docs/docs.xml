@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api-docs title="SDNi REST API">
+  <data>
+    <schema namespace="" namespaceId="ns0" file="ns0.xsd">
+      <types>
+        <type name="networkCapabilities" id="org.opendaylight.controller.sdniaggregator.NetworkCapabilities" package="org.opendaylight.controller.sdniaggregator">
+          <facets>
+          </facets>
+          <elements>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="latency">
+              <choice name="latency" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="link">
+              <choice name="link" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="ipAddressList">
+              <choice name="ipAddressList" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="macAddressList">
+              <choice name="macAddressList" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="host">
+              <choice name="host" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="node">
+              <choice name="node" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="bandwidth">
+              <choice name="bandwidth" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+            <element minOccurs="0" maxOccurs="unbounded" jsonName="controller">
+              <choice name="controller" namespace="" typeNamespace="http://www.w3.org/2001/XMLSchema" typeName="string"/>
+            </element>
+          </elements>
+        </type>
+      </types>
+      <elements>
+        <element name="networkCapabilities" type="org.opendaylight.controller.sdniaggregator.NetworkCapabilities" typeName="networkCapabilities" typeNamespace="" typeSchemaId="ns0">
+          <facets>
+          </facets>
+          <examplexml><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<networkCapabilities>
+  <latency>...</latency>
+  <latency>...</latency>
+  <!--...more "latency" elements...-->
+  <link>...</link>
+  <link>...</link>
+  <!--...more "link" elements...-->
+  <ipAddressList>...</ipAddressList>
+  <ipAddressList>...</ipAddressList>
+  <!--...more "ipAddressList" elements...-->
+  <macAddressList>...</macAddressList>
+  <macAddressList>...</macAddressList>
+  <!--...more "macAddressList" elements...-->
+  <host>...</host>
+  <host>...</host>
+  <!--...more "host" elements...-->
+  <node>...</node>
+  <node>...</node>
+  <!--...more "node" elements...-->
+  <bandwidth>...</bandwidth>
+  <bandwidth>...</bandwidth>
+  <!--...more "bandwidth" elements...-->
+  <controller>...</controller>
+  <controller>...</controller>
+  <!--...more "controller" elements...-->
+</networkCapabilities>]]></examplexml>
+        </element>
+      </elements>
+      <facets>
+      </facets>
+    </schema>
+  </data>
+  <soap>
+    <wsdls>
+    </wsdls>
+  </soap>
+  <rest baseAddress="http://localhost:8080/full" wadl="application.wadl">
+    <resources>
+      <resource name="/{containerName}/qos" subcontext="/controller/nb/v2/sdni">
+        <facets>
+          <facet>
+            <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+            <value>SdniNorthbound</value>
+            <documentation><![CDATA[This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.
+And also Update the available bandwidth based on the parameters Its queries
+SDNiAggregator to fetch/modify the data. Totally 3 API calls - Network
+Capabilities Data, Update]]></documentation>
+          </facet>
+        </facets>
+        <additionalHeaderLabels>
+        </additionalHeaderLabels>
+        <operation name="GET">
+          <documentation>
+            <![CDATA[Retrieve the Network Capabilities QOS Data like node, port, receive packets etc.,
+from SDNiAggregator]]>
+          </documentation>
+          <contentType type="*/*" consumable="true" produceable="false"/>
+          <contentType type="application/xml" consumable="true" produceable="false"/>
+          <contentType type="application/json" consumable="false" produceable="true"/>
+          <parameter name="containerName" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[(no documentation provided)]]>
+          </parameter>
+          <outValue>
+            
+            
+            <documentation><![CDATA[NetworkCapabilitiesQOS Example: Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/qos
+Response Body in JSON:
+[{"node":"00:00:00:00:00:00:00:04","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"1","receivePackets":61,"transmitPackets":63,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"2","receivePackets":47,"transmitPackets":47,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"3","receivePackets":62,"transmitPackets":64,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"4","receivePackets":70,"transmitPackets":72,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"1","receivePackets":27,"transmitPackets":290,"collisionCount":0,
+"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"2","receivePackets":23,"transmitPackets":285,"collisionCount":0,
+"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"3","receivePackets":61,"transmitPackets":55,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:05","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+"node":"00:00:00:00:00:00:00:05","port":"1","receivePackets":51,"transmitPackets":51,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:05","port":"2","receivePackets":52,"transmitPackets":54,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0}]]]></documentation>
+          </outValue>
+          <statusCode code="404 Not Found">
+            <condition><![CDATA[The Container Name was not found]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+        </operation>
+      </resource>
+      <resource name="/{containerName}/topology" subcontext="/controller/nb/v2/sdni">
+        <facets>
+          <facet>
+            <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+            <value>SdniNorthbound</value>
+            <documentation><![CDATA[This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.
+And also Update the available bandwidth based on the parameters Its queries
+SDNiAggregator to fetch/modify the data. Totally 3 API calls - Network
+Capabilities Data, Update]]></documentation>
+          </facet>
+        </facets>
+        <additionalHeaderLabels>
+        </additionalHeaderLabels>
+        <operation name="GET">
+          <documentation>
+            <![CDATA[Retrieve the Network Capabilities Data like links, bandwidth, node etc.,
+from SDNiAggregator]]>
+          </documentation>
+          <contentType type="*/*" consumable="true" produceable="false"/>
+          <contentType type="application/xml" consumable="true" produceable="false"/>
+          <contentType type="application/json" consumable="false" produceable="true"/>
+          <parameter name="containerName" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[(no documentation provided)]]>
+          </parameter>
+          <outValue>
+            <xmlElement elementSchemaId="ns0" elementNamespace="" elementName="networkCapabilities" />
+            
+            <documentation><![CDATA[NetworkCapabilities Example: Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/topology
+Response Body in XML: {"link":[
+"(OF|2@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:03)"
+,
+"(OF|3@OF|00:00:00:00:00:00:00:03->OF|2@OF|00:00:00:00:00:00:00:01)"
+,
+"(OF|1@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:02)"
+,
+"(OF|3@OF|00:00:00:00:00:00:00:02->OF|1@OF|00:00:00:00:00:00:00:01)"
+],
+"bandwidth":["10Gbps","10Gbps","10Gbps","10Gbps"],"latency":[],
+"macAddressList"
+:["00:00:00:00:00:01","00:00:00:00:00:02","00:00:00:00:00:03"],
+"ipAddressList"
+:["10.0.0.1","10.0.0.3"],"controller":["10.132.35.14"],
+"node":["00:00:00:00:00:00:00:01","00:00:00:00:00:00:00:02",
+"00:00:00:00:00:00:00:03"],"host":["1","1"]}]]></documentation>
+          </outValue>
+          <statusCode code="404 Not Found">
+            <condition><![CDATA[The Container Name was not found]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+        </operation>
+      </resource>
+      <resource name="/{containerName}/property/linkbandwidth/{propertyValue}" subcontext="/controller/nb/v2/sdni">
+        <facets>
+          <facet>
+            <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+            <value>SdniNorthbound</value>
+            <documentation><![CDATA[This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.
+And also Update the available bandwidth based on the parameters Its queries
+SDNiAggregator to fetch/modify the data. Totally 3 API calls - Network
+Capabilities Data, Update]]></documentation>
+          </facet>
+        </facets>
+        <additionalHeaderLabels>
+        </additionalHeaderLabels>
+        <operation name="PUT">
+          <documentation>
+            <![CDATA[Update the available bandwidth property by its link name. Set of linkname
+with different bandwidth can be updated here. This method returns a
+non-successful response if the bandwidth is not updated.]]>
+          </documentation>
+          <contentType type="*/*" consumable="false" produceable="true"/>
+          <contentType type="application/xml" consumable="true" produceable="true"/>
+          <contentType type="application/json" consumable="true" produceable="false"/>
+          <parameter name="containerName" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[Name of the Container (Eg. 'default')]]>
+          </parameter>
+          <parameter name="propertyValue" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[Value of the Property. Description can be any string (Eg.
+'Node1'), valid values for tier are non negative numbers, and
+valid values for forwarding are 0 for reactive and 1 for
+proactive forwarding.]]>
+          </parameter>
+          <outValue>
+            
+            
+            <documentation><![CDATA[Response as dictated by the HTTP Response Status code
+<pre>
+Example:
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/property/linkbandwidth/JSONObject
+</pre>]]></documentation>
+          </outValue>
+          <statusCode code="201 Created">
+            <condition><![CDATA[Operation successful]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="400 Bad Request">
+            <condition><![CDATA[The nodeId or configuration is invalid]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="401 Unauthorized">
+            <condition><![CDATA[User not authorized to perform this operation]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="404 Not Found">
+            <condition><![CDATA[The Container Name or node or configuration name is not found]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="406 Not Acceptable">
+            <condition><![CDATA[The property cannot be configured in non-default container]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="409 Conflict">
+            <condition><![CDATA[Unable to update configuration due to cluster conflict or conflicting description property]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="503 Service Unavailable">
+            <condition><![CDATA[One or more of Controller services are unavailable]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+        </operation>
+      </resource>
+      <resource name="/{containerName}/property/{propertyName}/{propertyValue}" subcontext="/controller/nb/v2/sdni">
+        <facets>
+          <facet>
+            <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+            <value>SdniNorthbound</value>
+            <documentation><![CDATA[This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.
+And also Update the available bandwidth based on the parameters Its queries
+SDNiAggregator to fetch/modify the data. Totally 3 API calls - Network
+Capabilities Data, Update]]></documentation>
+          </facet>
+        </facets>
+        <additionalHeaderLabels>
+        </additionalHeaderLabels>
+        <operation name="PUT">
+          <documentation>
+            <![CDATA[Update the available bandwidth property. This method returns a
+non-successful response if the bandwidth is not updated.]]>
+          </documentation>
+          <contentType type="*/*" consumable="false" produceable="true"/>
+          <contentType type="application/xml" consumable="true" produceable="true"/>
+          <contentType type="application/json" consumable="true" produceable="false"/>
+          <parameter name="containerName" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[Name of the Container (Eg. 'default')]]>
+          </parameter>
+          <parameter name="propertyName" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[Name of the Property. Properties that can be configured are:
+description, forwarding(only for default container) and tier]]>
+          </parameter>
+          <parameter name="propertyValue" type="path" xmlTypeName="string" xmlTypeNamespace="http://www.w3.org/2001/XMLSchema">
+            <![CDATA[Value of the Property. Description can be any string (Eg.
+'Node1'), valid values for tier are non negative numbers, and
+valid values for forwarding are 0 for reactive and 1 for
+proactive forwarding.]]>
+          </parameter>
+          <outValue>
+            
+            
+            <documentation><![CDATA[Response as dictated by the HTTP Response Status code
+<pre>
+Example:
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/property/bandwidth/5
+</pre>]]></documentation>
+          </outValue>
+          <statusCode code="201 Created">
+            <condition><![CDATA[Operation successful]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="400 Bad Request">
+            <condition><![CDATA[The nodeId or configuration is invalid]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="401 Unauthorized">
+            <condition><![CDATA[User not authorized to perform this operation]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="404 Not Found">
+            <condition><![CDATA[The Container Name or node or configuration name is not found]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="406 Not Acceptable">
+            <condition><![CDATA[The property cannot be configured in non-default container]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="409 Conflict">
+            <condition><![CDATA[Unable to update configuration due to cluster conflict or conflicting description property]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+          <statusCode code="503 Service Unavailable">
+            <condition><![CDATA[One or more of Controller services are unavailable]]></condition>
+            <additionalHeaders>
+            </additionalHeaders>
+          </statusCode>
+        </operation>
+      </resource>
+    </resources>
+    <facets>
+      <facet>
+        <name>org.codehaus.enunciate.contract.jaxrs.Resource</name>
+        <value>SdniNorthbound</value>
+        <documentation><![CDATA[This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.
+And also Update the available bandwidth based on the parameters Its queries
+SDNiAggregator to fetch/modify the data. Totally 3 API calls - Network
+Capabilities Data, Update]]></documentation>
+      </facet>
+    </facets>
+  </rest>
+  <packages>
+    <package id="org.opendaylight.controller.sdnimanager.northbound">
+    </package>
+  </packages>
+</api-docs>

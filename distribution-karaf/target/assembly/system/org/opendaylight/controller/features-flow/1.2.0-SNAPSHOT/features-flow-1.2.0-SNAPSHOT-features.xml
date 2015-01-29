@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<features name="odl-flow-1.2.0-SNAPSHOT" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
+    <repository>mvn:org.opendaylight.controller/features-mdsal/1.2.0-SNAPSHOT/xml/features</repository>
+    <feature name='odl-flow-model' version='1.2.0-SNAPSHOT' description="OpenDaylight :: Flow :: Model">
+        <feature version='0.7.0-SNAPSHOT'>odl-yangtools-models</feature>
+        <bundle>mvn:org.opendaylight.controller.model/model-flow-base/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.model/model-flow-service/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.model/model-flow-statistics/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.model/model-inventory/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.model/model-topology/1.2.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name='odl-flow-services' version='1.2.0-SNAPSHOT' description="OpenDaylight :: Flow :: Services">
+        <feature version='1.2.0-SNAPSHOT'>odl-mdsal-broker</feature>
+        <feature version='1.2.0-SNAPSHOT'>odl-flow-model</feature>
+        <bundle>mvn:org.opendaylight.controller.md/topology-manager/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.md/topology-lldp-discovery/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.md/statistics-manager/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.md/inventory-manager/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller.md/forwardingrules-manager/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller/liblldp/0.9.0-SNAPSHOT</bundle>
+        <configfile finalname="etc/opendaylight/karaf/30-statistics-manager.xml">mvn:org.opendaylight.controller.md/statistics-manager-config/1.2.0-SNAPSHOT/xml/config</configfile>
+    </feature>
+
+</features>

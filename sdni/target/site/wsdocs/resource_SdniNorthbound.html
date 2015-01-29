@@ -1,0 +1,454 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>SdniNorthbound</title>
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS: implied media="all" -->
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/prettify.css">
+
+  <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
+  <script src="js/libs/modernizr-1.7.min.js"></script>
+
+</head>
+
+<body class="home">
+
+  <div class="container">
+    <header>
+      <div id="header" class="column first last span-20">
+        <div id="site-name" class="column span-18 append-1 prepend-1 first last"><a href="index.html">SdniNorthbound</a></div>
+        <div id="primary" class="column span-18 append-1 prepend-1 first last">
+          <ul class="navigation">
+            <li id="nav-rest"><a href="rest.html">REST</a></li>
+            <li id="nav-data"><a href="model.html">Data Model</a></li>
+            <li id="nav-downloads"><a href="downloads.html">Files and Libraries</a></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="xbreadcrumbs" id="breadcrumbs">
+            <li>
+              <a href="index.html" class="home">Home</a> &gt;
+            </li>
+            <li>
+              <a href="rest.html">REST</a> &gt;
+              <ul>
+                <li><a href="model.html">Data Model</a></li>
+                <li><a href="rest.html">REST</a></li>
+                <li><a href="downloads.html">Files and Libraries</a></li>
+              </ul>
+            </li>
+            <li class="current">
+              <a href="resource_SdniNorthbound.html">SdniNorthbound</a>
+              <ul>
+                <li><a href="resource_SdniNorthbound.html">SdniNorthbound</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div id="main" class="column first last span-20">
+      <h1>SdniNorthbound</h1>
+
+      <p>This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.
+And also Update the available bandwidth based on the parameters Its queries
+SDNiAggregator to fetch/modify the data. Totally 3 API calls - Network
+Capabilities Data, Update</p>
+      <p>The following resources are applicable:</p>
+      <ul>
+        <li>
+        <a href="#path__-containerName-_property_-propertyName-_-propertyValue-.html">/{containerName}/property/{propertyName}/{propertyValue}</a>
+        </li>
+        <li>
+        <a href="#path__-containerName-_property_linkbandwidth_-propertyValue-.html">/{containerName}/property/linkbandwidth/{propertyValue}</a>
+        </li>
+        <li>
+        <a href="#path__-containerName-_qos.html">/{containerName}/qos</a>
+        </li>
+        <li>
+        <a href="#path__-containerName-_topology.html">/{containerName}/topology</a>
+        </li>
+      </ul>
+        <a name="path__-containerName-_property_-propertyName-_-propertyValue-.html"></a>
+      <h1>/{containerName}/property/{propertyName}/{propertyValue}</h1>
+      <p class="note">Mount Point: <a href="../controller/nb/v2/sdni/{containerName}/property/{propertyName}/{propertyValue}">/controller/nb/v2/sdni/{containerName}/property/{propertyName}/{propertyValue}</a></p>
+      <a name="PUT"></a>
+      <h2>PUT</h2>
+      <p>
+            Update the available bandwidth property. This method returns a
+non-successful response if the bandwidth is not updated.
+          </p>
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>containerName</td>
+          <td>
+            Name of the Container (Eg. 'default')
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>propertyName</td>
+          <td>
+            Name of the Property. Properties that can be configured are:
+description, forwarding(only for default container) and tier
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>propertyValue</td>
+          <td>
+            Value of the Property. Description can be any string (Eg.
+'Node1'), valid values for tier are non negative numbers, and
+valid values for forwarding are 0 for reactive and 1 for
+proactive forwarding.
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td>(custom)</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>*/*<br/>application/xml<br/></td>
+        </tr>
+      </table>
+      <p>Response as dictated by the HTTP Response Status code
+<pre>
+Example:
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/property/bandwidth/5
+</pre></p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>201 Created</td>
+          <td>Operation successful</td>
+        </tr>
+        <tr>
+          <td>400 Bad Request</td>
+          <td>The nodeId or configuration is invalid</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+          <td>User not authorized to perform this operation</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>The Container Name or node or configuration name is not found</td>
+        </tr>
+        <tr>
+          <td>406 Not Acceptable</td>
+          <td>The property cannot be configured in non-default container</td>
+        </tr>
+        <tr>
+          <td>409 Conflict</td>
+          <td>Unable to update configuration due to cluster conflict or conflicting description property</td>
+        </tr>
+        <tr>
+          <td>503 Service Unavailable</td>
+          <td>One or more of Controller services are unavailable</td>
+        </tr>
+      </table>
+        <a name="path__-containerName-_property_linkbandwidth_-propertyValue-.html"></a>
+      <h1>/{containerName}/property/linkbandwidth/{propertyValue}</h1>
+      <p class="note">Mount Point: <a href="../controller/nb/v2/sdni/{containerName}/property/linkbandwidth/{propertyValue}">/controller/nb/v2/sdni/{containerName}/property/linkbandwidth/{propertyValue}</a></p>
+      <a name="PUT"></a>
+      <h2>PUT</h2>
+      <p>
+            Update the available bandwidth property by its link name. Set of linkname
+with different bandwidth can be updated here. This method returns a
+non-successful response if the bandwidth is not updated.
+          </p>
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>containerName</td>
+          <td>
+            Name of the Container (Eg. 'default')
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>propertyValue</td>
+          <td>
+            Value of the Property. Description can be any string (Eg.
+'Node1'), valid values for tier are non negative numbers, and
+valid values for forwarding are 0 for reactive and 1 for
+proactive forwarding.
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td>(custom)</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>*/*<br/>application/xml<br/></td>
+        </tr>
+      </table>
+      <p>Response as dictated by the HTTP Response Status code
+<pre>
+Example:
+Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/property/linkbandwidth/JSONObject
+</pre></p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>201 Created</td>
+          <td>Operation successful</td>
+        </tr>
+        <tr>
+          <td>400 Bad Request</td>
+          <td>The nodeId or configuration is invalid</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+          <td>User not authorized to perform this operation</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>The Container Name or node or configuration name is not found</td>
+        </tr>
+        <tr>
+          <td>406 Not Acceptable</td>
+          <td>The property cannot be configured in non-default container</td>
+        </tr>
+        <tr>
+          <td>409 Conflict</td>
+          <td>Unable to update configuration due to cluster conflict or conflicting description property</td>
+        </tr>
+        <tr>
+          <td>503 Service Unavailable</td>
+          <td>One or more of Controller services are unavailable</td>
+        </tr>
+      </table>
+        <a name="path__-containerName-_qos.html"></a>
+      <h1>/{containerName}/qos</h1>
+      <p class="note">Mount Point: <a href="../controller/nb/v2/sdni/{containerName}/qos">/controller/nb/v2/sdni/{containerName}/qos</a></p>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Retrieve the Network Capabilities QOS Data like node, port, receive packets etc.,
+from SDNiAggregator
+          </p>
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>containerName</td>
+          <td>
+            (no documentation provided)
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td>(custom)</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/json</td>
+        </tr>
+      </table>
+      <p>NetworkCapabilitiesQOS Example: Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/qos
+Response Body in JSON:
+[{"node":"00:00:00:00:00:00:00:04","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"1","receivePackets":61,"transmitPackets":63,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"2","receivePackets":47,"transmitPackets":47,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:04","port":"3","receivePackets":62,"transmitPackets":64,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"4","receivePackets":70,"transmitPackets":72,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"1","receivePackets":27,"transmitPackets":290,"collisionCount":0,
+"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"2","receivePackets":23,"transmitPackets":285,"collisionCount":0,
+"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:06","port":"3","receivePackets":61,"transmitPackets":55,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:05","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+"node":"00:00:00:00:00:00:00:05","port":"1","receivePackets":51,"transmitPackets":51,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0},
+{"node":"00:00:00:00:00:00:00:05","port":"2","receivePackets":52,"transmitPackets":54,"collisionCount":0,"receiveFrameError":0,
+"receiveOverRunError":0,"receiveCrcError":0}]</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>The Container Name was not found</td>
+        </tr>
+      </table>
+        <a name="path__-containerName-_topology.html"></a>
+      <h1>/{containerName}/topology</h1>
+      <p class="note">Mount Point: <a href="../controller/nb/v2/sdni/{containerName}/topology">/controller/nb/v2/sdni/{containerName}/topology</a></p>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Retrieve the Network Capabilities Data like links, bandwidth, node etc.,
+from SDNiAggregator
+          </p>
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>containerName</td>
+          <td>
+            (no documentation provided)
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_networkCapabilities.html">networkCapabilities</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/json</td>
+        </tr>
+      </table>
+      <p>NetworkCapabilities Example: Request URL:
+http://localhost:8080/controller/nb/v2/sdni/default/topology
+Response Body in XML: {"link":[
+"(OF|2@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:03)"
+,
+"(OF|3@OF|00:00:00:00:00:00:00:03->OF|2@OF|00:00:00:00:00:00:00:01)"
+,
+"(OF|1@OF|00:00:00:00:00:00:00:01->OF|3@OF|00:00:00:00:00:00:00:02)"
+,
+"(OF|3@OF|00:00:00:00:00:00:00:02->OF|1@OF|00:00:00:00:00:00:00:01)"
+],
+"bandwidth":["10Gbps","10Gbps","10Gbps","10Gbps"],"latency":[],
+"macAddressList"
+:["00:00:00:00:00:01","00:00:00:00:00:02","00:00:00:00:00:03"],
+"ipAddressList"
+:["10.0.0.1","10.0.0.3"],"controller":["10.132.35.14"],
+"node":["00:00:00:00:00:00:00:01","00:00:00:00:00:00:00:02",
+"00:00:00:00:00:00:00:03"],"host":["1","1"]}</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>The Container Name was not found</td>
+        </tr>
+      </table>
+
+      <div class="clear" />
+    </div>
+    <footer>
+      <div id="footer">
+        Generated by <a href="http://enunciate.codehaus.org">Enunciate</a>.
+      </div>
+    </footer>
+  </div> <!--! end of #container -->
+
+  <!-- JavaScript at the bottom for fast page loading -->
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+  <script>window.jQuery || document.write("<script src='js/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
+
+  <!--manage the navigation menu-->
+  <script src="js/libs/xbreadcrumbs.js"></script>
+  <script>
+    $(function() {
+      $('#breadcrumbs').xBreadcrumbs();
+    });
+  </script>
+
+
+  <!-- prettify code blocks. see http://code.google.com/p/google-code-prettify/ -->
+  <script src="js/libs/prettify/prettify.js"></script>
+  <script>
+    $(function() {
+      prettyPrint();
+    });
+  </script>
+
+  <!--[if lt IE 7 ]>
+    <script src="js/libs/dd_belatedpng.js"></script>
+    <script>DD_belatedPNG.fix("img, .png_bg"); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+  <![endif]-->
+
+</body>
+</html>

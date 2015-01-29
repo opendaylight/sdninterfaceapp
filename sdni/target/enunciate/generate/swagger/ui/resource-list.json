@@ -1,0 +1,12 @@
+{
+  "swaggerVersion": "1.1",
+  "basePath": "http://localhost:8080/full/ui",
+  "apis": [
+    {
+      "path": "/SdniNorthbound.json",
+      "description" : "This class SDNi REST APIs is used to retrieve SDNi Network Capabilities Data.\nAnd also Update the available bandwidth based on the parameters Its queries\nSDNiAggregator to fetch/modify the data. Totally 3 API calls - Network\nCapabilities Data, Update",
+      "nickname" : "SdniNorthbound",
+      "resourcePath" : "SdniNorthbound"
+    }
+  ]
+}

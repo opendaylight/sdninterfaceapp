@@ -1,0 +1,7 @@
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/EdgeProperties.java
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/NetworkCapabilitiesQOS.java
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/HostConfig.java
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/NetworkCapabilities.java
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/PortStatistics.java
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/SDNiBandwidth.java
+/home/tcs/sdninterfaceapp/sdniaggregator/src/main/java/org/opendaylight/controller/sdniaggregator/SdniManager.java

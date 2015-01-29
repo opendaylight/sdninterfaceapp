@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="networkCapabilities" type="networkCapabilities"/>
+  <xs:complexType name="networkCapabilities">
+    <xs:sequence>
+      <xs:element name="latency" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="link" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ipAddressList" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="macAddressList" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="host" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="node" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="bandwidth" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="controller" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

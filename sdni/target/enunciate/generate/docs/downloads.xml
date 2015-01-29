@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<downloads>
+  <download name="C Client Library">
+    <created>29 Jan, 2015 7:39:31 PM</created>
+    <files>
+      <file name="full.c" size="32.49K"><![CDATA[]]></file>
+      <file name="enunciate-common.c" size="39.67K"><![CDATA[Common code needed for all projects.]]></file>
+    </files>
+    <description><![CDATA[<h1>
+  Introduction
+</h1>
+
+<p>
+  The C module generates the source code for the ANSI-C-compatible data structures and (de)serialization
+  functions that can be used in conjunction with <a href="http://xmlsoft.org/">libxml2</a> to (de)serialize
+  the REST resources as they are represented as XML data.
+</p>
+
+<p>
+  The generated C source code depends on the <a href="http://xmlsoft.org/html/libxml-xmlreader.html">XML Reader API</a>
+  and the <a href="http://xmlsoft.org/html/libxml-xmlwriter.html">XML Writer API</a> as well as the <tt>&lt;time.h&gt;</tt>,
+  <tt>&lt;string.h&gt;</tt>, and <tt>&lt;stdlib.h&gt;</tt> C standard libraries.
+</p>
+
+<h1>
+  REST XML Example
+</h1>
+
+<code class="prettyprint">
+#include &lt;full.c&gt;
+//...
+
+xmlTextReaderPtr reader = ...; //set up the reader to the url.
+full_ns0_networkCapabilities *response_element = ...;
+response_element = xml_read_full_ns0_networkCapabilities(reader);
+
+//handle the response as needed...
+
+//free the full_ns0_networkCapabilities
+free_full_ns0_networkCapabilities(response_element);
+</code>
+]]></description>
+    <dependencies>
+    </dependencies>
+  </download>
+  <download name=".NET Client Library">
+    <created>29 Jan, 2015 7:39:32 PM</created>
+    <platform>.NET 2.0</platform>
+    <files>
+      <file name="full-dotnet.zip" size="768.00bytes"><![CDATA[The C# source code for the .NET client library.]]></file>
+    </files>
+    <description><![CDATA[<h1>
+  Introduction
+</h1>
+
+
+<p>
+  The .NET client-side library defines the classes that can be (de)serialized to/from XML.
+  This is useful for accessing the REST endpoints that are published by this application.
+</p>
+
+<h1>
+  REST Example
+</h1>
+
+<code class="prettyprint">
+//read a resource from a REST url
+Uri uri = new Uri(...);
+
+XmlSerializer s = new XmlSerializer(
+  typeof( NetworkCapabilities )
+);
+
+  //Create the request object
+WebRequest req = WebRequest.Create(uri);
+WebResponse resp = req.GetResponse();
+Stream stream = resp.GetResponseStream();
+TextReader r = new StreamReader( stream );
+
+NetworkCapabilities order = (NetworkCapabilities) s.Deserialize( r );
+
+//handle the result as needed...
+</code>
+<p>
+  This bundle contains C# source code.
+</p>]]></description>
+    <dependencies>
+    </dependencies>
+  </download>
+  <download name="Java Client Library">
+    <created>29 Jan, 2015 7:39:32 PM</created>
+    <platform>Java (Version 5+)</platform>
+    <files>
+      <file name="full-client.jar" size="3.02K"><![CDATA[The binaries for the Java client library.]]></file>
+      <file name="full-client-sources.jar" size="877.00bytes"><![CDATA[The sources for the Java client library.]]></file>
+    </files>
+    <description><![CDATA[<h1>
+  Introduction
+</h1>
+
+<p>
+  The Java client-side library is used to access the Web service API for this application.
+</p>
+
+<p>
+  The JAX-WS client-side library is used to provide the set of Java objects that can be serialized
+  to/from XML using <a href="https://jaxb.dev.java.net/">JAXB</a>.  This is useful for accessing the
+  REST endpoints that are published by this application.
+</p>
+
+<h1>
+  REST Example (Raw JAXB)
+</h1>
+
+<code class="prettyprint">
+java.net.URL url = new java.net.URL(baseURL + "/{containerName}/topology");
+JAXBContext context = JAXBContext.newInstance( NetworkCapabilities.class );
+java.net.URLConnection connection = url.openConnection();
+connection.connect();
+
+Unmarshaller unmarshaller = context.createUnmarshaller();
+NetworkCapabilities result = (NetworkCapabilities) unmarshaller.unmarshal( connection.getInputStream() );
+//handle the result as needed...
+</code>
+
+<h1>
+  REST Example (Jersey client)
+</h1>
+
+<code class="prettyprint">
+com.sun.jersey.api.client.Client client = com.sun.jersey.api.client.Client.create();
+
+NetworkCapabilities result = client.resource(baseUrl + "/{containerName}/topology")
+  
+  .get(NetworkCapabilities.class);
+
+//handle the result as needed...
+</code>
+]]></description>
+    <dependencies>
+    </dependencies>
+  </download>
+  <download name="Objective C Client Library">
+    <created>29 Jan, 2015 7:39:31 PM</created>
+    <files>
+      <file name="full.h" size="1.72K"><![CDATA[]]></file>
+      <file name="full.m" size="22.44K"><![CDATA[]]></file>
+      <file name="enunciate-common.h" size="12.82K"><![CDATA[Common header needed for all projects.]]></file>
+      <file name="enunciate-common.m" size="42.34K"><![CDATA[Common implementation code needed for all projects.]]></file>
+    </files>
+    <description><![CDATA[<h1>
+  Introduction
+</h1>
+
+<p>
+  The Objective C module generates the source code for the Objective C classes and (de)serialization
+  functions that can be used in conjunction with <a href="http://xmlsoft.org/">libxml2</a> to (de)serialize
+  the REST resources as they are represented as XML data.
+</p>
+
+<p>
+  The generated Objective C source code depends on the <a href="http://xmlsoft.org/html/libxml-xmlreader.html">XML Reader API</a>
+  and the <a href="http://xmlsoft.org/html/libxml-xmlwriter.html">XML Writer API</a> as well as the base OpenStep foundation classes.
+</p>
+
+<h1>
+  REST XML Example
+</h1>
+
+<code class="prettyprint">
+#import &lt;full.h&gt;
+//...
+
+FULLNS0NetworkCapabilities *responseElement;
+NSData *responseData; //data holding the XML from the response.
+NSURL *baseURL = ...; //the base url including the host and subpath.
+NSURL *url = [NSURL URLWithString: @"/{containerName}/topology" relativeToURL: baseURL];
+NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+NSURLResponse *response = nil;
+NSError *error = NULL;
+[request setHTTPMethod: @"GET"];
+
+//this example uses a synchronous request,
+//but you'll probably want to use an asynchronous call
+responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+FULLNS0NetworkCapabilities *responseElement = [FULLNS0NetworkCapabilities readFromXML: responseData];
+[responseElement retain];
+
+//handle the response as needed...
+</code>
+]]></description>
+    <dependencies>
+    </dependencies>
+  </download>
+</downloads>

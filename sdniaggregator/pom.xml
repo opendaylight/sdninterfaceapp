@@ -76,11 +76,13 @@
           <instructions>
             	<Import-Package>org.opendaylight.controller.sal.core,
               org.opendaylight.controller.sal.utils,
+	      org.opendaylight.controller.sal.reader,
               org.opendaylight.controller.hosttracker,
               org.opendaylight.controller.hosttracker.hostAware,
               org.opendaylight.controller.sal.packet.address,
               org.opendaylight.controller.sal.action,
               org.opendaylight.controller.switchmanager,
+	      org.opendaylight.controller.statisticsmanager,
               org.opendaylight.controller.clustering.services,
               org.opendaylight.controller.topologymanager,
               org.apache.felix.dm,
