@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a96c907_83c35c88",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2759
+      },
+      "writtenOn": "2015-02-10T14:45:22Z",
+      "side": 1,
+      "message": "Looks like whatever rebasing you did accidently overwrote the author and your commit message.\n\nI\u0027d recommend fixing the commit message and setting the Author to the correct author :)",
+      "revId": "b0e9537d41f7b41dbaeeda3db3a479bb9766f554",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
