@@ -40,6 +40,11 @@
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>switchmanager</artifactId>
     </dependency>
+     <dependency>
+      <groupId>org.opendaylight.controller</groupId>
+      <artifactId>statisticsmanager</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -55,6 +60,7 @@
               org.opendaylight.controller.sal.utils,
               org.opendaylight.controller.containermanager,
               org.opendaylight.controller.switchmanager,
+	      org.opendaylight.controller.statisticsmanager,
               org.opendaylight.controller.usermanager,
               org.opendaylight.controller.hosttracker,
               org.opendaylight.controller.hosttracker.hostAware,
