@@ -12,16 +12,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-
 import javax.annotation.concurrent.Immutable;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.opendaylight.protocol.util.ByteArray;
@@ -40,7 +37,7 @@ public final class HexDumpBGPFileParser {
     private static final String FF_16 = Strings.repeat("FF", 16);
 
     private HexDumpBGPFileParser() {
-
+        throw new UnsupportedOperationException();
     }
 
     public static List<byte[]> parseMessages(final File file) throws IOException {
@@ -50,7 +47,7 @@ public final class HexDumpBGPFileParser {
 
     public static List<byte[]> parseMessages(final InputStream is) throws IOException {
         Preconditions.checkNotNull(is);
-        try (InputStreamReader isr = new InputStreamReader(is)) {
+        try (InputStreamReader isr = new InputStreamReader(is, "UTF-8")) {
             return parseMessages(CharStreams.toString(isr));
         } finally {
             is.close();
@@ -59,14 +56,16 @@ public final class HexDumpBGPFileParser {
 
     public static List<byte[]> parseMessages(final String c) {
         final String content = clearWhiteSpaceToUpper(c);
+        final int sixteen = 16;
+        final int four = 4;
         // search for 16 FFs
 
         final List<byte[]> messages = Lists.newLinkedList();
         int idx = content.indexOf(FF_16, 0);
         while (idx > -1) {
             // next 2 bytes are length
-            final int lengthIdx = idx + 16 * 2;
-            final int messageIdx = lengthIdx + 4;
+            final int lengthIdx = idx + sixteen * 2;
+            final int messageIdx = lengthIdx + four;
             final String hexLength = content.substring(lengthIdx, messageIdx);
             byte[] byteLength = null;
             try {
@@ -87,7 +86,7 @@ public final class HexDumpBGPFileParser {
             try {
                 message = Hex.decodeHex(hexMessage.toCharArray());
             } catch (final DecoderException e) {
-                new IllegalArgumentException("Failed to decode message body", e);
+                throw new IllegalArgumentException("Failed to decode message body", e);
             }
             messages.add(message);
             idx = messageEndIdx;

@@ -1,1 +1,3 @@
-org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.$YangModelBindingProvider
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.$YangModelBindingProvider
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.segment.routing.rev150206.$YangModelBindingProvider
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.controller.bgp.linkstate.rev131115.$YangModelBindingProvider

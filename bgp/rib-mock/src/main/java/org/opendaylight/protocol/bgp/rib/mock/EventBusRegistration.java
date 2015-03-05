@@ -10,20 +10,19 @@ package org.opendaylight.protocol.bgp.rib.mock;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-
 import java.util.List;
 import java.util.Set;
-
-import org.opendaylight.protocol.bgp.parser.BGPSession;
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
 import org.opendaylight.protocol.bgp.parser.BgpTableTypeImpl;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Keepalive;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Open;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParameters;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.OptionalCapabilities;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.MultiprotocolCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCase;
 import org.opendaylight.yangtools.concepts.AbstractListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
@@ -70,15 +69,19 @@ final class EventBusRegistration extends AbstractListenerRegistration<BGPSession
         } else if (message instanceof Open) {
             final Set<BgpTableType> tts = Sets.newHashSet();
             for (final BgpParameters param : ((Open) message).getBgpParameters()) {
-                if (param.getCParameters() instanceof MultiprotocolCase) {
-                    final MultiprotocolCase p = (MultiprotocolCase) param.getCParameters();
-                    LOG.debug("Adding open parameter {}", p);
-                    final BgpTableType type = new BgpTableTypeImpl(p.getMultiprotocolCapability().getAfi(), p.getMultiprotocolCapability().getSafi());
-                    tts.add(type);
+                for (final OptionalCapabilities capa : param.getOptionalCapabilities()) {
+                    if (capa.getCParameters() instanceof MultiprotocolCase) {
+                        final MultiprotocolCase p = (MultiprotocolCase) capa.getCParameters();
+                        LOG.debug("Adding open parameter {}", p);
+                        final BgpTableType type = new BgpTableTypeImpl(p.getMultiprotocolCapability().getAfi(), p.getMultiprotocolCapability().getSafi());
+                        tts.add(type);
+                    }
                 }
             }
 
             listener.onSessionUp(new BGPSession() {
+
+                private static final long AS = 30L;
 
                 @Override
                 public void close() {
@@ -97,7 +100,7 @@ final class EventBusRegistration extends AbstractListenerRegistration<BGPSession
 
                 @Override
                 public AsNumber getAsNumber() {
-                    return new AsNumber(30L);
+                    return new AsNumber(AS);
                 }
             });
         } else if (!(message instanceof Keepalive)) {

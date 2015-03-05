@@ -14,7 +14,6 @@ import org.opendaylight.protocol.bgp.rib.spi.Peer;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv6Prefix;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6Case;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6CaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.destination.ipv6._case.DestinationIpv6;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.destination.ipv6._case.DestinationIpv6Builder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
@@ -36,13 +35,22 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.binding.KeyedInstanceIdentifier;
 
 final class Ipv6AdjRIBsIn extends AbstractAdjRIBs<Ipv6Prefix, Ipv6Route, Ipv6RouteKey> {
+    private final InstanceIdentifier<Ipv6Routes> routesBasePath;
+
     Ipv6AdjRIBsIn(final KeyedInstanceIdentifier<Tables, TablesKey> basePath) {
         super(basePath);
+        routesBasePath = basePath.builder().child(Ipv6Routes.class).build();
     }
 
     @Override
+    @Deprecated
     public KeyedInstanceIdentifier<Ipv6Route, Ipv6RouteKey> identifierForKey(final InstanceIdentifier<Tables> basePath, final Ipv6Prefix key) {
         return basePath.child(Ipv6Routes.class).child(Ipv6Route.class, new Ipv6RouteKey(key));
+    }
+
+    @Override
+    public KeyedInstanceIdentifier<Ipv6Route, Ipv6RouteKey> identifierForKey(final Ipv6Prefix key) {
+        return routesBasePath.child(Ipv6Route.class, new Ipv6RouteKey(key));
     }
 
     @Override
@@ -61,7 +69,7 @@ final class Ipv6AdjRIBsIn extends AbstractAdjRIBs<Ipv6Prefix, Ipv6Route, Ipv6Rou
 
     @Override
     public void removeRoutes(final AdjRIBsTransaction trans, final Peer peer, final MpUnreachNlri nlri) {
-        for (final Ipv6Prefix id : ((DestinationIpv6) nlri.getWithdrawnRoutes().getDestinationType()).getIpv6Prefixes()) {
+        for (final Ipv6Prefix id : ((DestinationIpv6Case) nlri.getWithdrawnRoutes().getDestinationType()).getDestinationIpv6().getIpv6Prefixes()) {
             super.remove(trans, peer, id);
         }
     }
@@ -78,7 +86,7 @@ final class Ipv6AdjRIBsIn extends AbstractAdjRIBs<Ipv6Prefix, Ipv6Route, Ipv6Rou
                 new DestinationIpv6CaseBuilder().setDestinationIpv6(new DestinationIpv6Builder().setIpv6Prefixes(
                     Lists.newArrayList(data.getPrefix())).build()).build()).build());
         } else {
-            ((DestinationIpv6) ar.getDestinationType()).getIpv6Prefixes().add(data.getPrefix());
+            ((DestinationIpv6Case) ar.getDestinationType()).getDestinationIpv6().getIpv6Prefixes().add(data.getPrefix());
         }
     }
 

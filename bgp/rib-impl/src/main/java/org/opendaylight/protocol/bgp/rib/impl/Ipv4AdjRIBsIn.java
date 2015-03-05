@@ -14,7 +14,6 @@ import org.opendaylight.protocol.bgp.rib.spi.Peer;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Prefix;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv4Case;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv4CaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.destination.ipv4._case.DestinationIpv4;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.destination.ipv4._case.DestinationIpv4Builder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
@@ -36,13 +35,22 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.binding.KeyedInstanceIdentifier;
 
 final class Ipv4AdjRIBsIn extends AbstractAdjRIBs<Ipv4Prefix, Ipv4Route, Ipv4RouteKey> {
+    private final InstanceIdentifier<Ipv4Routes> routesBasePath;
+
     Ipv4AdjRIBsIn(final KeyedInstanceIdentifier<Tables, TablesKey> basePath) {
         super(basePath);
+        routesBasePath = basePath.builder().child(Ipv4Routes.class).build();
     }
 
     @Override
+    @Deprecated
     public KeyedInstanceIdentifier<Ipv4Route, Ipv4RouteKey> identifierForKey(final InstanceIdentifier<Tables> basePath, final Ipv4Prefix key) {
         return basePath.child(Ipv4Routes.class).child(Ipv4Route.class, new Ipv4RouteKey(key));
+    }
+
+    @Override
+    public KeyedInstanceIdentifier<Ipv4Route, Ipv4RouteKey> identifierForKey(final Ipv4Prefix key) {
+        return routesBasePath.child(Ipv4Route.class, new Ipv4RouteKey(key));
     }
 
     @Override
@@ -79,7 +87,7 @@ final class Ipv4AdjRIBsIn extends AbstractAdjRIBs<Ipv4Prefix, Ipv4Route, Ipv4Rou
                 new DestinationIpv4CaseBuilder().setDestinationIpv4(new DestinationIpv4Builder().setIpv4Prefixes(
                     Lists.newArrayList(data.getPrefix())).build()).build()).build());
         } else {
-            ((DestinationIpv4) ar.getDestinationType()).getIpv4Prefixes().add(data.getPrefix());
+            ((DestinationIpv4Case) ar.getDestinationType()).getDestinationIpv4().getIpv4Prefixes().add(data.getPrefix());
         }
     }
 

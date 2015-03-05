@@ -7,9 +7,9 @@
  */
 package org.opendaylight.protocol.bgp.testtool;
 
-import org.opendaylight.protocol.bgp.parser.BGPSession;
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
-import org.opendaylight.protocol.bgp.parser.BGPTerminationReason;
+import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
+import org.opendaylight.protocol.bgp.rib.spi.BGPTerminationReason;
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Testing BGP Listener.
  */
-public class TestingListener implements BGPSessionListener {
+public class TestingListener implements ReusableBGPPeer {
     private static final Logger LOG = LoggerFactory.getLogger(TestingListener.class);
 
     @Override
@@ -39,5 +39,15 @@ public class TestingListener implements BGPSessionListener {
     @Override
     public void onSessionTerminated(final BGPSession session, final BGPTerminationReason cause) {
         LOG.info("Client Listener: Connection lost: {}.", cause);
+    }
+
+    @Override
+    public void releaseConnection() {
+        LOG.info("Client Listener: Connection released.");
+    }
+
+    @Override
+    public boolean isSessionActive() {
+        return true;
     }
 }

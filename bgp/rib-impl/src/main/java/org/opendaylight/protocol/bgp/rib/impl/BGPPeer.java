@@ -8,17 +8,24 @@
 
 package org.opendaylight.protocol.bgp.rib.impl;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.net.InetAddresses;
-
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
 import javax.annotation.concurrent.GuardedBy;
-
+import org.opendaylight.controller.config.yang.bgp.rib.impl.BGPPeerRuntimeMXBean;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.BGPPeerRuntimeRegistration;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.BGPPeerRuntimeRegistrator;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.BgpPeerState;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.BgpSessionState;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.RouteTable;
 import org.opendaylight.protocol.bgp.rib.impl.spi.AdjRIBsOutRegistration;
+import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionStatistics;
 import org.opendaylight.protocol.bgp.rib.impl.spi.RIB;
 import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
@@ -36,7 +43,8 @@ import org.slf4j.LoggerFactory;
  * Class representing a peer. We have a single instance for each peer, which provides translation from BGP events into
  * RIB actions.
  */
-public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable {
+public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRuntimeMXBean {
+
     private static final Logger LOG = LoggerFactory.getLogger(BGPPeer.class);
 
     @GuardedBy("this")
@@ -50,6 +58,10 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable {
     private byte[] rawIdentifier;
     @GuardedBy("this")
     private AdjRIBsOutRegistration reg;
+
+    private BGPPeerRuntimeRegistrator registrator;
+    private BGPPeerRuntimeRegistration runtimeReg;
+    private long sessionEstablishedCounter = 0L;
 
     public BGPPeer(final String name, final RIB rib) {
         this.rib = Preconditions.checkNotNull(rib);
@@ -87,7 +99,11 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable {
 
         // Not particularly nice, but what can
         if (session instanceof BGPSessionImpl) {
-            reg = rib.registerRIBsOut(this, new SessionRIBsOut((BGPSessionImpl) session));
+            this.reg = this.rib.registerRIBsOut(this, new SessionRIBsOut((BGPSessionImpl) session));
+        }
+        this.sessionEstablishedCounter++;
+        if (this.registrator != null) {
+            this.runtimeReg = this.registrator.register(this);
         }
     }
 
@@ -97,30 +113,29 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable {
             this.rib.clearTable(this, key);
         }
 
-        if (reg != null) {
-            reg.close();
-            reg = null;
+        if (this.reg != null) {
+            this.reg.close();
+            this.reg = null;
         }
 
         this.tables.clear();
-        this.session = null;
     }
 
     @Override
     public void onSessionDown(final BGPSession session, final Exception e) {
         LOG.info("Session with peer {} went down", this.name, e);
-        cleanup();
+        releaseConnection();
     }
 
     @Override
     public void onSessionTerminated(final BGPSession session, final BGPTerminationReason cause) {
         LOG.info("Session with peer {} terminated: {}", this.name, cause);
-        cleanup();
+        releaseConnection();
     }
 
     @Override
     public String toString() {
-        return addToStringAttributes(Objects.toStringHelper(this)).toString();
+        return addToStringAttributes(MoreObjects.toStringHelper(this)).toString();
     }
 
     protected ToStringHelper addToStringAttributes(final ToStringHelper toStringHelper) {
@@ -146,6 +161,10 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable {
 
     @GuardedBy("this")
     private void dropConnection() {
+        if (this.runtimeReg != null) {
+            this.runtimeReg.close();
+            this.runtimeReg = null;
+        }
         if (this.session != null) {
             this.session.close();
             this.session = null;
@@ -153,7 +172,51 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable {
     }
 
     @Override
+    public boolean isSessionActive() {
+        return this.session != null;
+    }
+
+    @Override
     public synchronized byte[] getRawIdentifier() {
-        return rawIdentifier;
+        return Arrays.copyOf(this.rawIdentifier, this.rawIdentifier.length);
+    }
+
+    @Override
+    public void resetSession() {
+        releaseConnection();
+    }
+
+    @Override
+    public void resetStats() {
+        if (this.session instanceof BGPSessionStatistics) {
+            ((BGPSessionStatistics) this.session).resetSessionStats();
+        }
+    }
+
+    public synchronized void registerRootRuntimeBean(final BGPPeerRuntimeRegistrator registrator) {
+        this.registrator = registrator;
+    }
+
+    @Override
+    public BgpSessionState getBgpSessionState() {
+        if (this.session instanceof BGPSessionStatistics) {
+            return ((BGPSessionStatistics) this.session).getBgpSesionState();
+        }
+        return new BgpSessionState();
+    }
+
+    @Override
+    public synchronized BgpPeerState getBgpPeerState() {
+        final BgpPeerState peerState = new BgpPeerState();
+        final List<RouteTable> routes = Lists.newArrayList();
+        for (final TablesKey tablesKey : this.tables) {
+            final RouteTable routeTable = new RouteTable();
+            routeTable.setTableType("afi=" + tablesKey.getAfi().getSimpleName() + ",safi=" + tablesKey.getSafi().getSimpleName());
+            routeTable.setRoutesCount(this.rib.getRoutesCount(tablesKey));
+            routes.add(routeTable);
+        }
+        peerState.setRouteTable(routes);
+        peerState.setSessionEstablishedCount(this.sessionEstablishedCounter);
+        return peerState;
     }
 }

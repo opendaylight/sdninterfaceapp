@@ -9,13 +9,10 @@ package org.opendaylight.protocol.bgp.parser.impl.message;
 
 
 import com.google.common.base.Preconditions;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-
 import java.util.List;
-
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
@@ -58,7 +55,7 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
     public static final int TOTAL_PATH_ATTR_LENGTH_SIZE = 2;
 
     private final AttributeRegistry reg;
-    
+
     private static SdniWrapper sdniwrapper = new SdniWrapper();
 
     // Constructors -------------------------------------------------------
@@ -75,28 +72,28 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
 
         final int withdrawnRoutesLength = buffer.readUnsignedShort();
         final UpdateBuilder eventBuilder = new UpdateBuilder();
+
         if (withdrawnRoutesLength > 0) {
             final List<Ipv4Prefix> withdrawnRoutes = Ipv4Util.prefixListForBytes(ByteArray.readBytes(buffer, withdrawnRoutesLength));
             eventBuilder.setWithdrawnRoutes(new WithdrawnRoutesBuilder().setWithdrawnRoutes(withdrawnRoutes).build());
         }
         final int totalPathAttrLength = buffer.readUnsignedShort();
-        
+
         if (withdrawnRoutesLength == 0 && totalPathAttrLength == 0) {
-        	//Retrieve and parse sdni message
+		//Retrieve and parse sdni message
         	final byte[] sdniNlri = ByteArray.readAllBytes(buffer);
         	LOG.trace("Started Parsing sdni update message");
         	if(!sdniNlri.equals(null) && sdniNlri.length>0){
-        		ByteBuf sdniMsg = Unpooled.copiedBuffer(sdniNlri);
+	        	ByteBuf sdniMsg = Unpooled.copiedBuffer(sdniNlri);
         		//Parsing sdni message
         		String result = sdniwrapper.parseSDNIMessage(sdniMsg);
         		LOG.trace("Status After Parsing sdni message:"+result);
-        	}
+		}
             return eventBuilder.build();
         }
         if (totalPathAttrLength > 0) {
             try {
-                final PathAttributes pathAttributes = this.reg.parseAttributes(buffer.slice(buffer.readerIndex(), totalPathAttrLength));
-                buffer.skipBytes(totalPathAttrLength);
+                final PathAttributes pathAttributes = this.reg.parseAttributes(buffer.readSlice(totalPathAttrLength));
                 eventBuilder.setPathAttributes(pathAttributes);
             } catch (final BGPParsingException | RuntimeException e) {
                 // Catch everything else and turn it into a BGPDocumentedException
@@ -129,7 +126,7 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
             messageBody.writeShort(withdrawnRoutesBuf.writerIndex());
             messageBody.writeBytes(withdrawnRoutesBuf);
         } else {
-        	messageBody.writeZero(WITHDRAWN_ROUTES_LENGTH_SIZE);
+            messageBody.writeZero(WITHDRAWN_ROUTES_LENGTH_SIZE);
         }
         if (update.getPathAttributes() != null) {
             final ByteBuf pathAttributesBuf = Unpooled.buffer();
@@ -137,16 +134,18 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
             messageBody.writeShort(pathAttributesBuf.writerIndex());
             messageBody.writeBytes(pathAttributesBuf);
         } else {
-        	messageBody.writeZero(TOTAL_PATH_ATTR_LENGTH_SIZE);
+            messageBody.writeZero(TOTAL_PATH_ATTR_LENGTH_SIZE);
         }
         final Nlri nlri = update.getNlri();
-    	if (nlri != null) {
+        if (nlri != null) {
             for (final Ipv4Prefix prefix : nlri.getNlri()) {
                 messageBody.writeBytes(Ipv4Util.bytesForPrefixBegin(prefix));
             }
-        } else {
+        }
+	else {
         	LOG.trace("Serialize sdni update message");
         	messageBody.writeBytes(sdniwrapper.getSDNIMessage());
+		messageBody.writeBytes(sdniwrapper.getSDNIQOSMessage());
         }
         LOG.trace("Update message serialized to {}", ByteBufUtil.hexDump(messageBody));
         MessageUtil.formatMessage(TYPE, messageBody, bytes);
