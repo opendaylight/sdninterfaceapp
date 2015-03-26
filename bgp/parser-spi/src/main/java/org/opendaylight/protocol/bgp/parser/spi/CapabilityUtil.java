@@ -7,23 +7,24 @@
  */
 package org.opendaylight.protocol.bgp.parser.spi;
 
-import com.google.common.primitives.UnsignedBytes;
-
-import org.opendaylight.protocol.util.ByteArray;
+import io.netty.buffer.ByteBuf;
 
 public final class CapabilityUtil {
 
-    private static final int HEADER_SIZE = 2;
-
     private CapabilityUtil() {
-
+        throw new UnsupportedOperationException();
     }
 
-    public static byte[] formatCapability(final int code, final byte[] value) {
-        final byte[] ret = new byte[HEADER_SIZE + value.length];
-        ret[0] = UnsignedBytes.checkedCast(code);
-        ret[1] = UnsignedBytes.checkedCast(value.length);
-        ByteArray.copyWhole(value, ret, HEADER_SIZE);
-        return ret;
+    /**
+     * Adds header to capability value.
+     *
+     * @param code type of the capability
+     * @param value capability value
+     * @param buffer ByteBuf where the capability will be copied with its header
+     */
+    public static void formatCapability(final int code, final ByteBuf value, final ByteBuf buffer) {
+        buffer.writeByte(code);
+        buffer.writeByte(value.writerIndex());
+        buffer.writeBytes(value);
     }
 }

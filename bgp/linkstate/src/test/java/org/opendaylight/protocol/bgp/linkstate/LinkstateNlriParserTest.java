@@ -14,34 +14,44 @@ import static org.junit.Assert.assertNull;
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.List;
 import org.junit.Test;
+import org.opendaylight.protocol.bgp.linkstate.nlri.LinkNlriParser;
+import org.opendaylight.protocol.bgp.linkstate.nlri.LinkstateNlriParser;
+import org.opendaylight.protocol.bgp.linkstate.nlri.NodeNlriParser;
+import org.opendaylight.protocol.bgp.linkstate.nlri.PrefixNlriParser;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
 import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Prefix;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.DomainIdentifier;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.NlriType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.OspfRouteType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.ProtocolId;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.TopologyIdentifier;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.isis.lan.identifier.IsIsRouterIdentifierBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.CLinkstateDestination;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LinkDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.LocalNodeDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.PrefixDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.linkstate.destination.c.linkstate.destination.RemoteNodeDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.IsisNodeCaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.IsisPseudonodeCaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.OspfNodeCaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.isis.node._case.IsisNodeBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.isis.pseudonode._case.IsisPseudonodeBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.ospf.node._case.OspfNodeBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.destination.linkstate._case.DestinationLinkstate;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.DomainIdentifier;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.OspfRouteType;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.ProtocolId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.TopologyIdentifier;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.isis.lan.identifier.IsIsRouterIdentifierBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.destination.CLinkstateDestination;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.LinkCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.NodeCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.PrefixCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LocalNodeDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.RemoteNodeDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.node._case.NodeDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.prefix._case.AdvertisingNodeDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.prefix._case.PrefixDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.IsisNodeCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.IsisPseudonodeCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.OspfNodeCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.isis.node._case.IsisNodeBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.isis.pseudonode._case.IsisPseudonodeBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.ospf.node._case.OspfNodeBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.destination.linkstate._case.DestinationLinkstate;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
@@ -102,12 +112,12 @@ public class LinkstateNlriParserTest {
     public void testNodeNlri() throws BGPParsingException {
         setUp(this.nodeNlri);
 
-        assertEquals(NlriType.Node, this.dest.getNlriType());
         assertNull(this.dest.getDistinguisher());
         assertEquals(ProtocolId.IsisLevel2, this.dest.getProtocolId());
         assertEquals(BigInteger.ONE, this.dest.getIdentifier().getValue());
+        final NodeCase nCase = ((NodeCase)this.dest.getObjectType());
 
-        final LocalNodeDescriptors nodeD = this.dest.getLocalNodeDescriptors();
+        final NodeDescriptors nodeD = nCase.getNodeDescriptors();
         assertEquals(new AsNumber(72L), nodeD.getAsNumber());
         assertEquals(new DomainIdentifier(0x28282828L), nodeD.getDomainId());
         assertEquals(new IsisPseudonodeCaseBuilder().setIsisPseudonode(
@@ -115,8 +125,6 @@ public class LinkstateNlriParserTest {
                 new IsIsRouterIdentifierBuilder().setIsoSystemId(
                     new IsoSystemIdentifier(new byte[] { (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
                         (byte) 0x39 })).build()).build()).build(), nodeD.getCRouterIdentifier());
-
-        assertNull(this.dest.getRemoteNodeDescriptors());
 
         final ByteBuf buffer = Unpooled.buffer();
         LinkstateNlriParser.serializeNlri(this.dest, buffer);
@@ -127,12 +135,13 @@ public class LinkstateNlriParserTest {
     public void testLinkNlri() throws BGPParsingException {
         setUp(this.linkNlri);
 
-        assertEquals(NlriType.Link, this.dest.getNlriType());
         assertNull(this.dest.getDistinguisher());
         assertEquals(ProtocolId.IsisLevel2, this.dest.getProtocolId());
         assertEquals(BigInteger.ONE, this.dest.getIdentifier().getValue());
 
-        final LocalNodeDescriptors local = this.dest.getLocalNodeDescriptors();
+        final LinkCase lCase = ((LinkCase)this.dest.getObjectType());
+
+        final LocalNodeDescriptors local = lCase.getLocalNodeDescriptors();
         assertEquals(new AsNumber(72L), local.getAsNumber());
         assertEquals(new DomainIdentifier(0x28282828L), local.getDomainId());
         assertEquals(
@@ -140,12 +149,12 @@ public class LinkstateNlriParserTest {
                 new IsisNodeBuilder().setIsoSystemId(
                     new IsoSystemIdentifier(new byte[] { (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
                         (byte) 0x42 })).build()).build(), local.getCRouterIdentifier());
-        final RemoteNodeDescriptors remote = this.dest.getRemoteNodeDescriptors();
+        final RemoteNodeDescriptors remote = lCase.getRemoteNodeDescriptors();
         assertEquals(new AsNumber(72L), remote.getAsNumber());
         assertEquals(new DomainIdentifier(0x28282828L), remote.getDomainId());
         assertEquals(new OspfNodeCaseBuilder().setOspfNode(new OspfNodeBuilder().setOspfRouterId(0x00000040L).build()).build(),
             remote.getCRouterIdentifier());
-        final LinkDescriptors ld = this.dest.getLinkDescriptors();
+        final LinkDescriptors ld = lCase.getLinkDescriptors();
         assertEquals("197.20.160.42", ld.getIpv4InterfaceAddress().getValue());
         assertEquals("197.20.160.40", ld.getIpv4NeighborAddress().getValue());
 
@@ -158,12 +167,13 @@ public class LinkstateNlriParserTest {
     public void testPrefixNlri() throws BGPParsingException {
         setUp(this.prefixNlri);
 
-        assertEquals(NlriType.Ipv4Prefix, this.dest.getNlriType());
         assertNull(this.dest.getDistinguisher());
         assertEquals(ProtocolId.IsisLevel2, this.dest.getProtocolId());
         assertEquals(BigInteger.ONE, this.dest.getIdentifier().getValue());
 
-        final LocalNodeDescriptors local = this.dest.getLocalNodeDescriptors();
+        final PrefixCase pCase = ((PrefixCase)this.dest.getObjectType());
+
+        final AdvertisingNodeDescriptors local = pCase.getAdvertisingNodeDescriptors();
         assertEquals(new AsNumber(72L), local.getAsNumber());
         assertEquals(new DomainIdentifier(0x28282828L), local.getDomainId());
         assertEquals(
@@ -171,9 +181,8 @@ public class LinkstateNlriParserTest {
                 new IsisNodeBuilder().setIsoSystemId(
                     new IsoSystemIdentifier(new byte[] { (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
                         (byte) 0x42 })).build()).build(), local.getCRouterIdentifier());
-        assertNull(this.dest.getRemoteNodeDescriptors());
 
-        final PrefixDescriptors pd = this.dest.getPrefixDescriptors();
+        final PrefixDescriptors pd = pCase.getPrefixDescriptors();
         assertEquals(OspfRouteType.External1, pd.getOspfRouteType());
         assertEquals(new TopologyIdentifier(15), pd.getMultiTopologyId());
         assertEquals(new Ipv4Prefix("255.255.0.0/16"), pd.getIpReachabilityInformation().getIpv4Prefix());
@@ -200,9 +209,9 @@ public class LinkstateNlriParserTest {
 
         setUp(this.nodeNlri);
         final List<CLinkstateDestination> destsU = Lists.newArrayList( this.dest );
-        final org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCase dlcU =
-            new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCaseBuilder().setDestinationLinkstate(
-                new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder().setCLinkstateDestination(destsU).build()).build();
+        final org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCase dlcU =
+            new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCaseBuilder().setDestinationLinkstate(
+                new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder().setCLinkstateDestination(destsU).build()).build();
         final WithdrawnRoutes wroutes = new WithdrawnRoutesBuilder().setDestinationType(dlcU).build();
         final PathAttributes2 unreach = new PathAttributes2Builder().setMpUnreachNlri(new MpUnreachNlriBuilder().setWithdrawnRoutes(wroutes).build()).build();
 
@@ -211,5 +220,38 @@ public class LinkstateNlriParserTest {
         result = Unpooled.buffer();
         parser.serializeAttribute(pa, result);
         assertArrayEquals(this.nodeNlri, ByteArray.getAllBytes(result));
+    }
+
+    @Test(expected=UnsupportedOperationException.class)
+    public void testLinkNlriPrivateConstructor() throws Throwable {
+        final Constructor<LinkNlriParser> c = LinkNlriParser.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        try {
+            c.newInstance();
+        } catch (final InvocationTargetException e) {
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected=UnsupportedOperationException.class)
+    public void testNodeNlriPrivateConstructor() throws Throwable {
+        final Constructor<NodeNlriParser> c = NodeNlriParser.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        try {
+            c.newInstance();
+        } catch (final InvocationTargetException e) {
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected=UnsupportedOperationException.class)
+    public void testPrefixNlriPrivateConstructor() throws Throwable {
+        final Constructor<PrefixNlriParser> c = PrefixNlriParser.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        try {
+            c.newInstance();
+        } catch (final InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 }

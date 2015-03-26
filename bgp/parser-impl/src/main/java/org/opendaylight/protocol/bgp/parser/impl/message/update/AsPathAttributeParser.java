@@ -8,10 +8,10 @@
 package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.primitives.UnsignedBytes;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
@@ -39,13 +39,14 @@ import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public final class AsPathAttributeParser implements AttributeParser, AttributeSerializer {
 
     public static final int TYPE = 2;
 
     private final ReferenceCache refCache;
     private static final Logger LOG = LoggerFactory.getLogger(AsPathAttributeParser.class);
+
+    private static final AsPath EMPTY = new AsPathBuilder().setSegments(Collections.<Segments> emptyList()).build();
 
     public AsPathAttributeParser(final ReferenceCache refCache) {
         this.refCache = Preconditions.checkNotNull(refCache);
@@ -54,39 +55,41 @@ public final class AsPathAttributeParser implements AttributeParser, AttributeSe
     /**
      * Parses AS_PATH from bytes.
      *
-     * @param buffer bytes to be parsed @return new ASPath object
+     * @param refCache ReferenceCache shared reference of object
+     * @param buffer bytes to be parsed
+     * @return new ASPath object
      * @throws BGPDocumentedException if there is no AS_SEQUENCE present (mandatory)
      * @throws BGPParsingException
      */
     private static AsPath parseAsPath(final ReferenceCache refCache, final ByteBuf buffer) throws BGPDocumentedException, BGPParsingException {
-        final List<Segments> ases = Lists.newArrayList();
+        if (!buffer.isReadable()) {
+            return EMPTY;
+        }
+        final ArrayList<Segments> ases = new ArrayList<>();
         boolean isSequence = false;
         while (buffer.isReadable()) {
-            final int type = UnsignedBytes.toInt(buffer.readByte());
+            final int type = buffer.readUnsignedByte();
             final SegmentType segmentType = AsPathSegmentParser.parseType(type);
             if (segmentType == null) {
                 throw new BGPParsingException("AS Path segment type unknown : " + type);
             }
-            final int count = UnsignedBytes.toInt(buffer.readByte());
+            final int count = buffer.readUnsignedByte();
 
             if (segmentType == SegmentType.AS_SEQUENCE) {
-                final List<AsSequence> numbers = AsPathSegmentParser.parseAsSequence(refCache, count, buffer.slice(buffer.readerIndex(),
-                    count * AsPathSegmentParser.AS_NUMBER_LENGTH));
+                final List<AsSequence> numbers = AsPathSegmentParser.parseAsSequence(refCache, count, buffer.readSlice(count * AsPathSegmentParser.AS_NUMBER_LENGTH));
                 ases.add(new SegmentsBuilder().setCSegment(
                     new AListCaseBuilder().setAList(new AListBuilder().setAsSequence(numbers).build()).build()).build());
                 isSequence = true;
             } else {
-                final List<AsNumber> list = AsPathSegmentParser.parseAsSet(refCache, count, buffer.slice(buffer.readerIndex(), count
-                    * AsPathSegmentParser.AS_NUMBER_LENGTH));
+                final List<AsNumber> list = AsPathSegmentParser.parseAsSet(refCache, count, buffer.readSlice(count * AsPathSegmentParser.AS_NUMBER_LENGTH));
                 ases.add(new SegmentsBuilder().setCSegment(new ASetCaseBuilder().setASet(new ASetBuilder().setAsSet(list).build()).build()).build());
-
             }
-            buffer.skipBytes(count * AsPathSegmentParser.AS_NUMBER_LENGTH);
         }
-
-        if (!isSequence && buffer.readableBytes() != 0) {
+        if (!isSequence) {
             throw new BGPDocumentedException("AS_SEQUENCE must be present in AS_PATH attribute.", BGPError.AS_PATH_MALFORMED);
         }
+
+        ases.trimToSize();
         return new AsPathBuilder().setSegments(ases).build();
     }
 

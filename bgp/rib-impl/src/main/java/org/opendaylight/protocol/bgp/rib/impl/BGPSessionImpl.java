@@ -8,26 +8,26 @@
 package org.opendaylight.protocol.bgp.rib.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import javax.annotation.concurrent.GuardedBy;
-
+import org.opendaylight.controller.config.yang.bgp.rib.impl.BgpSessionState;
 import org.opendaylight.protocol.bgp.parser.AsNumberUtil;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.BgpTableTypeImpl;
+import org.opendaylight.protocol.bgp.rib.impl.spi.BGPPeerRegistry;
+import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionPreferences;
+import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionStatistics;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
 import org.opendaylight.protocol.bgp.rib.spi.BGPTerminationReason;
@@ -41,25 +41,24 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.NotifyBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Open;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParameters;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.CParameters;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.OptionalCapabilities;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.optional.capabilities.CParameters;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.MultiprotocolCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @VisibleForTesting
-public class BGPSessionImpl extends AbstractProtocolSession<Notification> implements BGPSession {
+public class BGPSessionImpl extends AbstractProtocolSession<Notification> implements BGPSession, BGPSessionStatistics {
 
     private static final Logger LOG = LoggerFactory.getLogger(BGPSessionImpl.class);
 
     private static final Notification KEEP_ALIVE = new KeepaliveBuilder().build();
-    
-    private static final Notification UPDATE = new UpdateBuilder().build();
+
+    private static final int KA_TO_DEADTIMER_RATIO = 3;
 
     /**
      * Internal session state.
@@ -70,15 +69,15 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
          * is half-alive, e.g. the timers are running, but the session is not completely up, e.g. it has not been
          * announced to the listener. If the session is torn down in this state, we do not inform the listener.
          */
-        OpenConfirm,
+        OPEN_CONFIRM,
         /**
          * The session has been completely established.
          */
-        Up,
+        UP,
         /**
          * The session has been closed. It will not be resurrected.
          */
-        Idle,
+        IDLE,
     }
 
     /**
@@ -101,32 +100,48 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
     private final Channel channel;
 
     @GuardedBy("this")
-    private State state = State.OpenConfirm;
+    private State state = State.OPEN_CONFIRM;
 
     private final Set<BgpTableType> tableTypes;
     private final int holdTimerValue;
     private final int keepAlive;
     private final AsNumber asNumber;
     private final Ipv4Address bgpId;
+    private final BGPPeerRegistry peerRegistry;
+    private final ChannelOutputLimiter limiter;
 
-    public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final int localHoldTimer) {
+    private BGPSessionStats sessionStats;
+
+    public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final BGPSessionPreferences localPreferences,
+            final BGPPeerRegistry peerRegitry) {
+        this(listener, channel, remoteOpen, localPreferences.getHoldTime(), peerRegitry);
+        this.sessionStats = new BGPSessionStats(remoteOpen, this.holdTimerValue, this.keepAlive, channel, Optional.of(localPreferences), this.tableTypes);
+    }
+
+    public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final int localHoldTimer,
+            final BGPPeerRegistry peerRegitry) {
         this.listener = Preconditions.checkNotNull(listener);
         this.channel = Preconditions.checkNotNull(channel);
+        this.limiter = new ChannelOutputLimiter(this);
         this.holdTimerValue = (remoteOpen.getHoldTimer() < localHoldTimer) ? remoteOpen.getHoldTimer() : localHoldTimer;
         LOG.info("BGP HoldTimer new value: {}", this.holdTimerValue);
-        this.keepAlive = this.holdTimerValue / 3;
+        this.keepAlive = this.holdTimerValue / KA_TO_DEADTIMER_RATIO;
         this.asNumber = AsNumberUtil.advertizedAsNumber(remoteOpen);
+        this.peerRegistry = peerRegitry;
 
         final Set<TablesKey> tts = Sets.newHashSet();
         final Set<BgpTableType> tats = Sets.newHashSet();
         if (remoteOpen.getBgpParameters() != null) {
             for (final BgpParameters param : remoteOpen.getBgpParameters()) {
-                final CParameters cp = param.getCParameters();
-                if (cp instanceof MultiprotocolCase) {
-                    final TablesKey tt = new TablesKey(((MultiprotocolCase) cp).getMultiprotocolCapability().getAfi(), ((MultiprotocolCase) cp).getMultiprotocolCapability().getSafi());
-                    LOG.trace("Added table type to sync {}", tt);
-                    tts.add(tt);
-                    tats.add(new BgpTableTypeImpl(tt.getAfi(), tt.getSafi()));
+                for (final OptionalCapabilities optCapa : param.getOptionalCapabilities()) {
+                    final CParameters cp = optCapa.getCParameters();
+                    if (cp instanceof MultiprotocolCase) {
+                        final TablesKey tt = new TablesKey(((MultiprotocolCase) cp).getMultiprotocolCapability().getAfi(),
+                                ((MultiprotocolCase) cp).getMultiprotocolCapability().getSafi());
+                        LOG.trace("Added table type to sync {}", tt);
+                        tts.add(tt);
+                        tats.add(new BgpTableTypeImpl(tt.getAfi(), tt.getSafi()));
+                    }
                 }
             }
         }
@@ -150,15 +165,20 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
             }, this.keepAlive, TimeUnit.SECONDS);
         }
         this.bgpId = remoteOpen.getBgpIdentifier();
+        this.sessionStats = new BGPSessionStats(remoteOpen, this.holdTimerValue, this.keepAlive, channel, Optional.<BGPSessionPreferences>absent(),
+                this.tableTypes);
     }
 
     @Override
     public synchronized void close() {
         LOG.info("Closing session: {}", this);
-        if (this.state != State.Idle) {
-            this.sendMessage(new NotifyBuilder().setErrorCode(BGPError.CEASE.getCode()).build());
+
+        if (this.state != State.IDLE) {
+            this.writeAndFlush(new NotifyBuilder().setErrorCode(BGPError.CEASE.getCode()).setErrorSubcode(
+                    BGPError.CEASE.getSubcode()).build());
+            removePeerSession();
             this.channel.close();
-            this.state = State.Idle;
+            this.state = State.IDLE;
         }
     }
 
@@ -171,6 +191,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
     public synchronized void handleMessage(final Notification msg) {
         // Update last reception time
         this.lastMessageReceivedAt = System.nanoTime();
+        this.sessionStats.updateReceivedMsgTotal();
 
         if (msg instanceof Open) {
             // Open messages should not be present here
@@ -182,53 +203,73 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
             this.closeWithoutMessage();
             this.listener.onSessionTerminated(this, new BGPTerminationReason(BGPError.forValue(((Notify) msg).getErrorCode(),
                 ((Notify) msg).getErrorSubcode())));
+            this.sessionStats.updateReceivedMsgErr((Notify) msg);
         } else if (msg instanceof Keepalive) {
             // Keepalives are handled internally
-           	LOG.trace("Received KeepAlive messsage.");
+            LOG.trace("Received KeepAlive messsage.");
             this.kaCounter++;
+            this.sessionStats.updateReceivedMsgKA();
             if (this.kaCounter >= 2) {
                 this.sync.kaReceived();
             }
         } else {
-        	LOG.trace("Received Update message.");
-        	//All others are passed up
+            // All others are passed up
             this.listener.onMessage(this, msg);
             this.sync.updReceived((Update) msg);
+            this.sessionStats.updateReceivedMsgUpd();
         }
     }
 
     @Override
     public synchronized void endOfInput() {
-        if (this.state == State.Up) {
+        if (this.state == State.UP) {
             this.listener.onSessionDown(this, new IOException("End of input detected. Close the session."));
         }
     }
 
-    synchronized void sendMessage(final Notification msg) {
-        try {
-        	
-            this.channel.writeAndFlush(msg).addListener(
-                new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(final ChannelFuture f) {
-                        if (!f.isSuccess()) {
-                            LOG.info("Failed to send message {} to socket {}", msg, f.cause(), BGPSessionImpl.this.channel);
-                        } else {
-                            LOG.trace("Message {} sent to socket {}", msg, BGPSessionImpl.this.channel);
-                        }
+    @GuardedBy("this")
+    private void writeEpilogue(final ChannelFuture future, final Notification msg) {
+        future.addListener(
+            new ChannelFutureListener() {
+                @Override
+                public void operationComplete(final ChannelFuture f) {
+                    if (!f.isSuccess()) {
+                        LOG.info("Failed to send message {} to socket {}", msg, f.cause(), BGPSessionImpl.this.channel);
+                    } else {
+                        LOG.trace("Message {} sent to socket {}", msg, BGPSessionImpl.this.channel);
                     }
-                });
-            this.lastMessageSentAt = System.nanoTime();
-            LOG.debug("Sent message: {} to peer {}", msg, this.bgpId);
+                }
+            });
+        this.lastMessageSentAt = System.nanoTime();
+        this.sessionStats.updateSentMsgTotal();
+        if (msg instanceof Update) {
+            this.sessionStats.updateSentMsgUpd();
+        } else if (msg instanceof Notify) {
+            this.sessionStats.updateSentMsgErr((Notify) msg);
+        }
+    }
+
+    void flush() {
+        this.channel.flush();
+    }
+
+    synchronized void write(final Notification msg) {
+        try {
+            writeEpilogue(this.channel.write(msg), msg);
         } catch (final Exception e) {
             LOG.warn("Message {} was not sent.", msg, e);
         }
     }
 
+    synchronized void writeAndFlush(final Notification msg) {
+        writeEpilogue(this.channel.writeAndFlush(msg), msg);
+    }
+
     private synchronized void closeWithoutMessage() {
         LOG.debug("Closing session: {}", this);
+        removePeerSession();
         this.channel.close();
-        this.state = State.Idle;
+        this.state = State.IDLE;
     }
 
     /**
@@ -238,10 +279,16 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
      * @param closeObject
      */
     private void terminate(final BGPError error) {
-        this.sendMessage(new NotifyBuilder().setErrorCode(error.getCode()).setErrorSubcode(error.getSubcode()).build());
+        this.writeAndFlush(new NotifyBuilder().setErrorCode(error.getCode()).setErrorSubcode(error.getSubcode()).build());
         this.closeWithoutMessage();
 
         this.listener.onSessionTerminated(this, new BGPTerminationReason(error));
+    }
+
+    private void removePeerSession() {
+        if (this.peerRegistry != null) {
+            this.peerRegistry.removePeerSession(StrictBGPPeerRegistry.getIpAddress(this.channel.remoteAddress()));
+        }
     }
 
     /**
@@ -251,7 +298,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
      * state will become IDLE), then rescheduling won't occur.
      */
     private synchronized void handleHoldTimer() {
-        if (this.state == State.Idle) {
+        if (this.state == State.IDLE) {
             return;
         }
 
@@ -278,7 +325,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
      * starts to execute (the session state will become IDLE), that rescheduling won't occur.
      */
     private synchronized void handleKeepaliveTimer() {
-        if (this.state == State.Idle) {
+        if (this.state == State.IDLE) {
             return;
         }
 
@@ -286,13 +333,11 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
         long nextKeepalive = this.lastMessageSentAt + TimeUnit.SECONDS.toNanos(this.keepAlive);
 
         if (ct >= nextKeepalive) {
-        	LOG.trace("inside handleKeepaliveTimer");
-        	this.sendMessage(KEEP_ALIVE);
-  
-          	//Send Update message with sdni message
-        	this.sendMessage(UPDATE);
-        
+            this.writeAndFlush(KEEP_ALIVE);
+           //Send Update message with sdni message
+        	this.writeAndFlush(UPDATE);
             nextKeepalive = this.lastMessageSentAt + TimeUnit.SECONDS.toNanos(this.keepAlive);
+            this.sessionStats.updateSentMsgKA();
         }
         this.channel.eventLoop().schedule(new Runnable() {
             @Override
@@ -304,7 +349,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
 
     @Override
     public final String toString() {
-        return addToStringAttributes(Objects.toStringHelper(this)).toString();
+        return addToStringAttributes(MoreObjects.toStringHelper(this)).toString();
     }
 
     protected ToStringHelper addToStringAttributes(final ToStringHelper toStringHelper) {
@@ -320,7 +365,8 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
 
     @Override
     protected synchronized void sessionUp() {
-        this.state = State.Up;
+        this.sessionStats.startSessionStopwatch();
+        this.state = State.UP;
         this.listener.onSessionUp(this);
     }
 
@@ -342,14 +388,27 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
         return this.channel != null && this.channel.isWritable();
     }
 
-    synchronized void schedule(final Runnable task) {
+    void schedule(final Runnable task) {
         Preconditions.checkState(this.channel != null);
         this.channel.eventLoop().submit(task);
-
     }
 
     @VisibleForTesting
-    protected void setLastMessageSentAt(final long lastMessageSentAt) {
+    protected synchronized void setLastMessageSentAt(final long lastMessageSentAt) {
         this.lastMessageSentAt = lastMessageSentAt;
+    }
+
+    @Override
+    public synchronized BgpSessionState getBgpSesionState() {
+        return this.sessionStats.getBgpSessionState(this.state);
+    }
+
+    @Override
+    public synchronized void resetSessionStats() {
+        this.sessionStats.resetStats();
+    }
+
+    ChannelOutputLimiter getLimiter() {
+        return this.limiter;
     }
 }

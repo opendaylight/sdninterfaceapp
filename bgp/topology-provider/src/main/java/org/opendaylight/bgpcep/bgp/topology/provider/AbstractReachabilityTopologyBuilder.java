@@ -7,10 +7,16 @@
  */
 package org.opendaylight.bgpcep.bgp.topology.provider;
 
-import java.util.ArrayList;
-
-import org.opendaylight.controller.md.sal.common.api.data.DataModification;
-import org.opendaylight.controller.sal.binding.api.data.DataProviderService;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
+import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.protocol.bgp.rib.RibReference;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.IpPrefix;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.Route;
@@ -23,16 +29,19 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.type
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NodeId;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.TopologyId;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Node;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.NodeBuilder;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.NodeKey;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.TopologyTypesBuilder;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.Node1;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.Node1Builder;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.IgpNodeAttributes;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.IgpNodeAttributesBuilder;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.igp.node.attributes.Prefix;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.igp.node.attributes.PrefixBuilder;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.igp.node.attributes.PrefixKey;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.opendaylight.yangtools.yang.binding.KeyedInstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +50,18 @@ import org.slf4j.LoggerFactory;
  */
 abstract class AbstractReachabilityTopologyBuilder<T extends Route> extends AbstractTopologyBuilder<T> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractReachabilityTopologyBuilder.class);
+    private final Map<NodeId, NodeUsage> nodes = new HashMap<>();
 
-    protected AbstractReachabilityTopologyBuilder(final DataProviderService dataProvider, final RibReference locRibReference,
+    private static final class NodeUsage {
+        private final InstanceIdentifier<IgpNodeAttributes> attrId;
+        private int useCount = 1;
+
+        NodeUsage(final InstanceIdentifier<IgpNodeAttributes> attrId) {
+            this.attrId = Preconditions.checkNotNull(attrId);
+        }
+    }
+
+    protected AbstractReachabilityTopologyBuilder(final DataBroker dataProvider, final RibReference locRibReference,
             final TopologyId topologyId, final Class<T> idClass) {
         super(dataProvider, locRibReference, topologyId, new TopologyTypesBuilder().build(), idClass);
     }
@@ -63,28 +82,37 @@ abstract class AbstractReachabilityTopologyBuilder<T extends Route> extends Abst
         }
     }
 
-    private InstanceIdentifier<Node1> nodeInstanceId(final NodeId ni) {
-        return getInstanceIdentifier().builder().child(Node.class, new NodeKey(ni)).augmentation(Node1.class).toInstance();
+    private KeyedInstanceIdentifier<Node, NodeKey> nodeInstanceId(final NodeId ni) {
+        return getInstanceIdentifier().child(Node.class, new NodeKey(ni));
     }
 
-    private InstanceIdentifier<Node1> ensureNodePresent(final DataModification<InstanceIdentifier<?>, DataObject> trans, final NodeId ni) {
-        final InstanceIdentifier<Node1> nii = nodeInstanceId(ni);
-        LOG.debug("Looking for pre-existing node at {}", nii);
-
-        if (trans.readOperationalData(nii) == null) {
-            LOG.debug("Create a new node at {}", nii);
-            trans.putOperationalData(nii, new Node1Builder().setIgpNodeAttributes(
-                    new IgpNodeAttributesBuilder().setPrefix(new ArrayList<Prefix>()).build()).build());
+    private static <T extends DataObject> T read(final ReadTransaction t, final InstanceIdentifier<T> id) {
+        final Optional<T> o;
+        try {
+            o = t.read(LogicalDatastoreType.OPERATIONAL, id).get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.warn("Failed to read {}, assuming non-existent", id, e);
+            return null;
         }
 
-        return nii;
+        return o.orNull();
     }
 
-    private void removeEmptyNode(final DataModification<InstanceIdentifier<?>, DataObject> trans, final InstanceIdentifier<Node1> nii) {
-        final Node1 node = (Node1) trans.readOperationalData(nii);
-        if (node != null && node.getIgpNodeAttributes().getPrefix().isEmpty()) {
-            trans.removeOperationalData(nii);
+    private InstanceIdentifier<IgpNodeAttributes> ensureNodePresent(final ReadWriteTransaction trans, final NodeId ni) {
+        final NodeUsage present = nodes.get(ni);
+        if (present != null) {
+            return present.attrId;
         }
+
+        final KeyedInstanceIdentifier<Node, NodeKey> nii = nodeInstanceId(ni);
+        final InstanceIdentifier<IgpNodeAttributes> ret = nii.builder().augmentation(Node1.class).child(IgpNodeAttributes.class).build();
+
+        trans.merge(LogicalDatastoreType.OPERATIONAL, nii, new NodeBuilder().setKey(nii.getKey()).setNodeId(ni)
+            .addAugmentation(Node1.class, new Node1Builder().setIgpNodeAttributes(
+                new IgpNodeAttributesBuilder().setPrefix(Collections.<Prefix>emptyList()).build()).build()).build());
+
+        nodes.put(ni, new NodeUsage(ret));
+        return ret;
     }
 
     protected abstract Attributes getAttributes(final T value);
@@ -92,34 +120,46 @@ abstract class AbstractReachabilityTopologyBuilder<T extends Route> extends Abst
     protected abstract IpPrefix getPrefix(final T value);
 
     @Override
-    protected final void createObject(final DataModification<InstanceIdentifier<?>, DataObject> trans, final InstanceIdentifier<T> id,
-            final T value) {
+    protected final void createObject(final ReadWriteTransaction trans, final InstanceIdentifier<T> id, final T value) {
         final NodeId ni = advertizingNode(getAttributes(value));
-        final InstanceIdentifier<Node1> nii = ensureNodePresent(trans, ni);
+        final InstanceIdentifier<IgpNodeAttributes> nii = ensureNodePresent(trans, ni);
 
         final IpPrefix prefix = getPrefix(value);
         final PrefixKey pk = new PrefixKey(prefix);
 
-        trans.putOperationalData(
-                nii.builder().child(
-                        org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.IgpNodeAttributes.class).child(
-                        Prefix.class, pk).toInstance(), new PrefixBuilder().setKey(pk).setPrefix(prefix).build());
+        trans.put(LogicalDatastoreType.OPERATIONAL,
+                nii.child(Prefix.class, pk), new PrefixBuilder().setKey(pk).setPrefix(prefix).build());
     }
 
     @Override
-    protected final void removeObject(final DataModification<InstanceIdentifier<?>, DataObject> trans, final InstanceIdentifier<T> id,
-            final T value) {
+    protected final void removeObject(final ReadWriteTransaction trans, final InstanceIdentifier<T> id, final T value) {
         final NodeId ni = advertizingNode(getAttributes(value));
-        final InstanceIdentifier<Node1> nii = nodeInstanceId(ni);
+        final NodeUsage present = nodes.get(ni);
+        Preconditions.checkState(present != null, "Removing prefix from non-existent node %s", present);
 
-        final IpPrefix prefix = getPrefix(value);
-        final PrefixKey pk = new PrefixKey(prefix);
+        final PrefixKey pk = new PrefixKey(getPrefix(value));
+        trans.delete(LogicalDatastoreType.OPERATIONAL, present.attrId.child(Prefix.class, pk));
 
-        trans.removeOperationalData(nii.builder().child(
-                org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.nt.l3.unicast.igp.topology.rev131021.igp.node.attributes.IgpNodeAttributes.class).child(
-                Prefix.class, pk).toInstance());
-
-        removeEmptyNode(trans, nii);
+        /*
+         * This is optimization magic: we are reading a list and we want to remove it once it
+         * hits zero. We may be in a transaction, so the read is costly, especially since we
+         * have just modified the list.
+         *
+         * Once we have performed the read, though, we can check the number of nodes, and reuse
+         * it for that number of removals. Note that since we do not track data and thus have
+         * no understanding about the difference between replace and add, we do not ever increase
+         * the life of this in createObject().
+         */
+        present.useCount--;
+        if (present.useCount == 0) {
+            final IgpNodeAttributes attrs = read(trans, present.attrId);
+            if (attrs != null) {
+                present.useCount = attrs.getPrefix().size();
+                if (present.useCount == 0) {
+                    trans.delete(LogicalDatastoreType.OPERATIONAL, nodeInstanceId(ni));
+                    nodes.remove(ni);
+                }
+            }
+        }
     }
-
 }

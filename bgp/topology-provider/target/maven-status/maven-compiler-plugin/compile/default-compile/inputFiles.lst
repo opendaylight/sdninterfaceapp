@@ -1,7 +1,0 @@
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/LinkstateTopologyBuilder.java
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/AbstractReachabilityTopologyBuilder.java
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/Ipv4ReachabilityTopologyBuilder.java
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/UriBuilder.java
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/LocRIBListener.java
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/AbstractTopologyBuilder.java
-/home/lte/opendaylight/bgpcep_modify/bgp/topology-provider/src/main/java/org/opendaylight/bgpcep/bgp/topology/provider/Ipv6ReachabilityTopologyBuilder.java

@@ -24,14 +24,10 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mult
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1Builder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
 import org.opendaylight.yangtools.yang.binding.DataObject;
-import org.slf4j.Logger;
-
-import org.slf4j.LoggerFactory;
 
 
 public final class MPReachAttributeParser implements AttributeParser, AttributeSerializer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MPReachAttributeParser.class);
     public static final int TYPE = 14;
 
     private final NlriRegistry reg;
@@ -42,7 +38,6 @@ public final class MPReachAttributeParser implements AttributeParser, AttributeS
 
     @Override
     public void parseAttribute(final ByteBuf buffer, final PathAttributesBuilder builder) throws BGPDocumentedException {
-        LOG.trace("inside parseAttribute of MPReachAttributeParser");
         try {
             final PathAttributes1 a = new PathAttributes1Builder().setMpReachNlri(this.reg.parseMpReach(buffer)).build();
             builder.addAugmentation(PathAttributes1.class, a);
@@ -53,7 +48,6 @@ public final class MPReachAttributeParser implements AttributeParser, AttributeS
 
     @Override
     public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
-        LOG.trace("inside serializeAttribute of MPReachAttributeParser");
         Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
         final PathAttributes pathAttributes = (PathAttributes) attribute;
         final PathAttributes1 pathAttributes1 = pathAttributes.getAugmentation(PathAttributes1.class);

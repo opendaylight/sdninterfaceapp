@@ -32,9 +32,13 @@
     </prerequisites>
 
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-sdniwrapper</artifactId>
+            <artifactId>concepts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>util</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -78,6 +82,10 @@
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
             <artifactId>netty-common</artifactId>
         </dependency>
         <dependency>
@@ -100,11 +108,31 @@
             <groupId>org.opendaylight.yangtools</groupId>
             <artifactId>yang-binding</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-linkstate</artifactId>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>concepts</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>yang-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>yang-data-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>yang-model-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>yang-data-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools.model</groupId>
+            <artifactId>ietf-inet-types</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bgp-parser-impl</artifactId>
@@ -112,6 +140,10 @@
         <dependency>
             <groupId>org.opendaylight.controller</groupId>
             <artifactId>config-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>sal-common-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.controller</groupId>
@@ -126,6 +158,12 @@
             <artifactId>netty-timer-config</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Testing dependencies -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -134,6 +172,26 @@
         <dependency>
             <groupId>org.opendaylight.yangtools</groupId>
             <artifactId>mockito-configuration</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>bgp-linkstate</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>binding-generator-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>yang-parser-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>yang-parser-impl</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -175,17 +233,22 @@
         <dependency>
             <groupId>org.opendaylight.tcpmd5</groupId>
             <artifactId>tcpmd5-jni</artifactId>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.tcpmd5</groupId>
             <artifactId>tcpmd5-jni</artifactId>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.controller</groupId>
             <artifactId>sal-binding-broker-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>sal-broker-impl</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
