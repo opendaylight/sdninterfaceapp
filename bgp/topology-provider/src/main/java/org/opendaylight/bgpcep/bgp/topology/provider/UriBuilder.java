@@ -8,19 +8,19 @@
 package org.opendaylight.bgpcep.bgp.topology.provider;
 
 import com.google.common.primitives.UnsignedBytes;
-
 import org.apache.commons.codec.binary.Hex;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.NodeIdentifier;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.bgp.rib.rib.loc.rib.tables.routes.linkstate.routes._case.linkstate.routes.LinkstateRoute;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.bgp.rib.rib.loc.rib.tables.routes.linkstate.routes._case.linkstate.routes.linkstate.route.object.type.LinkCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.bgp.rib.rib.loc.rib.tables.routes.linkstate.routes._case.linkstate.routes.linkstate.route.object.type.link._case.LinkDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.CRouterIdentifier;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.IsisNodeCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.IsisPseudonodeCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.OspfNodeCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.OspfPseudonodeCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.isis.pseudonode._case.IsisPseudonode;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev131125.node.identifier.c.router.identifier.ospf.pseudonode._case.OspfPseudonode;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.NodeIdentifier;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.LinkCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.routes.linkstate.routes.LinkstateRoute;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.CRouterIdentifier;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.IsisNodeCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.IsisPseudonodeCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.OspfNodeCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.OspfPseudonodeCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.isis.pseudonode._case.IsisPseudonode;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.node.identifier.c.router.identifier.ospf.pseudonode._case.OspfPseudonode;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.network.concepts.rev131125.IsoSystemIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,14 +75,27 @@ final class UriBuilder {
         return this;
     }
 
-    private String isoId(final byte[] bytes) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(Hex.encodeHexString(new byte[] { bytes[0], bytes[1] }));
-        sb.append('.');
-        sb.append(Hex.encodeHexString(new byte[] { bytes[2], bytes[3] }));
-        sb.append('.');
-        sb.append(Hex.encodeHexString(new byte[] { bytes[4], bytes[5] }));
-        return sb.toString();
+    private static String isoId(final byte[] bytes) {
+        final StringBuilder sBuilder = new StringBuilder();
+        int i = 0;
+        while (i < bytes.length) {
+            sBuilder.append(Hex.encodeHexString(new byte[] { bytes[i++], bytes[i++] }));
+            if (i != bytes.length) {
+                sBuilder.append('.');
+            }
+        }
+        return sBuilder.toString();
+    }
+
+    /**
+     * Creates a String representation of ISO system identifier
+     * in format XX.XX.XX where X is one byte.
+     *
+     * @param systemId IsoSystemIdentifier object
+     * @return String representation of ISO Identifier
+     */
+    public static String isoId(final IsoSystemIdentifier systemId) {
+        return isoId(systemId.getValue());
     }
 
     private String formatRouterIdentifier(final CRouterIdentifier routerIdentifier) {
@@ -91,11 +104,11 @@ final class UriBuilder {
         }
 
         if (routerIdentifier instanceof IsisNodeCase) {
-            return isoId(((IsisNodeCase) routerIdentifier).getIsisNode().getIsoSystemId().getValue());
+            return isoId(((IsisNodeCase) routerIdentifier).getIsisNode().getIsoSystemId());
         } else if (routerIdentifier instanceof IsisPseudonodeCase) {
             final IsisPseudonode r = ((IsisPseudonodeCase) routerIdentifier).getIsisPseudonode();
             return isoId(r.getIsIsRouterIdentifier().getIsoSystemId().getValue()) + '.'
-                    + Hex.encodeHexString(new byte[] { UnsignedBytes.checkedCast(r.getPsn()) });
+                + Hex.encodeHexString(new byte[] { UnsignedBytes.checkedCast(r.getPsn()) });
         } else if (routerIdentifier instanceof OspfNodeCase) {
             return ((OspfNodeCase) routerIdentifier).getOspfNode().getOspfRouterId().toString();
         } else if (routerIdentifier instanceof OspfPseudonodeCase) {

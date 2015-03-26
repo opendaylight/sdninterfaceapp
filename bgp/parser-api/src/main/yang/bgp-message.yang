@@ -5,6 +5,7 @@ module bgp-message {
 
     import ietf-inet-types { prefix inet; revision-date 2010-09-24; }
     import bgp-types { prefix bgp-t; revision-date 2013-09-19; }
+    import network-concepts { prefix netc; revision-date 2013-11-25; }
 
     organization "Cisco Systems, Inc.";
     contact "Dana Kutenicsova <dkutenic@cisco.com>";
@@ -37,6 +38,18 @@ module bgp-message {
         }
     }
 
+    grouping originator-id {
+        leaf originator {
+            type inet:ipv4-address;
+        }
+    }
+
+    grouping cluster-id {
+        leaf-list cluster {
+            type bgp-t:cluster-identifier;
+        }
+    }
+
     notification open {
         description "Open Message";
         reference "http://tools.ietf.org/html/rfc4271#section-4.2";
@@ -57,13 +70,15 @@ module bgp-message {
             mandatory true;
         }
         list bgp-parameters {
-            reference "http://tools.ietf.org/html/rfc3392#section-4";
-            choice c-parameters {
-                case as4-bytes-case {
-                    container as4-bytes-capability {
-                        reference "http://tools.ietf.org/html/rfc6793";
-                        leaf as-number {
-                            type inet:as-number;
+            list optional-capabilities {
+                reference "http://tools.ietf.org/html/rfc5492#section-4";
+                choice c-parameters {
+                    case as4-bytes-case {
+                        container as4-bytes-capability {
+                            reference "http://tools.ietf.org/html/rfc6793";
+                            leaf as-number {
+                                type inet:as-number;
+                            }
                         }
                     }
                 }
@@ -112,11 +127,39 @@ module bgp-message {
         list extended-communities {
             uses bgp-t:extended-community;
         }
-        leaf originator-id {
-            type inet:ipv4-address;
+        container originator-id {
+            uses originator-id;
         }
-        leaf-list cluster-id {
-            type bgp-t:cluster-identifier;
+        container cluster-id {
+            uses cluster-id;
+        }
+        container aigp {
+            container aigp-tlv {
+                leaf metric {
+                    type netc:accumulated-igp-metric;
+                }
+            }
+        }
+        list unrecognized-attributes {
+            key type;
+            leaf partial {
+                type boolean;
+                mandatory true;
+            }
+            leaf transitive {
+                type boolean;
+                mandatory true;
+            }
+            leaf type {
+                type uint8;
+                mandatory true;
+            }
+            leaf value {
+                type binary {
+                    length 0..65535;
+                }
+                mandatory true;
+            }
         }
     }
 

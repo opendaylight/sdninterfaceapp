@@ -10,9 +10,9 @@ package org.opendaylight.protocol.bgp.parser.impl.message.update;
 
 import static org.opendaylight.protocol.bgp.parser.impl.message.update.AsPathSegmentParser.SegmentType.AS_SEQUENCE;
 import static org.opendaylight.protocol.bgp.parser.impl.message.update.AsPathSegmentParser.SegmentType.AS_SET;
-
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.opendaylight.protocol.util.ReferenceCache;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
@@ -66,43 +66,41 @@ public final class AsPathSegmentParser {
     }
 
     static List<AsSequence> parseAsSequence(final ReferenceCache refCache, final int count, final ByteBuf buffer) {
-        final List<AsSequence> coll = new ArrayList<>();
+        final List<AsSequence> coll = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            coll.add(
-                    refCache.getSharedReference(new AsSequenceBuilder().setAs(refCache.getSharedReference(new AsNumber(buffer.readUnsignedInt()))).build()));
+            coll.add(refCache.getSharedReference(new AsSequenceBuilder().setAs(refCache.getSharedReference(new AsNumber(buffer.readUnsignedInt()))).build()));
         }
-        return coll;
+        return (coll.isEmpty()) ? Collections.<AsSequence>emptyList() : coll;
     }
 
     static List<AsNumber> parseAsSet(final ReferenceCache refCache, final int count, final ByteBuf buffer) {
-        final List<AsNumber> coll = new ArrayList<>();
+        final List<AsNumber> coll = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            coll.add(refCache.getSharedReference(
-                    new AsNumber(buffer.readUnsignedInt())));
+            coll.add(refCache.getSharedReference(new AsNumber(buffer.readUnsignedInt())));
         }
-        return coll;
+        return (coll.isEmpty()) ? Collections.<AsNumber>emptyList() : coll;
     }
 
-    static void serializeAsSet(ASetCase aSetCase, ByteBuf byteAggregator) {
-        ASet aset = aSetCase.getASet();
+    static void serializeAsSet(final ASetCase aSetCase, final ByteBuf byteAggregator) {
+        final ASet aset = aSetCase.getASet();
         if (aset == null || aset.getAsSet() == null) {
             return;
         }
         byteAggregator.writeByte(serializeType(AS_SET));
         byteAggregator.writeByte(aset.getAsSet().size());
-        for (AsNumber asNumber : aset.getAsSet()) {
+        for (final AsNumber asNumber : aset.getAsSet()) {
             byteAggregator.writeInt(asNumber.getValue().intValue());
         }
     }
 
-    static void serializeAsSequence(AListCase aListCase, ByteBuf byteAggregator) {
-        AList alist = aListCase.getAList();
+    static void serializeAsSequence(final AListCase aListCase, final ByteBuf byteAggregator) {
+        final AList alist = aListCase.getAList();
         if (alist == null || alist.getAsSequence() == null) {
             return;
         }
         byteAggregator.writeByte(serializeType(AS_SEQUENCE));
         byteAggregator.writeByte(alist.getAsSequence().size());
-        for (AsSequence value : alist.getAsSequence()) {
+        for (final AsSequence value : alist.getAsSequence()) {
             byteAggregator.writeInt(value.getAs().getValue().intValue());
         }
     }

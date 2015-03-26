@@ -8,13 +8,15 @@
 package org.opendaylight.protocol.bgp.parser.spi.pojo;
 
 import java.util.ServiceLoader;
-
 import org.opendaylight.protocol.bgp.parser.spi.BGPExtensionProviderActivator;
 import org.opendaylight.protocol.bgp.parser.spi.BGPExtensionProviderContext;
 
 public final class ServiceLoaderBGPExtensionProviderContext {
     private static final class Holder {
         private static final BGPExtensionProviderContext INSTANCE;
+
+        private Holder() {
+        }
 
         static {
             try {
@@ -29,7 +31,7 @@ public final class ServiceLoaderBGPExtensionProviderContext {
         final BGPExtensionProviderContext ctx = new SimpleBGPExtensionProviderContext();
 
         final ServiceLoader<BGPExtensionProviderActivator> loader = ServiceLoader.load(BGPExtensionProviderActivator.class);
-        for (BGPExtensionProviderActivator a : loader) {
+        for (final BGPExtensionProviderActivator a : loader) {
             a.start(ctx);
         }
 
@@ -41,6 +43,6 @@ public final class ServiceLoaderBGPExtensionProviderContext {
     }
 
     private ServiceLoaderBGPExtensionProviderContext() {
-
+        throw new UnsupportedOperationException();
     }
 }

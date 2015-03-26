@@ -1,13 +1,13 @@
 package org.opendaylight.controller.config.yang.bgp.rib.impl;
 
-import com.google.common.base.Objects;
-
+import com.google.common.base.MoreObjects;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.rib.impl.StrictBGPPeerRegistry;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPPeerRegistry;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionPreferences;
 import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.IpAddress;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
 
@@ -46,27 +46,33 @@ public class StrictBgpPeerRegistryModule extends org.opendaylight.controller.con
 
         @Override
         public BGPSessionPreferences getPeerPreferences(final IpAddress ip) {
-            return global.getPeerPreferences(ip);
+            return this.global.getPeerPreferences(ip);
         }
 
         @Override
-        public BGPSessionListener getPeer(final IpAddress ip, final Ipv4Address sourceId, final Ipv4Address remoteId) throws BGPDocumentedException {
-            return global.getPeer(ip, sourceId, remoteId);
+        public BGPSessionListener getPeer(final IpAddress ip, final Ipv4Address sourceId, final Ipv4Address remoteId, final AsNumber asNumber)
+                throws BGPDocumentedException {
+            return this.global.getPeer(ip, sourceId, remoteId, asNumber);
         }
 
         @Override
         public boolean isPeerConfigured(final IpAddress ip) {
-            return global.isPeerConfigured(ip);
+            return this.global.isPeerConfigured(ip);
         }
 
         @Override
         public void removePeer(final IpAddress ip) {
-            global.removePeer(ip);
+            this.global.removePeer(ip);
+        }
+
+        @Override
+        public void removePeerSession(final IpAddress ip) {
+            this.global.removePeerSession(ip);
         }
 
         @Override
         public void addPeer(final IpAddress ip, final ReusableBGPPeer peer, final BGPSessionPreferences preferences) {
-            global.addPeer(ip, peer, preferences);
+            this.global.addPeer(ip, peer, preferences);
         }
 
         @Override
@@ -76,10 +82,9 @@ public class StrictBgpPeerRegistryModule extends org.opendaylight.controller.con
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
-                    .add("peers", global)
+            return MoreObjects.toStringHelper(this)
+                    .add("peers", this.global)
                     .toString();
         }
     }
-
 }

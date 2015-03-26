@@ -8,23 +8,28 @@
 package org.opendaylight.protocol.bgp.parser.spi.pojo;
 
 import com.google.common.base.Preconditions;
-import com.google.common.primitives.UnsignedBytes;
-
 import io.netty.buffer.ByteBuf;
-
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
+import java.util.concurrent.atomic.AtomicReference;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeParser;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeRegistry;
 import org.opendaylight.protocol.bgp.parser.spi.AttributeSerializer;
+import org.opendaylight.protocol.concepts.AbstractRegistration;
 import org.opendaylight.protocol.concepts.HandlerRegistry;
+import org.opendaylight.protocol.util.BitArray;
 import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.protocol.util.Values;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.UnrecognizedAttributes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.UnrecognizedAttributesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.UnrecognizedAttributesKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributesBuilder;
 import org.opendaylight.yangtools.yang.binding.DataContainer;
@@ -33,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 final class SimpleAttributeRegistry implements AttributeRegistry {
+
     private static final class RawAttribute {
         private final AttributeParser parser;
         private final ByteBuf buffer;
@@ -49,54 +55,63 @@ final class SimpleAttributeRegistry implements AttributeRegistry {
     private static final int PARTIAL_BIT = 2;
     private static final int EXTENDED_LENGTH_BIT = 3;
     private final HandlerRegistry<DataContainer, AttributeParser, AttributeSerializer> handlers = new HandlerRegistry<>();
+    private final Map<AbstractRegistration, AttributeSerializer> serializers = new LinkedHashMap<>();
+    private final AtomicReference<Iterable<AttributeSerializer>> roSerializers =
+        new AtomicReference<Iterable<AttributeSerializer>>(this.serializers.values());
+    private final List<UnrecognizedAttributes> unrecognizedAttributes = new ArrayList<>();
+
 
     AutoCloseable registerAttributeParser(final int attributeType, final AttributeParser parser) {
         Preconditions.checkArgument(attributeType >= 0 && attributeType <= Values.UNSIGNED_BYTE_MAX_VALUE);
         return this.handlers.registerParser(attributeType, parser);
     }
 
-    AutoCloseable registerAttributeSerializer(final Class<? extends DataObject> paramClass, final AttributeSerializer serializer) {
-        return this.handlers.registerSerializer(paramClass, serializer);
+    synchronized AutoCloseable registerAttributeSerializer(final Class<? extends DataObject> paramClass, final AttributeSerializer serializer) {
+        final AbstractRegistration reg = this.handlers.registerSerializer(paramClass, serializer);
+
+        this.serializers.put(reg, serializer);
+        return new AbstractRegistration() {
+            @Override
+            protected void removeRegistration() {
+                synchronized (SimpleAttributeRegistry.this) {
+                    SimpleAttributeRegistry.this.serializers.remove(reg);
+                    SimpleAttributeRegistry.this.roSerializers.set(SimpleAttributeRegistry.this.serializers.values());
+                }
+                reg.close();
+            }
+        };
     }
 
-    private int addAttribute(final ByteBuf buffer, final Map<Integer, RawAttribute> attributes) throws BGPDocumentedException {
-        final boolean[] flags = ByteArray.parseBits(buffer.readByte());
-        final Integer type = UnsignedBytes.toInt(buffer.readByte());
-        final int hdrlen;
-        final int len;
-        if (flags[EXTENDED_LENGTH_BIT]) {
-            len = UnsignedBytes.toInt(buffer.readByte()) * 256 + UnsignedBytes.toInt(buffer.readByte());
-            hdrlen = 4;
-        } else {
-            len = UnsignedBytes.toInt(buffer.readByte());
-            hdrlen = 3;
-        }
+    private void addAttribute(final ByteBuf buffer, final Map<Integer, RawAttribute> attributes) throws BGPDocumentedException {
+        final BitArray flags = BitArray.valueOf(buffer.readByte());
+        final int type = buffer.readUnsignedByte();
+        final int len = (flags.get(EXTENDED_LENGTH_BIT)) ? buffer.readUnsignedShort() : buffer.readUnsignedByte();
         if (!attributes.containsKey(type)) {
             final AttributeParser parser = this.handlers.getParser(type);
             if (parser == null) {
-                if (!flags[OPTIONAL_BIT]) {
+                if (!flags.get(OPTIONAL_BIT)) {
                     throw new BGPDocumentedException("Well known attribute not recognized.", BGPError.WELL_KNOWN_ATTR_NOT_RECOGNIZED);
                 }
-                if (flags[TRANSITIVE_BIT]) {
-                    // FIXME: transitive attributes need to be preserved
-                    LOG.warn("Losing unrecognized transitive attribute {}", type);
-                } else {
-                    LOG.debug("Ignoring unrecognized attribute type {}", type);
-                }
+                final UnrecognizedAttributes unrecognizedAttribute = new UnrecognizedAttributesBuilder()
+                    .setKey(new UnrecognizedAttributesKey((short)type))
+                    .setPartial(flags.get(PARTIAL_BIT))
+                    .setTransitive(flags.get(TRANSITIVE_BIT))
+                    .setType((short)type)
+                    .setValue(ByteArray.readBytes(buffer, len)).build();
+                unrecognizedAttributes.add(unrecognizedAttribute);
+                LOG.debug("Unrecognized attribute were parsed: {}", unrecognizedAttribute);
             } else {
-                attributes.put(type, new RawAttribute(parser, buffer.slice(buffer.readerIndex(), len)));
-                buffer.skipBytes(len);
+                attributes.put(type, new RawAttribute(parser, buffer.readSlice(len)));
             }
         } else {
             LOG.debug("Ignoring duplicate attribute type {}", type);
         }
-        return hdrlen + len;
     }
 
     @Override
     public PathAttributes parseAttributes(final ByteBuf buffer) throws BGPDocumentedException, BGPParsingException {
-        final TreeMap<Integer, RawAttribute> attributes = new TreeMap<>();
-        while (buffer.readableBytes() != 0) {
+        final Map<Integer, RawAttribute> attributes = new TreeMap<>();
+        while (buffer.isReadable()) {
             addAttribute(buffer, attributes);
         }
         /*
@@ -110,13 +125,13 @@ final class SimpleAttributeRegistry implements AttributeRegistry {
             final RawAttribute a = e.getValue();
             a.parser.parseAttribute(a.buffer, builder);
         }
-
+        builder.setUnrecognizedAttributes(unrecognizedAttributes);
         return builder.build();
     }
 
     @Override
     public void serializeAttribute(final DataObject attribute,final ByteBuf byteAggregator) {
-        for (AttributeSerializer serializer : this.handlers.getAllSerializers()) {
+        for (final AttributeSerializer serializer : this.roSerializers.get()) {
             serializer.serializeAttribute(attribute, byteAggregator);
         }
     }

@@ -13,10 +13,8 @@ import static org.junit.Assert.assertNotSame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +22,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
@@ -33,6 +30,9 @@ import org.opendaylight.protocol.bgp.parser.BgpTableTypeImpl;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv6Address;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv6Prefix;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv6.prefixes.DestinationIpv6Builder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv6.prefixes.destination.ipv6.Ipv6PrefixesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationIpv6CaseBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Open;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.OpenBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.ProtocolVersion;
@@ -40,7 +40,9 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParameters;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParametersBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.CParameters;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.OptionalCapabilities;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.OptionalCapabilitiesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.optional.capabilities.CParameters;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.AsPathBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.OriginBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.as.path.Segments;
@@ -49,11 +51,9 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1Builder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.DestinationIpv6CaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.destination.destination.type.destination.ipv6._case.DestinationIpv6Builder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.MultiprotocolCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.MultiprotocolCaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.multiprotocol._case.MultiprotocolCapabilityBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.multiprotocol._case.MultiprotocolCapabilityBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.BgpOrigin;
@@ -128,15 +128,16 @@ public class BGPMessageParserMockTest {
      * @param fileNumber parameter to distinguish between files from which bytes are read
      */
     private byte[] fillInputBytes(final int fileNumber) throws Exception {
-
-        final InputStream is = this.getClass().getResourceAsStream("/up" + fileNumber + ".bin");
         final ByteArrayOutputStream bis = new ByteArrayOutputStream();
         final byte[] data = new byte[60];
         int nRead = 0;
-        while ((nRead = is.read(data, 0, data.length)) != -1) {
-            bis.write(data, 0, nRead);
+        try (final InputStream is = this.getClass().getResourceAsStream("/up" + fileNumber + ".bin")) {
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                bis.write(data, 0, nRead);
+            }
+            bis.flush();
+            is.close();
         }
-        bis.flush();
         return bis.toByteArray();
     }
 
@@ -152,9 +153,9 @@ public class BGPMessageParserMockTest {
         final List<AsSequence> asnums = Lists.newArrayList(new AsSequenceBuilder().setAs(new AsNumber(asn)).build());
         final List<Segments> asPath = Lists.newArrayList();
         asPath.add(new SegmentsBuilder().setCSegment(
-                new AListCaseBuilder().setAList(new AListBuilder().setAsSequence(asnums).build()).build()).build());
+            new AListCaseBuilder().setAList(new AListBuilder().setAsSequence(asnums).build()).build()).build());
         final CNextHop nextHop = new Ipv6NextHopCaseBuilder().setIpv6NextHop(
-                new Ipv6NextHopBuilder().setGlobal(new Ipv6Address("2001:db8::1")).setLinkLocal(new Ipv6Address("fe80::c001:bff:fe7e:0")).build()).build();
+            new Ipv6NextHopBuilder().setGlobal(new Ipv6Address("2001:db8::1")).setLinkLocal(new Ipv6Address("fe80::c001:bff:fe7e:0")).build()).build();
 
         final Ipv6Prefix pref1 = new Ipv6Prefix("2001:db8:1:2::/64");
         final Ipv6Prefix pref2 = new Ipv6Prefix("2001:db8:1:1::/64");
@@ -169,8 +170,8 @@ public class BGPMessageParserMockTest {
         mpReachBuilder.setSafi(UnicastSubsequentAddressFamily.class);
         mpReachBuilder.setCNextHop(nextHop);
         mpReachBuilder.setAdvertizedRoutes(new AdvertizedRoutesBuilder().setDestinationType(
-                new DestinationIpv6CaseBuilder().setDestinationIpv6(
-                        new DestinationIpv6Builder().setIpv6Prefixes(Lists.newArrayList(pref1, pref2, pref3)).build()).build()).build());
+            new DestinationIpv6CaseBuilder().setDestinationIpv6(
+                new DestinationIpv6Builder().setIpv6Prefixes(Lists.newArrayList(new Ipv6PrefixesBuilder().setPrefix(pref1).build(), new Ipv6PrefixesBuilder().setPrefix(pref2).build(), new Ipv6PrefixesBuilder().setPrefix(pref3).build())).build()).build()).build());
 
         paBuilder.addAugmentation(PathAttributes1.class, new PathAttributes1Builder().setMpReachNlri(mpReachBuilder.build()).build());
 
@@ -189,21 +190,23 @@ public class BGPMessageParserMockTest {
         final List<BgpParameters> params = Lists.newArrayList();
 
         final CParameters par = new MultiprotocolCaseBuilder().setMultiprotocolCapability(
-                new MultiprotocolCapabilityBuilder().setAfi(Ipv4AddressFamily.class).setSafi(MplsLabeledVpnSubsequentAddressFamily.class).build()).build();
-        params.add(new BgpParametersBuilder().setCParameters(par).build());
+            new MultiprotocolCapabilityBuilder().setAfi(Ipv4AddressFamily.class).setSafi(MplsLabeledVpnSubsequentAddressFamily.class).build()).build();
+        params.add(new BgpParametersBuilder().setOptionalCapabilities(Lists.newArrayList(new OptionalCapabilitiesBuilder().setCParameters(par).build())).build());
 
         final byte[] input = new byte[] { 5, 8, 13, 21 };
 
         openMap.put(Unpooled.copiedBuffer(input), new OpenBuilder().setMyAsNumber(30).setHoldTimer(30).setBgpParameters(params).setVersion(
-                new ProtocolVersion((short) 4)).build());
+            new ProtocolVersion((short) 4)).build());
 
         final BGPMessageParserMock mockParser = new BGPMessageParserMock(openMap);
 
         final Set<BgpTableType> result = Sets.newHashSet();
         for (final BgpParameters p : ((Open) mockParser.parseMessage(Unpooled.copiedBuffer(input))).getBgpParameters()) {
-            final CParameters cp = p.getCParameters();
-            final BgpTableType t = new BgpTableTypeImpl(((MultiprotocolCase) cp).getMultiprotocolCapability().getAfi(), ((MultiprotocolCase) cp).getMultiprotocolCapability().getSafi());
-            result.add(t);
+            for (final OptionalCapabilities capa : p.getOptionalCapabilities()) {
+                final CParameters cp = capa.getCParameters();
+                final BgpTableType t = new BgpTableTypeImpl(((MultiprotocolCase) cp).getMultiprotocolCapability().getAfi(), ((MultiprotocolCase) cp).getMultiprotocolCapability().getSafi());
+                result.add(t);
+            }
         }
         assertEquals(type, result);
     }

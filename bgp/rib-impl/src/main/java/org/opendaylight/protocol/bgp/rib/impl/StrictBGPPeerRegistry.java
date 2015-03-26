@@ -8,27 +8,26 @@
 
 package org.opendaylight.protocol.bgp.rib.impl;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-
+import com.google.common.net.InetAddresses;
+import com.google.common.primitives.UnsignedInts;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
-
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
-
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPPeerRegistry;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionPreferences;
 import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.IpAddress;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv6Address;
@@ -44,8 +43,6 @@ import org.slf4j.LoggerFactory;
 public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(StrictBGPPeerRegistry.class);
-
-    private static final CharMatcher NONDIGIT = CharMatcher.inRange('0', '9').negate();
 
     // TODO remove backwards compatibility
     public static final StrictBGPPeerRegistry GLOBAL = new StrictBGPPeerRegistry();
@@ -72,6 +69,12 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
     }
 
     @Override
+    public synchronized void removePeerSession(final IpAddress ip) {
+        Preconditions.checkNotNull(ip);
+        this.sessionIds.remove(ip);
+    }
+
+    @Override
     public boolean isPeerConfigured(final IpAddress ip) {
         Preconditions.checkNotNull(ip);
         return this.peers.containsKey(ip);
@@ -83,7 +86,7 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
 
     @Override
     public synchronized BGPSessionListener getPeer(final IpAddress ip,
-        final Ipv4Address sourceId, final Ipv4Address remoteId)
+        final Ipv4Address sourceId, final Ipv4Address remoteId, final AsNumber asNumber)
             throws BGPDocumentedException {
         Preconditions.checkNotNull(ip);
         Preconditions.checkNotNull(sourceId);
@@ -91,12 +94,14 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
 
         checkPeerConfigured(ip);
 
-        final BGPSessionId currentConnection = new BGPSessionId(sourceId, remoteId);
+        final BGPSessionId currentConnection = new BGPSessionId(sourceId, remoteId, asNumber);
+        final BGPSessionListener p = this.peers.get(ip);
 
-        if (this.sessionIds.containsKey(ip)) {
+        final BGPSessionId previousConnection = this.sessionIds.get(ip);
+
+        if (previousConnection != null) {
+
             LOG.warn("Duplicate BGP session established with {}", ip);
-
-            final BGPSessionId previousConnection = this.sessionIds.get(ip);
 
             // Session reestablished with different ids
             if (!previousConnection.equals(currentConnection)) {
@@ -120,7 +125,17 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
                 this.peers.get(ip).releaseConnection();
                 return this.peers.get(ip);
 
-                // Session reestablished with same source bgp id, dropping current as duplicate
+            } else if (previousConnection.hasHigherAsNumber(currentConnection)) {
+                LOG.warn("BGP session with {} {} has to be dropped. Opposite session already present", ip, currentConnection);
+                throw new BGPDocumentedException(
+                    String.format("BGP session with %s initiated %s has to be dropped. Opposite session already present",
+                        ip, currentConnection),
+                        BGPError.CEASE);
+            } else if (currentConnection.hasHigherAsNumber(previousConnection)) {
+                LOG.warn("BGP session with {} {} released. Replaced by opposite session", ip, previousConnection);
+                this.peers.get(ip).releaseConnection();
+                return this.peers.get(ip);
+            // Session reestablished with same source bgp id, dropping current as duplicate
             } else {
                 LOG.warn("BGP session with %s initiated from %s to %s has to be dropped. Same session already present", ip, sourceId, remoteId);
                 throw new BGPDocumentedException(
@@ -132,7 +147,7 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
 
         // Map session id to peer IP address
         this.sessionIds.put(ip, currentConnection);
-        return this.peers.get(ip);
+        return p;
     }
 
     @Override
@@ -143,10 +158,10 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
     }
 
     /**
-     * Create IpAddress from SocketAddress. Only InetSocketAddress is accepted with inner address: Inet4Address and Inet6Address.
+     * Creates IpAddress from SocketAddress. Only InetSocketAddress is accepted with inner address: Inet4Address and Inet6Address.
      *
-     * @throws IllegalArgumentException if submitted socket address is not InetSocketAddress[ipv4 | ipv6]
      * @param socketAddress socket address to transform
+     * @throws IllegalArgumentException if submitted socket address is not InetSocketAddress[ipv4 | ipv6]
      */
     public static IpAddress getIpAddress(final SocketAddress socketAddress) {
         Preconditions.checkNotNull(socketAddress);
@@ -170,7 +185,7 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
             .add("peers", this.peers.keySet())
             .toString();
     }
@@ -179,11 +194,14 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
      * Session identifier that contains (source Bgp Id) -> (destination Bgp Id)
      */
     private static final class BGPSessionId {
-        private final Ipv4Address from, to;
 
-        BGPSessionId(final Ipv4Address from, final Ipv4Address to) {
+        private final Ipv4Address from, to;
+        private final AsNumber asNumber;
+
+        BGPSessionId(final Ipv4Address from, final Ipv4Address to, final AsNumber asNumber) {
             this.from = Preconditions.checkNotNull(from);
             this.to = Preconditions.checkNotNull(to);
+            this.asNumber = Preconditions.checkNotNull(asNumber);
         }
 
         /**
@@ -222,25 +240,21 @@ public final class StrictBGPPeerRegistry implements BGPPeerRegistry {
          * Check if this connection is equal to other and if it contains higher source bgp id
          */
         boolean isHigherDirection(final BGPSessionId other) {
-            Preconditions.checkState(!this.isSameDirection(other), "Equal sessions with same direction");
             return toLong(this.from) > toLong(other.from);
         }
 
-        private long toLong(final Ipv4Address from) {
-            return Long.parseLong(NONDIGIT.removeFrom(from.getValue()));
+        boolean hasHigherAsNumber(final BGPSessionId other) {
+            return this.asNumber.getValue() > other.asNumber.getValue();
         }
 
-        /**
-         * Check if 2 connections are equal and face same direction
-         */
-        boolean isSameDirection(final BGPSessionId other) {
-            Preconditions.checkState(this.equals(other), "Only equal sessions can be compared");
-            return this.from.equals(other.from);
+        private long toLong(final Ipv4Address from) {
+            final int i = InetAddresses.coerceToInteger(InetAddresses.forString(from.getValue()));
+            return UnsignedInts.toLong(i);
         }
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                 .add("from", this.from)
                 .add("to", this.to)
                 .toString();

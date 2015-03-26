@@ -9,20 +9,18 @@ package org.opendaylight.protocol.bgp.rib.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
 import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1Builder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2Builder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlriBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.UnicastSubsequentAddressFamily;
@@ -67,8 +65,7 @@ public class BGPSynchronization {
     private final BGPSession session;
 
     public BGPSynchronization(final BGPSession bgpSession, final BGPSessionListener listener, final Set<TablesKey> types) {
-	LOG.trace("inside BGPSynchronization"); 
-       this.listener = Preconditions.checkNotNull(listener);
+        this.listener = Preconditions.checkNotNull(listener);
         this.session = Preconditions.checkNotNull(bgpSession);
 
         for (final TablesKey type : types) {
@@ -79,18 +76,17 @@ public class BGPSynchronization {
     /**
      * For each received Update message, the upd sync variable needs to be updated to true, for particular AFI/SAFI
      * combination. Currently we only assume Unicast SAFI. From the Update message we have to extract the AFI. Each
-     * Update message can contain BGP Object with one type of AFI. If the object is BGP Link, BGP Node or BGPPrefix<?>
+     * Update message can contain BGP Object with one type of AFI. If the object is BGP Link, BGP Node or a BGPPrefix
      * the AFI is Linkstate. In case of BGPRoute, the AFI depends on the IP Address of the prefix.
      *
      * @param msg received Update message
      */
     public void updReceived(final Update msg) {
-       	LOG.trace("inside updReceived of update msg"); 
-	TablesKey type = new TablesKey(Ipv4AddressFamily.class, UnicastSubsequentAddressFamily.class);
+        TablesKey type = new TablesKey(Ipv4AddressFamily.class, UnicastSubsequentAddressFamily.class);
         boolean isEOR = false;
         if (msg.getNlri() == null && msg.getWithdrawnRoutes() == null) {
-        	if (msg.getPathAttributes() != null) {
-            	if (msg.getPathAttributes().getAugmentation(PathAttributes1.class) != null) {
+            if (msg.getPathAttributes() != null) {
+                if (msg.getPathAttributes().getAugmentation(PathAttributes1.class) != null) {
                     final PathAttributes1 pa = msg.getPathAttributes().getAugmentation(PathAttributes1.class);
                     if (pa.getMpReachNlri() != null) {
                         type = new TablesKey(pa.getMpReachNlri().getAfi(), pa.getMpReachNlri().getSafi());
@@ -100,9 +96,14 @@ public class BGPSynchronization {
                     if (pa.getMpUnreachNlri() != null) {
                         type = new TablesKey(pa.getMpUnreachNlri().getAfi(), pa.getMpUnreachNlri().getSafi());
                     }
+                    if (pa.getMpUnreachNlri().getWithdrawnRoutes() == null) {
+                        // EOR message contains only MPUnreach attribute and no NLRI
+                        isEOR = true;
+                    }
                 }
             } else {
-            	isEOR = true;
+                // true for empty Update Message
+                isEOR = true;
             }
         }
         final SyncVariables s = this.syncStorage.get(type);
@@ -113,6 +114,7 @@ public class BGPSynchronization {
         s.setUpd(true);
         if (isEOR) {
             s.setEorTrue();
+            LOG.info("BGP Synchronization finished for table {} ", type);
         }
     }
 
@@ -122,7 +124,6 @@ public class BGPSynchronization {
      * session.
      */
     public void kaReceived() {
-    	LOG.trace("inside kaReceived");
         for (final Entry<TablesKey, SyncVariables> entry : this.syncStorage.entrySet()) {
             final SyncVariables s = entry.getValue();
             if (!s.getEor()) {
@@ -139,13 +140,10 @@ public class BGPSynchronization {
     }
 
     private Update generateEOR(final TablesKey type) {
-        if (type.getAfi().equals(Ipv4AddressFamily.class) && type.getSafi().equals(UnicastSubsequentAddressFamily.class)) {
-            return new UpdateBuilder().build();
-        }
         return new UpdateBuilder().setPathAttributes(
                 new PathAttributesBuilder().addAugmentation(
-                        PathAttributes1.class,
-                        new PathAttributes1Builder().setMpReachNlri(
-                                new MpReachNlriBuilder().setAfi(type.getAfi()).setSafi(type.getSafi()).build()).build()).build()).build();
+                        PathAttributes2.class,
+                        new PathAttributes2Builder().setMpUnreachNlri(
+                                new MpUnreachNlriBuilder().setAfi(type.getAfi()).setSafi(type.getSafi()).build()).build()).build()).build();
     }
 }

@@ -9,7 +9,6 @@ package org.opendaylight.protocol.bgp.parser.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.opendaylight.protocol.bgp.parser.impl.message.BGPKeepAliveMessageParser;
 import org.opendaylight.protocol.bgp.parser.impl.message.BGPNotificationMessageParser;
 import org.opendaylight.protocol.bgp.parser.impl.message.BGPOpenMessageParser;
@@ -22,6 +21,7 @@ import org.opendaylight.protocol.bgp.parser.impl.message.update.AS4AggregatorAtt
 import org.opendaylight.protocol.bgp.parser.impl.message.update.AS4PathAttributeParser;
 import org.opendaylight.protocol.bgp.parser.impl.message.update.AdvertizedRoutesSerializer;
 import org.opendaylight.protocol.bgp.parser.impl.message.update.AggregatorAttributeParser;
+import org.opendaylight.protocol.bgp.parser.impl.message.update.AigpAttributeParser;
 import org.opendaylight.protocol.bgp.parser.impl.message.update.AsPathAttributeParser;
 import org.opendaylight.protocol.bgp.parser.impl.message.update.AtomicAggregateAttributeParser;
 import org.opendaylight.protocol.bgp.parser.impl.message.update.ClusterIdAttributeParser;
@@ -47,8 +47,9 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Open;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParameters;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.c.parameters.As4BytesCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.As4BytesCase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aggregator;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Aigp;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.AsPath;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.AtomicAggregate;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.ClusterId;
@@ -59,8 +60,8 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Origin;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.OriginatorId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutes;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.GracefulRestartCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.c.parameters.MultiprotocolCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.GracefulRestartCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.reach.nlri.AdvertizedRoutes;
@@ -125,6 +126,10 @@ public final class BGPActivator extends AbstractBGPExtensionProviderActivator {
         final OriginAttributeParser originAttributeParser = new OriginAttributeParser();
         regs.add(context.registerAttributeSerializer(Origin.class, originAttributeParser));
         regs.add(context.registerAttributeParser(OriginAttributeParser.TYPE, originAttributeParser));
+
+        final AigpAttributeParser aigpAttributeParser = new AigpAttributeParser();
+        regs.add(context.registerAttributeSerializer(Aigp.class, aigpAttributeParser));
+        regs.add(context.registerAttributeParser(AigpAttributeParser.TYPE, aigpAttributeParser));
 
         final AsPathAttributeParser asPathAttributeParser = new AsPathAttributeParser(context.getReferenceCache());
         regs.add(context.registerAttributeSerializer(AsPath.class, asPathAttributeParser));

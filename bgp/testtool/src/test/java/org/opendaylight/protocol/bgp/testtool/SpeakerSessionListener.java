@@ -7,9 +7,9 @@
  */
 package org.opendaylight.protocol.bgp.testtool;
 
-import org.opendaylight.protocol.bgp.parser.BGPSession;
-import org.opendaylight.protocol.bgp.parser.BGPSessionListener;
-import org.opendaylight.protocol.bgp.parser.BGPTerminationReason;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSession;
+import org.opendaylight.protocol.bgp.rib.spi.BGPSessionListener;
+import org.opendaylight.protocol.bgp.rib.spi.BGPTerminationReason;
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,5 +38,10 @@ public class SpeakerSessionListener implements BGPSessionListener {
     public void onMessage(final BGPSession session, final Notification message) {
         LOG.info("Server: Message received: {}", message);
         // this.d.stop();
+    }
+
+    @Override
+    public boolean isSessionActive() {
+        return true;
     }
 }
