@@ -61,7 +61,7 @@
               org.opendaylight.controller.sal.utils,
               org.opendaylight.controller.containermanager,
               org.opendaylight.controller.switchmanager,
-	      org.opendaylight.controller.statisticsmanager,
+              org.opendaylight.controller.statisticsmanager,
               org.opendaylight.controller.usermanager,
               org.opendaylight.controller.hosttracker,
               org.opendaylight.controller.hosttracker.hostAware,
