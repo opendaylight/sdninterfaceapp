@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -43,7 +42,6 @@ import org.opendaylight.controller.sdniaggregator.NetworkCapabilities;
 import org.opendaylight.controller.sdniaggregator.NetworkCapabilitiesQOS;
 import org.opendaylight.controller.sdniaggregator.SdniManager;
 import org.opendaylight.controller.switchmanager.ISwitchManager;
-import org.opendaylight.controller.statisticsmanager.IStatisticsManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,33 +175,33 @@ public class SdniNorthbound {
             @PathParam("containerName") String containerName) {
 
         LOGGER.debug("inside getTopologyDetails of sdni northbound");
-     	LOGGER.info("inside getTopologyDetails of sdni northbound");
-	if (!isValidContainer(containerName)) {
+        LOGGER.info("inside getTopologyDetails of sdni northbound");
+    if (!isValidContainer(containerName)) {
             throw new ResourceNotFoundException(CONTAINER + containerName
                     + " does not exist.");
         }
         if (!NorthboundUtils.isAuthorized(getUserName(), containerName,
                 Privilege.WRITE, this)) {
-	    LOGGER.info("not authorized");
+        LOGGER.info("not authorized");
             throw new UnauthorizedException(NOT_AUTHORIZED_MESSAGE + containerName);
         }
         ISwitchManager switchManager = getIfSwitchManagerService(containerName);
         if (switchManager == null) {
-	    LOGGER.info("switchManager not availbale");
+        LOGGER.info("switchManager not availbale");
             throw new ServiceUnavailableException("Switch Manager "
                     + RestMessages.SERVICEUNAVAILABLE.toString());
         }
         IfIptoHost hostTracker = (IfIptoHost) ServiceHelper.getInstance(
                 IfIptoHost.class, containerName, this);
         if (hostTracker == null) {
-	    LOGGER.info("hostTracker not available");
+        LOGGER.info("hostTracker not available");
             throw new ServiceUnavailableException("Host Tracker "
                     + RestMessages.SERVICEUNAVAILABLE.toString());
         }
-	LOGGER.info("after populated NetworkCapabilities data");
-	nc = sdnimanager.getTopologyDetails(containerName);
-	LOGGER.info("nc property"+ nc.getIpAddressList());
-	return nc;
+    LOGGER.info("after populated NetworkCapabilities data");
+    nc = sdnimanager.getTopologyDetails(containerName);
+    LOGGER.info("nc property"+ nc.getIpAddressList());
+    return nc;
 }
 
   /**
@@ -212,31 +210,31 @@ public class SdniNorthbound {
      * @param containerName
      * @return NetworkCapabilitiesQOS Example: Request URL:
      *         http://localhost:8080/controller/nb/v2/sdni/default/qos
-     *         Response Body in JSON:        	      
-     *		[{"node":"00:00:00:00:00:00:00:04","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},          
-     *		{"node":"00:00:00:00:00:00:00:04","port":"1","receivePackets":61,"transmitPackets":63,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},	                 
-     *		{"node":"00:00:00:00:00:00:00:04","port":"2","receivePackets":47,"transmitPackets":47,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0}, 
-     *		{"node":"00:00:00:00:00:00:00:04","port":"3","receivePackets":62,"transmitPackets":64,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:06","port":"4","receivePackets":70,"transmitPackets":72,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:06","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:06","port":"1","receivePackets":27,"transmitPackets":290,"collisionCount":0,
-     *		"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:06","port":"2","receivePackets":23,"transmitPackets":285,"collisionCount":0,
-     *		"receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:06","port":"3","receivePackets":61,"transmitPackets":55,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:05","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},
-     *		"node":"00:00:00:00:00:00:00:05","port":"1","receivePackets":51,"transmitPackets":51,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0},
-     *		{"node":"00:00:00:00:00:00:00:05","port":"2","receivePackets":52,"transmitPackets":54,"collisionCount":0,"receiveFrameError":0,
-     *		"receiveOverRunError":0,"receiveCrcError":0}]
+     *         Response Body in JSON:
+     *      [{"node":"00:00:00:00:00:00:00:04","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:04","port":"1","receivePackets":61,"transmitPackets":63,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:04","port":"2","receivePackets":47,"transmitPackets":47,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:04","port":"3","receivePackets":62,"transmitPackets":64,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:06","port":"4","receivePackets":70,"transmitPackets":72,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:06","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:06","port":"1","receivePackets":27,"transmitPackets":290,"collisionCount":0,
+     *      "receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:06","port":"2","receivePackets":23,"transmitPackets":285,"collisionCount":0,
+     *      "receiveFrameError":0,"receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:06","port":"3","receivePackets":61,"transmitPackets":55,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:05","port":"0","receivePackets":0,"transmitPackets":0,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      "node":"00:00:00:00:00:00:00:05","port":"1","receivePackets":51,"transmitPackets":51,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0},
+     *      {"node":"00:00:00:00:00:00:00:05","port":"2","receivePackets":52,"transmitPackets":54,"collisionCount":0,"receiveFrameError":0,
+     *      "receiveOverRunError":0,"receiveCrcError":0}]
   **/
 
     @Path("/{containerName}/qos")
@@ -247,21 +245,21 @@ public class SdniNorthbound {
             @PathParam("containerName") String containerName) {
 
         LOGGER.debug("inside getQOSDetails of sdni northbound");
-     	LOGGER.info("inside getQOSDetails of sdni northbound");
-	if (!isValidContainer(containerName)) {
+        LOGGER.info("inside getQOSDetails of sdni northbound");
+    if (!isValidContainer(containerName)) {
             throw new ResourceNotFoundException(CONTAINER + containerName
                     + " does not exist.");
         }
         if (!NorthboundUtils.isAuthorized(getUserName(), containerName,
                 Privilege.WRITE, this)) {
-	    LOGGER.info("not authorized");
+        LOGGER.info("not authorized");
             throw new UnauthorizedException(NOT_AUTHORIZED_MESSAGE + containerName);
         }
-        
-	LOGGER.info("after populated NetworkCapabilitiesQOS data");
-	list = sdnimanager.getQOSDetails(containerName);
-	LOGGER.info("list property"+ list);
-	return list;
+
+    LOGGER.info("after populated NetworkCapabilitiesQOS data");
+    list = sdnimanager.getQOSDetails(containerName);
+    LOGGER.info("list property"+ list);
+    return list;
 }
 
 /**
