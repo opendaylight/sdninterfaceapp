@@ -33,10 +33,10 @@ public class NetworkCapabilitiesQOS {
     private long receiveOverRunError;
     @XmlElement
     private long receiveCrcError;
-    
+
     public NetworkCapabilitiesQOS() {
     }
-     
+
     public String getNode() {
         return node;
     }
@@ -44,7 +44,7 @@ public class NetworkCapabilitiesQOS {
     public void setNode(String node) {
         this.node = node;
     }
-    
+
     public String getPort() {
         return port;
     }
@@ -52,7 +52,7 @@ public class NetworkCapabilitiesQOS {
     public void setPort(String port) {
         this.port = port;
     }
-    
+
     public long getReceivePackets() {
         return receivePackets;
     }
@@ -60,7 +60,7 @@ public class NetworkCapabilitiesQOS {
     public void setReceivePackets(long receivePackets) {
         this.receivePackets = receivePackets;
     }
-    
+
     public long getTransmitPackets() {
         return transmitPackets;
     }
@@ -68,7 +68,7 @@ public class NetworkCapabilitiesQOS {
     public void setTransmitPackets(long transmitPackets) {
         this.transmitPackets = transmitPackets;
     }
-    
+
 
     public long getCollisionCount() {
         return collisionCount;
@@ -97,12 +97,12 @@ public class NetworkCapabilitiesQOS {
     public long getReceiveCrcError() {
         return receiveCrcError;
     }
-    
+
     public void setReceiveCrcError(long receiveCrcErrors) {
         this.receiveCrcError = receiveCrcErrors;
     }
-    
-    
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -114,7 +114,7 @@ public class NetworkCapabilitiesQOS {
         sb.append(", receiveFrameError ").append(receiveFrameError+ "");
         sb.append(", receiveOverRunError ").append(receiveOverRunError+ "");
         sb.append(", receiveCrcError ").append(receiveCrcError+ "");
-       
+
         return sb.toString();
     }
 }

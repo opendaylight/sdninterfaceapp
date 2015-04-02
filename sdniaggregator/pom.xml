@@ -75,15 +75,16 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            	<Import-Package>org.opendaylight.controller.sal.core,
+            <Import-Package>
+              org.opendaylight.controller.sal.core,
               org.opendaylight.controller.sal.utils,
-	      org.opendaylight.controller.sal.reader,
+              org.opendaylight.controller.sal.reader,
               org.opendaylight.controller.hosttracker,
               org.opendaylight.controller.hosttracker.hostAware,
               org.opendaylight.controller.sal.packet.address,
               org.opendaylight.controller.sal.action,
               org.opendaylight.controller.switchmanager,
-	      org.opendaylight.controller.statisticsmanager,
+              org.opendaylight.controller.statisticsmanager,
               org.opendaylight.controller.clustering.services,
               org.opendaylight.controller.topologymanager,
               org.apache.felix.dm,
@@ -105,8 +106,11 @@
               org.opendaylight.controller.sal.match,
               org.opendaylight.controller.sal.packet,
               org.opendaylight.controller.sal.routing,
-              org.opendaylight.controller.sal.topology</Import-Package>
-		<Export-Package>org.opendaylight.controller.sdniaggregator</Export-Package>
+              org.opendaylight.controller.sal.topology
+            </Import-Package>
+            <Export-Package>
+              org.opendaylight.controller.sdniaggregator
+            </Export-Package>
           </instructions>
           <manifestLocation>${project.basedir}/META-INF</manifestLocation>
         </configuration>

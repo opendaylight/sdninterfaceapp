@@ -8,7 +8,6 @@
 
 package org.opendaylight.controller.sdniaggregator;
 
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -128,15 +127,15 @@ public class SdniManager {
                     }
                 }
             }
-	List<String> link = this.nwCapabilities.getLink();
-	List<String> bandwidth = this.nwCapabilities.getBandwidth();
-	if(bandwidth.isEmpty()){
-		if(!(link.isEmpty())){
-			for(String eachLink: link){
-				this.nwCapabilities.addBandwidth("10Gbps");
-			}
-		}
-	}
+    List<String> link = this.nwCapabilities.getLink();
+    List<String> bandwidth = this.nwCapabilities.getBandwidth();
+    if(bandwidth.isEmpty()){
+        if(!(link.isEmpty())){
+            for(String eachLink: link){
+                this.nwCapabilities.addBandwidth("10Gbps");
+            }
+        }
+    }
 
         }
         return SUCCESS;
@@ -241,8 +240,8 @@ public class SdniManager {
             statistics.add(portStat);
         }
 
-	NodeConnector nodeConnector;
-	String port;
+    NodeConnector nodeConnector;
+    String port;
         long receivePackets;
         long transmitPackets;
         long receiveFrameError;
@@ -250,35 +249,35 @@ public class SdniManager {
         long receiveCrcError;
         long collisionCount;
 
-	for (PortStatistics ps : statistics) {
-		Node node = ps.getNode();
-		String nodeName = "";
-            	nodeName = node.toString().replace("OF|", "");
+    for (PortStatistics ps : statistics) {
+        Node node = ps.getNode();
+        String nodeName = "";
+                nodeName = node.toString().replace("OF|", "");
 
-		List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
-		for(NodeConnectorStatistics nc : nodeConnectorStats ) {
-			nodeConnector = nc.getNodeConnector();
-			port = nodeConnector.getNodeConnectorIDString();
-                	receivePackets = nc.getReceivePacketCount();
-                	transmitPackets = nc.getTransmitPacketCount();
-               		receiveFrameError = nc.getReceiveFrameErrorCount();
-                	receiveOverRunError = nc.getReceiveOverRunErrorCount();
-                	receiveCrcError = nc.getReceiveCRCErrorCount();
-                	collisionCount = nc.getCollisionCount();
+        List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
+        for(NodeConnectorStatistics nc : nodeConnectorStats ) {
+            nodeConnector = nc.getNodeConnector();
+            port = nodeConnector.getNodeConnectorIDString();
+                    receivePackets = nc.getReceivePacketCount();
+                    transmitPackets = nc.getTransmitPacketCount();
+                    receiveFrameError = nc.getReceiveFrameErrorCount();
+                    receiveOverRunError = nc.getReceiveOverRunErrorCount();
+                    receiveCrcError = nc.getReceiveCRCErrorCount();
+                    collisionCount = nc.getCollisionCount();
 
-			NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
+            NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
 
-		        ncq.setNode(nodeName);
-                	ncq.setPort(port);
-                	ncq.setReceivePackets(receivePackets);
-                	ncq.setTransmitPackets(transmitPackets);
-               		ncq.setReceiveFrameError(receiveFrameError);
-                	ncq.setReceiveOverRunError(receiveOverRunError);
-                	ncq.setReceiveCrcError(receiveCrcError);
-     			ncq.setCollisionCount(collisionCount);
-                	list.add(ncq);
-            	}
-	   }
+                ncq.setNode(nodeName);
+                    ncq.setPort(port);
+                    ncq.setReceivePackets(receivePackets);
+                    ncq.setTransmitPackets(transmitPackets);
+                    ncq.setReceiveFrameError(receiveFrameError);
+                    ncq.setReceiveOverRunError(receiveOverRunError);
+                    ncq.setReceiveCrcError(receiveCrcError);
+                ncq.setCollisionCount(collisionCount);
+                    list.add(ncq);
+                }
+       }
          log.info("Inside Statistics manager - Node Connector Statistics List:" +list);
          return SUCCESS;
        }
@@ -293,7 +292,7 @@ public class SdniManager {
         // Retrieve Controller's IP address
         this.nwCapabilities.addController(findIpAddress());
         String result = "";
-	String result1 = "";
+    String result1 = "";
         String clustering = System.getProperty("supernodes", loopbackAddress);
 
         log.info("system property: " + clustering);
@@ -315,7 +314,7 @@ public class SdniManager {
                 return null;
             }
 
-	log.info("this.nwCapabilities"+this.nwCapabilities.getController());
+    log.info("this.nwCapabilities"+this.nwCapabilities.getController());
         } else {
             log.info("inside accessing clustering and connection manager");
             result = getClusteredControllers(containerName);
@@ -329,7 +328,7 @@ public class SdniManager {
         // Retrieve Controller's IP address
         this.nwCapabilities.addController(findIpAddress());
         String result = "";
-	String clustering = System.getProperty("supernodes", loopbackAddress);
+    String clustering = System.getProperty("supernodes", loopbackAddress);
 
         log.info("system property: " + clustering);
         if (clustering.equals("127.0.0.1")) {
@@ -354,7 +353,7 @@ public class SdniManager {
      * if controller is coordinator
      * @return List<ClusterBean>
      */
-	public String getClusteredControllersQOS(String containerName) {
+    public String getClusteredControllersQOS(String containerName) {
 
         IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
                 .getGlobalInstance(IClusterGlobalServices.class, this);
@@ -366,14 +365,14 @@ public class SdniManager {
         if (connectionManager == null) {
             return null;
         }
-	IStatisticsManager statisticsManager = (IStatisticsManager) ServiceHelper
+    IStatisticsManager statisticsManager = (IStatisticsManager) ServiceHelper
                 .getInstance(IStatisticsManager.class, containerName, this);
         if (statisticsManager == null) {
             return null;
         }
 
         NodeConnector nodeConnector;
-	String port;
+    String port;
         long receivePackets;
         long transmitPackets;
         long receiveFrameError;
@@ -391,42 +390,42 @@ public class SdniManager {
                 if (connectedNodes == null) {
                     return "not success";
                 }
-		List<PortStatistics> statistics = new ArrayList<PortStatistics>();
-       		for (Node node : connectedNodes) {
-            		List<NodeConnectorStatistics> stat = statisticsManager.getNodeConnectorStatistics(node);
-            		PortStatistics portStat = new PortStatistics(node, stat);
-            		statistics.add(portStat);
-        	}
-		for (PortStatistics ps : statistics) {
-			Node node = ps.getNode();
-			String nodeName = "";
-            		nodeName = node.toString().replace("OF|", "");
+        List<PortStatistics> statistics = new ArrayList<PortStatistics>();
+            for (Node node : connectedNodes) {
+                    List<NodeConnectorStatistics> stat = statisticsManager.getNodeConnectorStatistics(node);
+                    PortStatistics portStat = new PortStatistics(node, stat);
+                    statistics.add(portStat);
+            }
+        for (PortStatistics ps : statistics) {
+            Node node = ps.getNode();
+            String nodeName = "";
+                    nodeName = node.toString().replace("OF|", "");
 
-			List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
-			for(NodeConnectorStatistics nc : nodeConnectorStats ) {
-				nodeConnector = nc.getNodeConnector();
-				port = nodeConnector.getNodeConnectorIDString();
-                		receivePackets = nc.getReceivePacketCount();
-                		transmitPackets = nc.getTransmitPacketCount();
-               			receiveFrameError = nc.getReceiveFrameErrorCount();
-                		receiveOverRunError = nc.getReceiveOverRunErrorCount();
-                		receiveCrcError = nc.getReceiveCRCErrorCount();
-                		collisionCount = nc.getCollisionCount();
+            List<NodeConnectorStatistics>  nodeConnectorStats = ps.getPortStats();
+            for(NodeConnectorStatistics nc : nodeConnectorStats ) {
+                nodeConnector = nc.getNodeConnector();
+                port = nodeConnector.getNodeConnectorIDString();
+                        receivePackets = nc.getReceivePacketCount();
+                        transmitPackets = nc.getTransmitPacketCount();
+                        receiveFrameError = nc.getReceiveFrameErrorCount();
+                        receiveOverRunError = nc.getReceiveOverRunErrorCount();
+                        receiveCrcError = nc.getReceiveCRCErrorCount();
+                        collisionCount = nc.getCollisionCount();
 
-				NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
+                NetworkCapabilitiesQOS ncq = new NetworkCapabilitiesQOS();
 
-		      		ncq.setNode(nodeName);
-                		ncq.setPort(port);
-                		ncq.setReceivePackets(receivePackets);
-                		ncq.setTransmitPackets(transmitPackets);
-               			ncq.setReceiveFrameError(receiveFrameError);
-                		ncq.setReceiveOverRunError(receiveOverRunError);
-                		ncq.setReceiveCrcError(receiveCrcError);
-     				ncq.setCollisionCount(collisionCount);
-                		list.add(ncq);
-            		}
-	   	}
-	    }
+                    ncq.setNode(nodeName);
+                        ncq.setPort(port);
+                        ncq.setReceivePackets(receivePackets);
+                        ncq.setTransmitPackets(transmitPackets);
+                        ncq.setReceiveFrameError(receiveFrameError);
+                        ncq.setReceiveOverRunError(receiveOverRunError);
+                        ncq.setReceiveCrcError(receiveCrcError);
+                    ncq.setCollisionCount(collisionCount);
+                        list.add(ncq);
+                    }
+        }
+        }
         }
         return SUCCESS;
      }
@@ -436,7 +435,7 @@ public class SdniManager {
      * if controller is coordinator
      * @return List<ClusterBean>
      */
-	public String getClusteredControllers(String containerName) {
+    public String getClusteredControllers(String containerName) {
 
         IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
                 .getGlobalInstance(IClusterGlobalServices.class, this);
