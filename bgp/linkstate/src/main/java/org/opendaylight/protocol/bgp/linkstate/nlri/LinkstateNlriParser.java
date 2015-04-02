@@ -50,8 +50,6 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mult
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.destination.c.linkstate.destination.LinkSdniDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.destination.c.linkstate.destination.LinkSdniDescriptorsBuilder;
 
 /**
  * Parser and serializer for Linkstate NLRI.
@@ -90,7 +88,7 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
             .setLocalNodeDescriptors(localDescriptors)
             .setRemoteNodeDescriptors(remoteDescriptors)
             .setLinkDescriptors(LinkNlriParser.parseLinkDescriptors(buffer.slice()))
-			.setLinkSdniDescriptors(LinkNlriParser.parseLinkSdniDescriptors(buffer.slice())).build());
+            .setLinkSdniDescriptors(LinkNlriParser.parseLinkSdniDescriptors(buffer.slice())).build());
         return remote;
     }
 
@@ -225,17 +223,17 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
                 LinkNlriParser.serializeLinkDescriptors(lCase.getLinkDescriptors(), nlriByteBuf);
             }
             nlriType = NlriType.Link;
-		//Serialize Link-Sdni descriptors
+            //Serialize Link-Sdni descriptors
             if(isSdniOn){
-                    final byte[] sdniData = LinkNlriParser.serializeLinkSdniDescriptors();
-                    buffer.writeShort(SDNI_LINK_STATE);
-                    buffer.writeShort(sdniData.length);
-                    buffer.writeBytes(sdniData);
-                   // serializeLinkSdniDescriptors(buffer, destination.getLinkSdniDescriptors());
-                    final byte[] sdniqosData = LinkNlriParser.serializeLinkSdniQOSDescriptors();
-                    buffer.writeShort(SDNI_QOS_STATE);
-                    buffer.writeShort(sdniqosData.length);
-                    buffer.writeBytes(sdniqosData);
+                final byte[] sdniData = LinkNlriParser.serializeLinkSdniDescriptors();
+                buffer.writeShort(SDNI_LINK_STATE);
+                buffer.writeShort(sdniData.length);
+                buffer.writeBytes(sdniData);
+                // serializeLinkSdniDescriptors(buffer, destination.getLinkSdniDescriptors());
+                final byte[] sdniqosData = LinkNlriParser.serializeLinkSdniQOSDescriptors();
+                buffer.writeShort(SDNI_QOS_STATE);
+                buffer.writeShort(sdniqosData.length);
+                buffer.writeBytes(sdniqosData);
             }
         } else if (ot instanceof NodeCase) {
             final NodeCase nCase = (NodeCase)destination.getObjectType();
