@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_fc42290f",
+        "filename": "project.config",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 2759
+      },
+      "writtenOn": "2015-04-06T15:10:30Z",
+      "side": 1,
+      "message": "Definitely don\u0027t want Non-interactive users to have this permission but I will set the permissions for the sdninterfaceapp users.",
+      "revId": "de34757a1f0c9f42a476b7143a7b2183e1468883",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
