@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1422540590843
+Bnd-LastModified: 1429778518968
 Build-Jdk: 1.7.0_65
 Built-By: root
 Bundle-ManifestVersion: 2
@@ -11,7 +11,7 @@ Export-Package: org.opendaylight.controller.sdniaggregator;uses:="com.fa
  sterxml.jackson.annotation,javax.xml.bind.annotation,org.opendaylight.c
  ontroller.hosttracker.hostAware,org.opendaylight.controller.sal.core,or
  g.opendaylight.controller.sal.reader,org.opendaylight.controller.sal.ut
- ils";version="0.6.0.SNAPSHOT"
+ ils";version="0.6.0"
 Import-Package: org.opendaylight.controller.sal.core;version="[0.9,1)",o
  rg.opendaylight.controller.sal.utils;version="[0.9,1)",org.opendaylight
  .controller.sal.reader;version="[0.9,1)",org.opendaylight.controller.ho
@@ -24,15 +24,16 @@ Import-Package: org.opendaylight.controller.sal.core;version="[0.9,1)",o
  sion="[1.7,2)",javax.xml.bind.annotation,com.fasterxml.jackson.annotati
  on;version="[2.3,3)",org.opendaylight.controller.connectionmanager;vers
  ion="[0.2,1)",org.opendaylight.controller.sal.topology;version="[0.9,1)
- ",org.apache.felix.dm;version="[3.0,4)",javax.ws.rs,javax.ws.rs.core,or
- g.opendaylight.controller.sal.match;version="[0.9,1)",org.opendaylight.
- controller.forwardingrulesmanager;version="[0.7,1)",com.fasterxml.jacks
- on.databind;version="[2.3,3)",javax.xml.bind,com.fasterxml.jackson.core
- ;version="[2.3,3)",org.opendaylight.controller.sal.flowprogrammer;versi
- on="[0.9,1)",org.osgi.service.component;version="[1.2,2)",org.opendayli
- ght.controller.sal.packet;version="[0.9,1)",org.opendaylight.controller
- .sal.action;version="[0.9,1)",com.fasterxml.jackson.jaxrs.json;version=
- "[2.3,3)",com.fasterxml.jackson.jaxrs.base;version="[2.3,3)",com.faster
- xml.jackson.core.type;version="[2.3,3)",org.opendaylight.controller.sal
- .routing;version="[0.9,1)"
-Tool: Bnd-2.1.0.20130426-122213
+ ",org.opendaylight.controller.forwardingrulesmanager;version="[0.7,1)",
+ com.fasterxml.jackson.jaxrs.json;version="[2.3,3)",javax.ws.rs,javax.xm
+ l.bind,org.opendaylight.controller.sal.action;version="[0.9,1)",org.osg
+ i.service.component;version="[1.2,2)",com.fasterxml.jackson.databind;ve
+ rsion="[2.3,3)",com.fasterxml.jackson.jaxrs.base;version="[2.3,3)",org.
+ opendaylight.controller.sal.packet;version="[0.9,1)",org.opendaylight.c
+ ontroller.sal.flowprogrammer;version="[0.9,1)",org.opendaylight.control
+ ler.sal.routing;version="[0.9,1)",org.apache.felix.dm;version="[3.0,4)"
+ ,org.opendaylight.controller.sal.match;version="[0.9,1)",com.fasterxml.
+ jackson.core;version="[2.3,3)",javax.ws.rs.core,com.fasterxml.jackson.c
+ ore.type;version="[2.3,3)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+Tool: Bnd-2.3.0.201405100607

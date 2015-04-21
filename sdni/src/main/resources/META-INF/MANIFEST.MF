@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1422540575330
+Bnd-LastModified: 1429778527292
 Build-Jdk: 1.7.0_65
 Built-By: root
 Bundle-ManifestVersion: 2
@@ -20,13 +20,14 @@ Import-Package: org.opendaylight.controller.sal.utils;version="[0.9,1)",
  ound.commons.utils;version="[0.5,1)",org.opendaylight.controller.sal.au
  thorization;version="[0.9,1)",javax.ws.rs;version="[1.1,2)",javax.ws.rs
  .core;version="[1.1,2)",org.slf4j;version="[1.7,2)",org.opendaylight.co
- ntroller.sdniaggregator;version="[0.6,1)",org.opendaylight.controller.s
- al.core;version="[0.9,1)",com.sun.jersey.spi.container.servlet,org.open
- daylight.controller.hosttracker.hostAware;version="[0.6,1)",org.openday
- light.controller.statisticsmanager;version="[0.6,1)",org.opendaylight.c
- ontroller.usermanager;version="[0.5,1)",org.apache.commons.logging
+ ntroller.sdniaggregator;version="[0.6,1)",com.sun.jersey.spi.container.
+ servlet,org.opendaylight.controller.sal.core;version="[0.9,1)",org.open
+ daylight.controller.hosttracker.hostAware;version="[0.6,1)",org.apache.
+ commons.logging,org.opendaylight.controller.usermanager;version="[0.5,1
+ )",org.opendaylight.controller.statisticsmanager;version="[0.6,1)"
 Jaxrs-Resources: ,org.opendaylight.controller.sdnimanager.northbound.Sdn
  iNorthbound
 Originally-Created-By: Apache Maven Bundle Plugin
-Tool: Bnd-2.1.0.20130426-122213
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+Tool: Bnd-2.3.0.201405100607
 Web-ContextPath: /controller/nb/v2/sdni
