@@ -25,6 +25,7 @@
         <bundle>mvn:org.opendaylight.controller/switchmanager/0.8.0-SNAPSHOT</bundle>
         <bundle>mvn:org.opendaylight.controller/topologymanager/0.5.0-SNAPSHOT</bundle>
         <bundle>mvn:org.opendaylight.controller/containermanager/0.6.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.controller/statisticsmanager/0.6.0-SNAPSHOT</bundle>
         <bundle>mvn:org.opendaylight.sdninterfaceapp/sdniaggregator/0.6.0-SNAPSHOT</bundle>
         <bundle>mvn:org.opendaylight.sdninterfaceapp/sdni/0.6.0-SNAPSHOT</bundle>
     </feature>
