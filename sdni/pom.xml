@@ -81,19 +81,34 @@
           <manifestLocation>${project.basedir}/src/main/resources/META-INF</manifestLocation>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.enunciate</groupId>
-        <artifactId>maven-enunciate-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.opendaylight.controller</groupId>
-            <artifactId>sal</artifactId>
-            <version>${sal.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
     </plugins>
   </build>
+
+  <!-- enunciate plugin does not work with JDK8 onwards -->
+  <profiles>
+    <profile>
+      <id>non-java8</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.enunciate</groupId>
+            <artifactId>maven-enunciate-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.opendaylight.controller</groupId>
+                <artifactId>sal</artifactId>
+                <version>${sal.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <scm>
     <connection>scm:git:ssh://git.opendaylight.org:29418/controller.git</connection>
     <developerConnection>scm:git:ssh://git.opendaylight.org:29418/sdninterfaceapp.git</developerConnection>
