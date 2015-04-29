@@ -67,11 +67,14 @@
                      "md5-channel-factory" attribute set and then add a "password" attribute here.
                      Note that the peer has to have the same password configured, otherwise the
                      connection will not be established.
+                     If peer role is not present, default value "Ibgp" will be used (allowed values are also "Ebgp" and
+                     "RrClient").
                 <module>
                     <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-peer</type>
                     <name>example-bgp-peer</name>
                     <host>192.0.2.1</host>
                     <holdtimer>180</holdtimer>
+                    <peerRole>Ibgp<peerRole>
                     <rib>
                         <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:cfg">prefix:rib</type>
                         <name>example-bgp-rib</name>
@@ -101,6 +104,8 @@
                     <rib-id>example-bgp-rib</rib-id>
                     <local-as>64496</local-as>
                     <bgp-rib-id>192.0.2.2</bgp-rib-id>
+                    <!-- if cluster-id is not present, it's value is the same as bgp-id -->
+                    <!-- <cluster-id>192.0.2.3</cluster-id> -->
                     <local-table>
                         <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-table-type</type>
                         <name>ipv4-unicast</name>
@@ -127,7 +132,7 @@
                     </data-provider>
                     <dom-data-provider>
                         <type xmlns:sal="urn:opendaylight:params:xml:ns:yang:controller:md:sal:dom">sal:dom-async-data-broker</type>
-                        <name>pingpong-broker</name>
+                        <name>inmemory-data-broker</name>
                     </dom-data-provider>
                     <codec-tree-factory>
                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-codec-tree-factory</type>

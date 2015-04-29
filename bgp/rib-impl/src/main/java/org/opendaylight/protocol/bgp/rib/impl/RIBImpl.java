@@ -16,6 +16,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -33,12 +34,15 @@ import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionChain;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionChainListener;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataBroker;
+import org.opendaylight.controller.md.sal.dom.api.DOMDataBrokerExtension;
+import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeChangeService;
 import org.opendaylight.controller.md.sal.dom.api.DOMTransactionChain;
 import org.opendaylight.protocol.bgp.rib.DefaultRibReference;
 import org.opendaylight.protocol.bgp.rib.impl.spi.AdjRIBsOut;
 import org.opendaylight.protocol.bgp.rib.impl.spi.AdjRIBsOutRegistration;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPDispatcher;
 import org.opendaylight.protocol.bgp.rib.impl.spi.RIB;
+import org.opendaylight.protocol.bgp.rib.impl.spi.RIBSupportContextRegistry;
 import org.opendaylight.protocol.bgp.rib.spi.AbstractAdjRIBs;
 import org.opendaylight.protocol.bgp.rib.spi.AdjRIBsIn;
 import org.opendaylight.protocol.bgp.rib.spi.BGPObjectComparator;
@@ -53,21 +57,21 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.prefixes.DestinationIpv4Builder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.prefixes.destination.ipv4.Ipv4Prefixes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.prefixes.destination.ipv4.Ipv4PrefixesBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationIpv4CaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationIpv4CaseBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Attributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.Nlri;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes1;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes2;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpReachNlri;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpReachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlri;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.BgpRib;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.RibId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.Route;
@@ -78,18 +82,25 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.LocRibBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.ClusterIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.UnicastSubsequentAddressFamily;
 import org.opendaylight.yangtools.binding.data.codec.api.BindingCodecTreeFactory;
+import org.opendaylight.yangtools.sal.binding.generator.impl.GeneratedClassLoadingStrategy;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.opendaylight.yangtools.yang.common.QName;
+import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
+import org.opendaylight.yangtools.yang.model.api.SchemaContext;
+import org.opendaylight.yangtools.yang.model.api.SchemaContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ThreadSafe
-public final class RIBImpl extends DefaultRibReference implements AutoCloseable, RIB, TransactionChainListener {
+public final class RIBImpl extends DefaultRibReference implements AutoCloseable, RIB, TransactionChainListener, SchemaContextListener {
     private static final Logger LOG = LoggerFactory.getLogger(RIBImpl.class);
     private static final Update EOR = new UpdateBuilder().build();
     private static final TablesKey IPV4_UNICAST_TABLE = new TablesKey(Ipv4AddressFamily.class, UnicastSubsequentAddressFamily.class);
+    private static final QName RIB_ID_QNAME = QName.cachedReference(QName.create(Rib.QNAME, "id"));
 
     /*
      * FIXME: performance: this needs to be turned into a Peer->offset map.
@@ -117,13 +128,18 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
     private final BindingTransactionChain chain;
     private final AsNumber localAs;
     private final Ipv4Address bgpIdentifier;
+    private final ClusterIdentifier clusterId;
     private final Set<BgpTableType> localTables;
+    private final Set<TablesKey> localTablesKeys;
     private final RIBTables tables;
     private final BlockingQueue<Peer> peers;
     private final DataBroker dataBroker;
     private final DOMDataBroker domDataBroker;
     private final RIBExtensionConsumerContext extensions;
-    private final BindingCodecTreeFactory codecFactory;
+    private final YangInstanceIdentifier yangRibId;
+    private final RIBSupportContextRegistryImpl ribContextRegistry;
+    private final EffectiveRibInWriter efWriter;
+    private final DOMDataBrokerExtension service;
 
     private final Runnable scheduler = new Runnable() {
         @Override
@@ -155,24 +171,27 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
         }
     };
 
-    public RIBImpl(final RibId ribId, final AsNumber localAs, final Ipv4Address localBgpId, final RIBExtensionConsumerContext extensions,
+    public RIBImpl(final RibId ribId, final AsNumber localAs, final Ipv4Address localBgpId, final Ipv4Address clusterId, final RIBExtensionConsumerContext extensions,
         final BGPDispatcher dispatcher, final ReconnectStrategyFactory tcpStrategyFactory, final BindingCodecTreeFactory codecFactory,
-        final ReconnectStrategyFactory sessionStrategyFactory, final DataBroker dps, final DOMDataBroker domDataBroker, final List<BgpTableType> localTables) {
+        final ReconnectStrategyFactory sessionStrategyFactory, final DataBroker dps, final DOMDataBroker domDataBroker, final List<BgpTableType> localTables, final GeneratedClassLoadingStrategy classStrategy) {
         super(InstanceIdentifier.create(BgpRib.class).child(Rib.class, new RibKey(Preconditions.checkNotNull(ribId))));
         this.chain = dps.createTransactionChain(this);
         this.localAs = Preconditions.checkNotNull(localAs);
         this.comparator = new BGPObjectComparator(localAs);
         this.bgpIdentifier = Preconditions.checkNotNull(localBgpId);
+        this.clusterId = (clusterId == null) ? new ClusterIdentifier(localBgpId) : new ClusterIdentifier(clusterId);
         this.dispatcher = Preconditions.checkNotNull(dispatcher);
         this.sessionStrategyFactory = Preconditions.checkNotNull(sessionStrategyFactory);
         this.tcpStrategyFactory = Preconditions.checkNotNull(tcpStrategyFactory);
         this.localTables = ImmutableSet.copyOf(localTables);
+        this.localTablesKeys = new HashSet<TablesKey>();
         this.tables = new RIBTables(extensions);
         this.peers = new LinkedBlockingQueue<>();
         this.dataBroker = dps;
         this.domDataBroker = Preconditions.checkNotNull(domDataBroker);
         this.extensions = Preconditions.checkNotNull(extensions);
-        this.codecFactory = codecFactory;
+        this.ribContextRegistry = RIBSupportContextRegistryImpl.create(extensions, codecFactory, classStrategy);
+        this.yangRibId = YangInstanceIdentifier.builder().node(BgpRib.QNAME).node(Rib.QNAME).nodeWithKey(Rib.QNAME, RIB_ID_QNAME, ribId.getValue()).build();
 
         LOG.debug("Instantiating RIB table {} at {}", ribId, getInstanceIdentifier());
 
@@ -185,6 +204,7 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
 
         for (final BgpTableType t : localTables) {
             final TablesKey key = new TablesKey(t.getAfi(), t.getSafi());
+            this.localTablesKeys.add(key);
             if (this.tables.create(trans, this, key) == null) {
                 LOG.debug("Did not create local table for unhandled table type {}", t);
             }
@@ -200,13 +220,29 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
             public void onFailure(final Throwable t) {
                 LOG.error("Failed to initiate RIB {}", getInstanceIdentifier(), t);
             }
+
         });
+
+        final PolicyDatabase pd  = new PolicyDatabase(localAs.getValue(), localBgpId, this.clusterId);
+
+        final DOMDataBrokerExtension service = this.domDataBroker.getSupportedExtensions().get(DOMDataTreeChangeService.class);
+        this.service = service;
+        this.efWriter = EffectiveRibInWriter.create(getService(), this.createPeerChain(this), getYangRibId(), pd, this.ribContextRegistry);
+        LOG.debug("Effective RIB created.");
+
+        for (final BgpTableType t : localTables) {
+            final TablesKey key = new TablesKey(t.getAfi(), t.getSafi());
+            // create locRibWriter for each table
+            LocRibWriter.create(this.ribContextRegistry, key, this.createPeerChain(this), getYangRibId(), localAs, getService(), pd);
+        }
     }
 
+    @Deprecated
     synchronized void initTables(final byte[] remoteBgpId) {
     }
 
     @Override
+    @Deprecated
     public synchronized void updateTables(final Peer peer, final Update message) {
         final AdjRIBsTransactionImpl trans = new AdjRIBsTransactionImpl(this.ribOuts, this.comparator, this.chain.newWriteOnlyTransaction());
 
@@ -227,16 +263,16 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
                         peer,
                         new MpUnreachNlriBuilder().setAfi(Ipv4AddressFamily.class).setSafi(UnicastSubsequentAddressFamily.class).setWithdrawnRoutes(
                             new WithdrawnRoutesBuilder().setDestinationType(
-                                new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationIpv4CaseBuilder().setDestinationIpv4(
+                                new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationIpv4CaseBuilder().setDestinationIpv4(
                                     new DestinationIpv4Builder().setIpv4Prefixes(prefixes).build()).build()).build()).build());
                 } else {
                     LOG.debug("Not removing objects from unhandled IPv4 Unicast");
                 }
             }
 
-            final PathAttributes attrs = message.getPathAttributes();
+            final Attributes attrs = message.getAttributes();
             if (attrs != null) {
-                final PathAttributes2 mpu = attrs.getAugmentation(PathAttributes2.class);
+                final Attributes2 mpu = attrs.getAugmentation(Attributes2.class);
                 if (mpu != null) {
                     final MpUnreachNlri nlri = mpu.getMpUnreachNlri();
                     final AdjRIBsIn<?, ?> ari = this.tables.get(new TablesKey(nlri.getAfi(), nlri.getSafi()));
@@ -280,7 +316,7 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
             }
 
             if (attrs != null) {
-                final PathAttributes1 mpr = attrs.getAugmentation(PathAttributes1.class);
+                final Attributes1 mpr = attrs.getAugmentation(Attributes1.class);
                 if (mpr != null) {
                     final MpReachNlri nlri = mpr.getMpReachNlri();
 
@@ -318,6 +354,7 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
         });
     }
 
+    @Deprecated
     @Override
     public synchronized void clearTable(final Peer peer, final TablesKey key) {
         final AdjRIBsIn<?, ?> ari = this.tables.get(key);
@@ -349,6 +386,7 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
     }
 
     @SuppressWarnings("unchecked")
+    @Deprecated
     protected <K, V extends Route> AdjRIBsIn<K, V> getTable(final TablesKey key) {
         return (AdjRIBsIn<K, V>) this.tables.get(key);
     }
@@ -391,6 +429,7 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
         return this.dispatcher;
     }
 
+    @Deprecated
     @Override
     public void initTable(final Peer bgpPeer, final TablesKey key) {
         // FIXME: BUG-196: support graceful restart
@@ -451,6 +490,19 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
         return 0;
     }
 
+    public Set<TablesKey> getLocalTablesKeys() {
+        return this.localTablesKeys;
+    }
+
+    public DOMDataTreeChangeService getService() {
+        return (DOMDataTreeChangeService) this.service;
+    }
+
+    @Override
+    public YangInstanceIdentifier getYangRibId() {
+        return this.yangRibId;
+    }
+
     @Override
     public DOMTransactionChain createPeerChain(final TransactionChainListener listener) {
         return this.domDataBroker.createTransactionChain(listener);
@@ -459,5 +511,15 @@ public final class RIBImpl extends DefaultRibReference implements AutoCloseable,
     @Override
     public RIBExtensionConsumerContext getRibExtensions() {
         return this.extensions;
+    }
+
+    @Override
+    public RIBSupportContextRegistry getRibSupportContext() {
+        return this.ribContextRegistry;
+    }
+
+    @Override
+    public void onGlobalContextUpdated(final SchemaContext context) {
+        this.ribContextRegistry.onSchemaContextUpdated(context);
     }
 }

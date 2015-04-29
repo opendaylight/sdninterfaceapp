@@ -229,7 +229,7 @@ module odl-bgp-rib-impl-cfg {
                 uses config:service-ref {
                     refine type {
                         mandatory true;
-                        config:required-identity mdsb:binding-async-data-broker;
+                        config:required-identity sal:dom-async-data-broker;
                     }
                 }
             }
@@ -310,6 +310,11 @@ module odl-bgp-rib-impl-cfg {
             leaf holdtimer {
                 type int16;
                 default 180;
+            }
+
+            leaf peer-role {
+                type rib:peer-role;
+                default ibgp;
             }
 
             leaf initiate-connection {
@@ -681,6 +686,12 @@ module odl-bgp-rib-impl-cfg {
                 description "Identifier of this RIB in local data store.";
                 type rib:rib-id;
                 mandatory true;
+            }
+
+            leaf cluster-id {
+                description "IBGP identifier. Needed by route reflection.";
+                reference "https://tools.ietf.org/html/rfc4456#section-7";
+                type inet:ipv4-address;
             }
         }
     }

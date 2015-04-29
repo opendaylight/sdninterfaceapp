@@ -343,7 +343,7 @@ module bgp-linkstate {
         }
     }
 
-    augment "/bgp-msg:update/bgp-msg:path-attributes/bgp-mp:mp-reach-nlri/bgp-mp:advertized-routes/bgp-mp:destination-type" {
+    augment "/bgp-msg:update/bgp-msg:attributes/bgp-mp:mp-reach-nlri/bgp-mp:advertized-routes/bgp-mp:destination-type" {
         case destination-linkstate-case {
             container destination-linkstate {
                 uses linkstate-destination;
@@ -351,7 +351,7 @@ module bgp-linkstate {
         }
     }
 
-    augment "/bgp-msg:update/bgp-msg:path-attributes/bgp-mp:mp-unreach-nlri/bgp-mp:withdrawn-routes/bgp-mp:destination-type" {
+    augment "/bgp-msg:update/bgp-msg:attributes/bgp-mp:mp-unreach-nlri/bgp-mp:withdrawn-routes/bgp-mp:destination-type" {
         case destination-linkstate-case {
             container destination-linkstate {
                 uses linkstate-destination;
@@ -579,6 +579,26 @@ module bgp-linkstate {
         }
     }
 
+    grouping linkstate-path-attribute {
+        choice link-state-attribute {
+            case node-attributes-case {
+                container node-attributes {
+                    uses node-state;
+                }
+            }
+            case link-attributes-case {
+                container link-attributes {
+                    uses link-state;
+                }
+            }
+            case prefix-attributes-case {
+                container prefix-attributes {
+                    uses prefix-state;
+                }
+            }
+        }
+    }
+
     grouping linkstate-routes {
         container linkstate-routes {
             list linkstate-route {
@@ -612,50 +632,16 @@ module bgp-linkstate {
                 uses linkstate;
 
                 uses bgp-rib:route {
-                    augment attributes {
-                        choice attribute-type {
-                            case node-case {
-                                container node-attributes {
-                                    uses node-state;
-                                }
-                            }
-                            case link-case {
-                                container link-attributes {
-                                    uses link-state;
-                                }
-                            }
-                            case prefix-case {
-                                container prefix-attributes {
-                                    uses prefix-state;
-                                }
-                            }
-                        }
+                    augment bgp-msg:attributes {
+                        uses linkstate-path-attribute;
                     }
                 }
             }
         }
     }
 
-    augment "/bgp-msg:update/bgp-msg:path-attributes" {
-        container linkstate-path-attribute {
-            choice link-state-attribute {
-                case node-attributes-case {
-                    container node-attributes {
-                        uses node-state;
-                    }
-                }
-                case link-attributes-case {
-                    container link-attributes {
-                        uses link-state;
-                    }
-                }
-                case prefix-attributes-case {
-                    container prefix-attributes {
-                        uses prefix-state;
-                    }
-                }
-            }
-        }
+    augment "/bgp-msg:update/bgp-msg:attributes" {
+        uses linkstate-path-attribute;
     }
 
     augment "/bgp-rib:application-rib/bgp-rib:tables/bgp-rib:routes" {
@@ -665,6 +651,24 @@ module bgp-linkstate {
     }
 
     augment "/bgp-rib:bgp-rib/bgp-rib:rib/bgp-rib:loc-rib/bgp-rib:tables/bgp-rib:routes" {
+        case linkstate-routes-case {
+            uses linkstate-routes;
+        }
+    }
+
+    augment "/bgp-rib:bgp-rib/bgp-rib:rib/bgp-rib:peer/bgp-rib:adj-rib-in/bgp-rib:tables/bgp-rib:routes" {
+        case linkstate-routes-case {
+            uses linkstate-routes;
+        }
+    }
+
+    augment "/bgp-rib:bgp-rib/bgp-rib:rib/bgp-rib:peer/bgp-rib:effective-rib-in/bgp-rib:tables/bgp-rib:routes" {
+        case linkstate-routes-case {
+            uses linkstate-routes;
+        }
+    }
+
+    augment "/bgp-rib:bgp-rib/bgp-rib:rib/bgp-rib:peer/bgp-rib:adj-rib-out/bgp-rib:tables/bgp-rib:routes" {
         case linkstate-routes-case {
             uses linkstate-routes;
         }
