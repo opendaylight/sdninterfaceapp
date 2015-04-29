@@ -14,6 +14,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.primitives.UnsignedInteger;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,7 +22,7 @@ import java.util.Set;
 
 /**
  * A map of Router identifier to an offset. Used to maintain a simple
- * offset-based lookup across multiple {@link RouteEntry} objects,
+ * offset-based lookup across multiple {@link AbstractRouteEntry} objects,
  * which share either contributors or consumers.
  *
  * We also provide utility reformat methods, which provide access to
@@ -86,7 +87,7 @@ final class OffsetMap {
 
     <T> T[] expand(final OffsetMap oldOffsets, final T[] oldArray, final int offset) {
         @SuppressWarnings("unchecked")
-        final T[] ret = (T[]) new Object[this.routerIds.length];
+        final T[] ret = (T[]) Array.newInstance(oldArray.getClass().getComponentType(), this.routerIds.length);
         final int oldSize = oldOffsets.routerIds.length;
 
         System.arraycopy(oldArray, 0, ret, 0, offset);

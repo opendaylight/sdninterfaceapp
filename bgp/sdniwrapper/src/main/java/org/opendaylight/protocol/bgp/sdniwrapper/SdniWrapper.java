@@ -52,15 +52,13 @@ public class SdniWrapper {
     private static final Logger LOG = LoggerFactory.getLogger(SdniWrapper.class);
     private static final NetworkCapabilities networkData = new NetworkCapabilities();
     private static final List<NetworkCapabilitiesQOS> list = new ArrayList();
-    private final String QOS_URL = "http://localhost:8080/controller/nb/v2/sdni/default/qos";
-    private final String CONTROLLER_URL = "http://localhost:8080/controller/nb/v2/sdni/default/topology";
+    private final String QOS_URL = "http://localhost:8282/controller/nb/v2/sdni/default/qos";
+    private final String CONTROLLER_URL = "http://localhost:8282/controller/nb/v2/sdni/default/topology";
     public static Map peer_information = new HashMap();
     private static int peer_count = 0;
 
     private static final String JDBC_DRIVER = "org.sqlite.JDBC";
     private static final String DB_URL = "jdbc:sqlite:/home/lte/sdni/database/CONTROLLER_TOPOLOGY_DATABASE";
-    private static final String QOS_DB_URL = "jdbc:sqlite:/home/lte/sdni/database/CONTROLLER_QOS_DATABASE";
-
 
 
     /**
@@ -716,7 +714,7 @@ public class SdniWrapper {
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(QOS_DB_URL);
+            conn = DriverManager.getConnection(DB_URL);
 
             LOG.trace("sql connection established");
 
@@ -772,7 +770,7 @@ public class SdniWrapper {
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(QOS_DB_URL);
+            conn = DriverManager.getConnection(DB_URL);
             stmt = conn.createStatement();
 
             LOG.trace("sql connection established");

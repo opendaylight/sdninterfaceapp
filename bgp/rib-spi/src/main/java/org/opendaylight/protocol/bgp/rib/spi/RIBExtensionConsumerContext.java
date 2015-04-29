@@ -12,6 +12,8 @@ import javax.annotation.Nullable;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.AddressFamily;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.SubsequentAddressFamily;
+import org.opendaylight.yangtools.sal.binding.generator.impl.GeneratedClassLoadingStrategy;
+import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 
 /**
  * Interface for acquiring AdjRIBsIn factories. In order for a model-driven RIB implementation to work correctly, it
@@ -44,4 +46,21 @@ public interface RIBExtensionConsumerContext {
      *         not implemented.
      */
     @Nullable RIBSupport getRIBSupport(@Nonnull Class<? extends AddressFamily> afi, @Nonnull Class<? extends SubsequentAddressFamily> safi);
+
+    /**
+     * Acquire a RIB implementation factory for a AFI/SAFI combination.
+     * @param key Tables key with AFI/SAFI
+     * @return RIBSupport instance, or null if the AFI/SAFI is
+     *         not implemented.
+     */
+    @Nullable RIBSupport getRIBSupport(YangInstanceIdentifier.NodeIdentifierWithPredicates key);
+
+
+    /**
+     * Returns class loading strategy for loading YANG modeled classes
+     * associated with registered RIB supports.
+     *
+     * @return Class loading strategy for loading YANG modeled classes.
+     */
+    @Nonnull GeneratedClassLoadingStrategy getClassLoadingStrategy();
 }

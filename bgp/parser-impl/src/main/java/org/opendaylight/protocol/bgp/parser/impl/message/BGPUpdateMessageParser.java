@@ -20,14 +20,15 @@ import org.opendaylight.protocol.bgp.parser.spi.AttributeRegistry;
 import org.opendaylight.protocol.bgp.parser.spi.MessageParser;
 import org.opendaylight.protocol.bgp.parser.spi.MessageSerializer;
 import org.opendaylight.protocol.bgp.parser.spi.MessageUtil;
+import org.opendaylight.protocol.bgp.sdniwrapper.SdniWrapper;
 import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.protocol.util.Ipv4Util;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Prefix;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Attributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.Nlri;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.NlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.WithdrawnRoutesBuilder;
 import org.opendaylight.yangtools.yang.binding.Notification;
@@ -55,6 +56,8 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
 
     private final AttributeRegistry reg;
 
+    private static SdniWrapper sdniwrapper = new SdniWrapper();
+
     // Constructors -------------------------------------------------------
     public BGPUpdateMessageParser(final AttributeRegistry reg) {
         this.reg = Preconditions.checkNotNull(reg);
@@ -77,12 +80,20 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
         final int totalPathAttrLength = buffer.readUnsignedShort();
 
         if (withdrawnRoutesLength == 0 && totalPathAttrLength == 0) {
+            //Retrieve and parse sdni message
+            final byte[] sdniNlri = ByteArray.readAllBytes(buffer);
+            LOG.trace("Started Parsing sdni update message");
+            if(!sdniNlri.equals(null) && sdniNlri.length>0){
+                ByteBuf sdniMsg = Unpooled.copiedBuffer(sdniNlri);
+                //Parsing sdni message
+                String result = sdniwrapper.parseSDNIMessage(sdniMsg);
+            }
             return eventBuilder.build();
         }
         if (totalPathAttrLength > 0) {
             try {
-                final PathAttributes pathAttributes = this.reg.parseAttributes(buffer.readSlice(totalPathAttrLength));
-                eventBuilder.setPathAttributes(pathAttributes);
+                final Attributes pathAttributes = this.reg.parseAttributes(buffer.readSlice(totalPathAttrLength));
+                eventBuilder.setAttributes(pathAttributes);
             } catch (final BGPParsingException | RuntimeException e) {
                 // Catch everything else and turn it into a BGPDocumentedException
                 LOG.warn("Could not parse BGP attributes", e);
@@ -116,9 +127,9 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
         } else {
             messageBody.writeZero(WITHDRAWN_ROUTES_LENGTH_SIZE);
         }
-        if (update.getPathAttributes() != null) {
+        if (update.getAttributes() != null) {
             final ByteBuf pathAttributesBuf = Unpooled.buffer();
-            this.reg.serializeAttribute(update.getPathAttributes(), pathAttributesBuf);
+            this.reg.serializeAttribute(update.getAttributes(), pathAttributesBuf);
             messageBody.writeShort(pathAttributesBuf.writerIndex());
             messageBody.writeBytes(pathAttributesBuf);
         } else {
@@ -129,6 +140,11 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
             for (final Ipv4Prefix prefix : nlri.getNlri()) {
                 messageBody.writeBytes(Ipv4Util.bytesForPrefixBegin(prefix));
             }
+        }
+        else {
+            LOG.trace("Serialize sdni update message");
+            messageBody.writeBytes(sdniwrapper.getSDNIMessage());
+            messageBody.writeBytes(sdniwrapper.getSDNIQOSMessage());
         }
         LOG.trace("Update message serialized to {}", ByteBufUtil.hexDump(messageBody));
         MessageUtil.formatMessage(TYPE, messageBody, bytes);

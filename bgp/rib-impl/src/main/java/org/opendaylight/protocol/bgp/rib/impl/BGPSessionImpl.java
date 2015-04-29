@@ -40,6 +40,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.NotifyBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Open;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.BgpParameters;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.OptionalCapabilities;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.bgp.parameters.optional.capabilities.CParameters;
@@ -56,7 +57,7 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
     private static final Logger LOG = LoggerFactory.getLogger(BGPSessionImpl.class);
 
     private static final Notification KEEP_ALIVE = new KeepaliveBuilder().build();
-
+    private static final Notification UPDATE = new UpdateBuilder().build();
     private static final int KA_TO_DEADTIMER_RATIO = 3;
 
     /**
@@ -112,21 +113,22 @@ public class BGPSessionImpl extends AbstractProtocolSession<Notification> implem
     private BGPSessionStats sessionStats;
 
     public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final BGPSessionPreferences localPreferences,
-            final BGPPeerRegistry peerRegitry) {
-        this(listener, channel, remoteOpen, localPreferences.getHoldTime(), peerRegitry);
+            final BGPPeerRegistry peerRegistry) {
+        this(listener, channel, remoteOpen, localPreferences.getHoldTime(), peerRegistry);
         this.sessionStats = new BGPSessionStats(remoteOpen, this.holdTimerValue, this.keepAlive, channel, Optional.of(localPreferences), this.tableTypes);
     }
 
     public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final int localHoldTimer,
-            final BGPPeerRegistry peerRegitry) {
+            final BGPPeerRegistry peerRegistry) {
         this.listener = Preconditions.checkNotNull(listener);
         this.channel = Preconditions.checkNotNull(channel);
         this.limiter = new ChannelOutputLimiter(this);
+        this.channel.pipeline().addLast(this.limiter);
         this.holdTimerValue = (remoteOpen.getHoldTimer() < localHoldTimer) ? remoteOpen.getHoldTimer() : localHoldTimer;
         LOG.info("BGP HoldTimer new value: {}", this.holdTimerValue);
         this.keepAlive = this.holdTimerValue / KA_TO_DEADTIMER_RATIO;
         this.asNumber = AsNumberUtil.advertizedAsNumber(remoteOpen);
-        this.peerRegistry = peerRegitry;
+        this.peerRegistry = peerRegistry;
 
         final Set<TablesKey> tts = Sets.newHashSet();
         final Set<BgpTableType> tats = Sets.newHashSet();

@@ -5,7 +5,6 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-
 package org.opendaylight.protocol.bgp.rib.impl;
 
 import com.google.common.base.MoreObjects;
@@ -29,8 +28,6 @@ import org.opendaylight.controller.md.sal.common.api.data.AsyncTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionChain;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionChainListener;
 import org.opendaylight.controller.md.sal.dom.api.DOMTransactionChain;
-import org.opendaylight.protocol.bgp.rib.RibReference;
-import org.opendaylight.protocol.bgp.rib.impl.spi.AdjRIBsOutRegistration;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionStatistics;
 import org.opendaylight.protocol.bgp.rib.impl.spi.RIB;
 import org.opendaylight.protocol.bgp.rib.impl.spi.ReusableBGPPeer;
@@ -41,18 +38,18 @@ import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.prefixes.DestinationIpv4Builder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.prefixes.destination.ipv4.Ipv4Prefixes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.prefixes.destination.ipv4.Ipv4PrefixesBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationIpv4CaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationIpv4CaseBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Attributes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes1;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes2;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlri;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpReachNlri;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpReachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlri;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.PeerRole;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily;
@@ -60,7 +57,6 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.type
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Class representing a peer. We have a single instance for each peer, which provides translation from BGP events into
@@ -72,32 +68,30 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
 
     @GuardedBy("this")
     private final Set<TablesKey> tables = new HashSet<>();
-    private final RIB rib;
-    private final String name;
-
     @GuardedBy("this")
     private BGPSession session;
     @GuardedBy("this")
     private byte[] rawIdentifier;
     @GuardedBy("this")
-    private AdjRIBsOutRegistration reg;
+    private DOMTransactionChain chain;
+    @GuardedBy("this")
+    private AdjRibInWriter ribWriter;
 
+    private final RIB rib;
+    private final String name;
     private BGPPeerRuntimeRegistrator registrator;
     private BGPPeerRuntimeRegistration runtimeReg;
     private long sessionEstablishedCounter = 0L;
 
-    @GuardedBy("this")
-    private AdjRibInWriter ribWriter;
-
     public BGPPeer(final String name, final RIB rib) {
+        this(name, rib, PeerRole.Ibgp);
+    }
+
+    public BGPPeer(final String name, final RIB rib, final PeerRole role) {
         this.rib = Preconditions.checkNotNull(rib);
         this.name = name;
-
-        final DOMTransactionChain chain = rib.createPeerChain(this);
-        // FIXME: make this configurable
-        final PeerRole role = PeerRole.Ibgp;
-
-        this.ribWriter = AdjRibInWriter.create(((RibReference)rib).getInstanceIdentifier().getKey(), role, chain);
+        this.chain = rib.createPeerChain(this);
+        this.ribWriter = AdjRibInWriter.create(rib.getYangRibId(), role, chain);
     }
 
     @Override
@@ -113,14 +107,14 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
             return;
         }
         final Update message = (Update) msg;
-        this.rib.updateTables(this, message);
+
         // update AdjRibs
-        final PathAttributes attrs = message.getPathAttributes();
+        final Attributes attrs = message.getAttributes();
         MpReachNlri mpReach = null;
         if (message.getNlri() != null) {
             mpReach = prefixesToMpReach(message);
-        } else if (attrs != null && attrs.getAugmentation(PathAttributes1.class) != null) {
-            mpReach = attrs.getAugmentation(PathAttributes1.class).getMpReachNlri();
+        } else if (attrs != null && attrs.getAugmentation(Attributes1.class) != null) {
+            mpReach = attrs.getAugmentation(Attributes1.class).getMpReachNlri();
         }
         if (mpReach != null) {
             this.ribWriter.updateRoutes(mpReach, attrs);
@@ -129,8 +123,8 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
         MpUnreachNlri mpUnreach = null;
         if (message.getWithdrawnRoutes() != null) {
             mpUnreach = prefixesToMpUnreach(message);
-        } else if (attrs != null && attrs.getAugmentation(PathAttributes2.class) != null) {
-            mpUnreach = attrs.getAugmentation(PathAttributes2.class).getMpUnreachNlri();
+        } else if (attrs != null && attrs.getAugmentation(Attributes2.class) != null) {
+            mpUnreach = attrs.getAugmentation(Attributes2.class).getMpUnreachNlri();
         }
         if (mpUnreach != null) {
             this.ribWriter.removeRoutes(mpUnreach);
@@ -153,8 +147,8 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
                 new AdvertizedRoutesBuilder().setDestinationType(
                     new DestinationIpv4CaseBuilder().setDestinationIpv4(
                         new DestinationIpv4Builder().setIpv4Prefixes(prefixes).build()).build()).build());
-        if (message.getPathAttributes() != null) {
-            b.setCNextHop(message.getPathAttributes().getCNextHop());
+        if (message.getAttributes() != null) {
+            b.setCNextHop(message.getAttributes().getCNextHop());
         }
         return b.build();
     }
@@ -172,30 +166,26 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
         }
         return new MpUnreachNlriBuilder().setAfi(Ipv4AddressFamily.class).setSafi(UnicastSubsequentAddressFamily.class).setWithdrawnRoutes(
                 new WithdrawnRoutesBuilder().setDestinationType(
-                    new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationIpv4CaseBuilder().setDestinationIpv4(
+                    new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationIpv4CaseBuilder().setDestinationIpv4(
                         new DestinationIpv4Builder().setIpv4Prefixes(prefixes).build()).build()).build()).build();
     }
 
     @Override
     public synchronized void onSessionUp(final BGPSession session) {
         LOG.info("Session with peer {} went up with tables: {}", this.name, session.getAdvertisedTableTypes());
-
         this.session = session;
         this.rawIdentifier = InetAddresses.forString(session.getBgpId().getValue()).getAddress();
 
         for (final BgpTableType t : session.getAdvertisedTableTypes()) {
             final TablesKey key = new TablesKey(t.getAfi(), t.getSafi());
-
             this.tables.add(key);
-            this.rib.initTable(this, key);
-        }
 
-        this.ribWriter = this.ribWriter.transform(session.getBgpId(), this.rib.getRibExtensions(), this.tables);
-
-        // Not particularly nice, but what can
-        if (session instanceof BGPSessionImpl) {
-            this.reg = this.rib.registerRIBsOut(this, new SessionRIBsOut((BGPSessionImpl) session));
+            // not particularly nice
+            if (session instanceof BGPSessionImpl) {
+                AdjRibOutListener.create(key, this.rib.getYangRibId(), ((RIBImpl)this.rib).getService(), this.rib.getRibSupportContext(), ((BGPSessionImpl) session).getLimiter());
+            }
         }
+        this.ribWriter = this.ribWriter.transform(RouterIds.createPeerId(session.getBgpId()), this.rib.getRibSupportContext(), this.tables, false);
         this.sessionEstablishedCounter++;
         if (this.registrator != null) {
             this.runtimeReg = this.registrator.register(this);
@@ -205,15 +195,7 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
     private synchronized void cleanup() {
         // FIXME: BUG-196: support graceful restart
         this.ribWriter.cleanTables(this.tables);
-        for (final TablesKey key : this.tables) {
-            this.rib.clearTable(this, key);
-        }
-
-        if (this.reg != null) {
-            this.reg.close();
-            this.reg = null;
-        }
-
+        this.chain.close();
         this.tables.clear();
     }
 
@@ -243,10 +225,6 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
     @Override
     public String getName() {
         return this.name;
-    }
-
-    protected RIB getRib() {
-        return this.rib;
     }
 
     @Override
@@ -318,12 +296,13 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
 
     @Override
     public void onTransactionChainFailed(final TransactionChain<?, ?> chain, final AsyncTransaction<?, ?> transaction, final Throwable cause) {
-        // TODO Auto-generated method stub
-
+        LOG.error("Transaction chain failed.", cause);
+        this.dropConnection();
+        this.chain = this.rib.createPeerChain(this);
     }
 
     @Override
     public void onTransactionChainSuccessful(final TransactionChain<?, ?> chain) {
-        // TODO Auto-generated method stub
+        LOG.debug("Transaction chain {} successfull.", chain);
     }
 }

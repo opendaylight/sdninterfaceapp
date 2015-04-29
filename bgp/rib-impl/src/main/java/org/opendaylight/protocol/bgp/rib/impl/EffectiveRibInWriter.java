@@ -10,6 +10,7 @@ package org.opendaylight.protocol.bgp.rib.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
 import java.util.Collection;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeChangeListener;
@@ -17,12 +18,13 @@ import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeChangeService;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeIdentifier;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataWriteTransaction;
 import org.opendaylight.controller.md.sal.dom.api.DOMTransactionChain;
-import org.opendaylight.protocol.bgp.rib.spi.RIBExtensionConsumerContext;
+import org.opendaylight.protocol.bgp.rib.impl.spi.RIBSupportContext;
+import org.opendaylight.protocol.bgp.rib.impl.spi.RIBSupportContextRegistry;
 import org.opendaylight.protocol.bgp.rib.spi.RIBSupport;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.graceful.restart._case.graceful.restart.capability.Tables;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.Peer;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.peer.AdjRibIn;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.peer.EffectiveRibIn;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.tables.Routes;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
@@ -59,22 +61,24 @@ final class EffectiveRibInWriter implements AutoCloseable {
      * Maintains {@link TableRouteListener} instances.
      */
     private final class AdjInTracker implements AutoCloseable, DOMDataTreeChangeListener {
-        private final RIBExtensionConsumerContext registry;
+        private final RIBSupportContextRegistry registry;
         private final YangInstanceIdentifier ribId;
         private final ListenerRegistration<?> reg;
         private final DOMTransactionChain chain;
 
-        AdjInTracker(final DOMDataTreeChangeService service, final RIBExtensionConsumerContext registry, final DOMTransactionChain chain, final YangInstanceIdentifier ribId) {
+        AdjInTracker(final DOMDataTreeChangeService service, final RIBSupportContextRegistry registry, final DOMTransactionChain chain, final YangInstanceIdentifier ribId) {
             this.registry = Preconditions.checkNotNull(registry);
             this.chain = Preconditions.checkNotNull(chain);
             this.ribId = Preconditions.checkNotNull(ribId);
 
-            final YangInstanceIdentifier tableId = ribId.node(Peer.QNAME).node(AdjRibIn.QNAME).node(Tables.QNAME);
+            final YangInstanceIdentifier tableId = ribId.node(Peer.QNAME).node(Peer.QNAME).node(AdjRibIn.QNAME).node(Tables.QNAME).node(Tables.QNAME);
             final DOMDataTreeIdentifier treeId = new DOMDataTreeIdentifier(LogicalDatastoreType.OPERATIONAL, tableId);
+            LOG.debug("Registered Effective RIB on {}", tableId);
             this.reg = service.registerDataTreeChangeListener(treeId, this);
         }
 
         private void processRoute(final DOMDataWriteTransaction tx, final RIBSupport ribSupport, final AbstractImportPolicy policy, final YangInstanceIdentifier routesPath, final DataTreeCandidateNode route) {
+            LOG.debug("Process route {}", route);
             switch (route.getModificationType()) {
             case DELETE:
                 // Delete has already been affected by the store in caller, so this is a no-op.
@@ -88,11 +92,11 @@ final class EffectiveRibInWriter implements AutoCloseable {
             case SUBTREE_MODIFIED:
             case WRITE:
                 // Lookup per-table attributes from RIBSupport
-                final ContainerNode adverisedAttrs = (ContainerNode) NormalizedNodes.findNode(route.getDataAfter(), ribSupport.routeAttributesIdentifier()).orNull();
+                final ContainerNode advertisedAttrs = (ContainerNode) NormalizedNodes.findNode(route.getDataAfter(), ribSupport.routeAttributesIdentifier()).orNull();
                 final ContainerNode effectiveAttrs;
 
-                if (adverisedAttrs != null) {
-                    effectiveAttrs = policy.effectiveAttributes(adverisedAttrs);
+                if (advertisedAttrs != null) {
+                    effectiveAttrs = policy.effectiveAttributes(advertisedAttrs);
 
                     /*
                      * Speed hack: if we determine that the policy has passed the attributes
@@ -103,7 +107,8 @@ final class EffectiveRibInWriter implements AutoCloseable {
                      * it may not be that common, in which case it does not make sense to pay
                      * the full equals price.
                      */
-                    if (effectiveAttrs == adverisedAttrs) {
+                    if (effectiveAttrs == advertisedAttrs) {
+                        LOG.trace("Effective and local attributes are equal. Quit processing route {}", route);
                         return;
                     }
                 } else {
@@ -116,7 +121,7 @@ final class EffectiveRibInWriter implements AutoCloseable {
                 if (effectiveAttrs != null) {
                     tx.put(LogicalDatastoreType.OPERATIONAL, routeId.node(ribSupport.routeAttributesIdentifier()), effectiveAttrs);
                 } else {
-                    LOG.warn("Route {} advertised empty attributes", route.getDataAfter());
+                    LOG.warn("Route {} advertised empty attributes", routeId);
                     tx.delete(LogicalDatastoreType.OPERATIONAL,  routeId);
                 }
                 break;
@@ -127,9 +132,10 @@ final class EffectiveRibInWriter implements AutoCloseable {
         }
 
         private void processTableChildren(final DOMDataWriteTransaction tx, final RIBSupport ribSupport, final NodeIdentifierWithPredicates peerKey, final YangInstanceIdentifier tablePath, final Collection<DataTreeCandidateNode> children) {
-            final AbstractImportPolicy policy = peerPolicyTracker.policyFor(IdentifierUtils.peerId(peerKey));
+            final AbstractImportPolicy policy = EffectiveRibInWriter.this.peerPolicyTracker.policyFor(IdentifierUtils.peerId(peerKey));
 
-            for (DataTreeCandidateNode child : children) {
+            for (final DataTreeCandidateNode child : children) {
+                LOG.debug("Process table children {}", child);
                 switch (child.getModificationType()) {
                 case DELETE:
                     tx.delete(LogicalDatastoreType.OPERATIONAL, tablePath.node(child.getIdentifier()));
@@ -148,7 +154,7 @@ final class EffectiveRibInWriter implements AutoCloseable {
                     // ensured that we have them in at target, so a subsequent delete will not fail :)
                     if (TABLE_ROUTES.equals(child.getIdentifier())) {
                         final YangInstanceIdentifier routesPath = tablePath.node(Routes.QNAME);
-                        for (DataTreeCandidateNode route : ribSupport.changedRoutes(child)) {
+                        for (final DataTreeCandidateNode route : ribSupport.changedRoutes(child)) {
                             processRoute(tx, ribSupport, policy, routesPath, route);
                         }
                     }
@@ -160,37 +166,37 @@ final class EffectiveRibInWriter implements AutoCloseable {
             }
         }
 
-        private RIBSupport getRibSupport(final NodeIdentifierWithPredicates tableKey) {
-            // FIXME: use codec to translate tableKey
-            return registry.getRIBSupport(null);
+        private RIBSupportContext getRibSupport(final NodeIdentifierWithPredicates tableKey) {
+            return this.registry.getRIBSupportContext(tableKey);
         }
 
         private YangInstanceIdentifier effectiveTablePath(final NodeIdentifierWithPredicates peerKey, final NodeIdentifierWithPredicates tableKey) {
-            return ribId.node(peerKey).node(EffectiveRibIn.QNAME).node(tableKey);
+            return this.ribId.node(Peer.QNAME).node(peerKey).node(EffectiveRibIn.QNAME).node(Tables.QNAME).node(tableKey);
         }
 
         private void modifyTable(final DOMDataWriteTransaction tx, final NodeIdentifierWithPredicates peerKey, final NodeIdentifierWithPredicates tableKey, final DataTreeCandidateNode table) {
-            final RIBSupport ribSupport = getRibSupport(tableKey);
+            final RIBSupportContext ribSupport = getRibSupport(tableKey);
             final YangInstanceIdentifier tablePath = effectiveTablePath(peerKey, tableKey);
 
-            processTableChildren(tx, ribSupport, peerKey, tablePath, table.getChildNodes());
+            processTableChildren(tx, ribSupport.getRibSupport(), peerKey, tablePath, table.getChildNodes());
         }
 
         private void writeTable(final DOMDataWriteTransaction tx, final NodeIdentifierWithPredicates peerKey, final NodeIdentifierWithPredicates tableKey, final DataTreeCandidateNode table) {
-            final RIBSupport ribSupport = getRibSupport(tableKey);
+            final RIBSupportContext ribSupport = getRibSupport(tableKey);
             final YangInstanceIdentifier tablePath = effectiveTablePath(peerKey, tableKey);
 
             // Create an empty table
-            TableContext.clearTable(tx, ribSupport, tablePath);
+            ribSupport.clearTable(tx,tablePath);
 
-            processTableChildren(tx, ribSupport, peerKey, tablePath, table.getChildNodes());
+            processTableChildren(tx, ribSupport.getRibSupport(), peerKey, tablePath, table.getChildNodes());
         }
 
         @Override
         public void onDataTreeChanged(final Collection<DataTreeCandidate> changes) {
-            final DOMDataWriteTransaction tx = chain.newWriteOnlyTransaction();
+            LOG.trace("Data changed called to effective RIB. Change : {}", changes);
+            final DOMDataWriteTransaction tx = this.chain.newWriteOnlyTransaction();
 
-            for (DataTreeCandidate tc : changes) {
+            for (final DataTreeCandidate tc : changes) {
                 final YangInstanceIdentifier rootPath = tc.getRootPath();
 
                 // Obtain the peer's key
@@ -234,22 +240,27 @@ final class EffectiveRibInWriter implements AutoCloseable {
         @Override
         public void close() {
             // FIXME: wipe all effective routes?
-            reg.close();
+            this.reg.close();
         }
     }
 
     private final ImportPolicyPeerTracker peerPolicyTracker;
     private final AdjInTracker adjInTracker;
 
-    private EffectiveRibInWriter(final DOMDataTreeChangeService service, final DOMTransactionChain chain, final YangInstanceIdentifier ribId) {
-        // FIXME: proper arguments
-        this.peerPolicyTracker = new ImportPolicyPeerTracker(service, ribId, null);
-        this.adjInTracker = new AdjInTracker(service, null, chain, ribId);
+    static EffectiveRibInWriter create(@Nonnull final DOMDataTreeChangeService service, @Nonnull final DOMTransactionChain chain,
+        @Nonnull final YangInstanceIdentifier ribId, @Nonnull final PolicyDatabase pd, @Nonnull final RIBSupportContextRegistry registry) {
+        return new EffectiveRibInWriter(service, chain, ribId, pd, registry);
+    }
+
+    private EffectiveRibInWriter(final DOMDataTreeChangeService service, final DOMTransactionChain chain, final YangInstanceIdentifier ribId,
+        final PolicyDatabase pd, final RIBSupportContextRegistry registry) {
+        this.peerPolicyTracker = new ImportPolicyPeerTracker(service, ribId, pd);
+        this.adjInTracker = new AdjInTracker(service, registry, chain, ribId);
     }
 
     @Override
     public void close() {
-        adjInTracker.close();
-        peerPolicyTracker.close();
+        this.adjInTracker.close();
+        this.peerPolicyTracker.close();
     }
 }

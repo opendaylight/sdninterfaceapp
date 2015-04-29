@@ -7,6 +7,7 @@
  */
 package org.opendaylight.protocol.bgp.linkstate.nlri;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -19,7 +20,6 @@ import org.opendaylight.protocol.bgp.parser.spi.NlriParser;
 import org.opendaylight.protocol.bgp.parser.spi.NlriSerializer;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.Identifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.NlriType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.NodeIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.ProtocolId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.RouteDistinguisher;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.ObjectType;
@@ -31,23 +31,33 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.link
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.NodeCaseBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.PrefixCase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.PrefixCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkDescriptors;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LocalNodeDescriptors;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.RemoteNodeDescriptors;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.node._case.NodeDescriptors;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.prefix._case.AdvertisingNodeDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCaseBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCase;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.update.PathAttributes;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes1;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.PathAttributes2;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpReachNlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlri;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.MpUnreachNlriBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.reach.nlri.AdvertizedRoutes;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.path.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.prefix._case.PrefixDescriptors;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCaseBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.reach.nlri.advertized.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Attributes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes1;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes2;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpReachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlri;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlriBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.reach.nlri.AdvertizedRoutes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
 import org.opendaylight.yangtools.yang.binding.DataObject;
+import org.opendaylight.yangtools.yang.common.QName;
+import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
+import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.PathArgument;
+import org.opendaylight.yangtools.yang.data.api.schema.ChoiceNode;
+import org.opendaylight.yangtools.yang.data.api.schema.ContainerNode;
+import org.opendaylight.yangtools.yang.data.api.schema.DataContainerChild;
+import org.opendaylight.yangtools.yang.data.api.schema.MapEntryNode;
+import org.opendaylight.yangtools.yang.data.api.schema.UnkeyedListEntryNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +65,9 @@ import org.slf4j.LoggerFactory;
  * Parser and serializer for Linkstate NLRI.
  */
 public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
+
     private static final Logger LOG = LoggerFactory.getLogger(LinkstateNlriParser.class);
+
     private static final int ROUTE_DISTINGUISHER_LENGTH = 8;
     private static final int PROTOCOL_ID_LENGTH = 1;
     private static final int IDENTIFIER_LENGTH = 8;
@@ -63,11 +75,21 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
     private static final int TYPE_LENGTH = 2;
     private static final int LENGTH_SIZE = 2;
 
+    private static final int LOCAL_NODE_DESCRIPTORS_TYPE = 256;
+    private static final int REMOTE_NODE_DESCRIPTORS_TYPE = 257;
+    private static final int SDNI_LINK_STATE = 258;
+    private static final int SDNI_QOS_STATE = 259;
 
-    private static final int LOCAL_NODE_DESCRIPTORS = 256;
-    private static final int REMOTE_NODE_DESCRIPTORS = 257;
-    private static final int SDNI_LINK_STATE = 256;
-    private static final int SDNI_QOS_STATE = 257;
+    private static final NodeIdentifier OBJECT_TYPE_NID = new NodeIdentifier(ObjectType.QNAME);
+    private static final NodeIdentifier NODE_DESCRIPTORS_NID = new NodeIdentifier(NodeDescriptors.QNAME);
+    private static final NodeIdentifier LOCAL_NODE_DESCRIPTORS_NID = new NodeIdentifier(LocalNodeDescriptors.QNAME);
+    private static final NodeIdentifier REMOTE_NODE_DESCRIPTORS_NID = new NodeIdentifier(RemoteNodeDescriptors.QNAME);
+    private static final NodeIdentifier ADVERTISING_NODE_DESCRIPTORS_NID = new NodeIdentifier(AdvertisingNodeDescriptors.QNAME);
+
+    private static final NodeIdentifier DISTINGUISHER_NID = new NodeIdentifier(QName.cachedReference(QName.create(CLinkstateDestination.QNAME, "route-distinguisher")));
+    private static final NodeIdentifier PROTOCOL_ID_NID = new NodeIdentifier(QName.cachedReference(QName.create(CLinkstateDestination.QNAME, "protocol-id")));
+    private static final NodeIdentifier IDENTIFIER_NID = new NodeIdentifier(QName.cachedReference(QName.create(CLinkstateDestination.QNAME, "identifier")));
+
     private final boolean isVpn;
     private static final boolean isSdniOn = true;
 
@@ -75,13 +97,13 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
         this.isVpn = isVpn;
     }
 
-    private static NodeIdentifier parseLink(final CLinkstateDestinationBuilder builder, final ByteBuf buffer, final LocalNodeDescriptors localDescriptors)
+    private static org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.NodeIdentifier parseLink(final CLinkstateDestinationBuilder builder, final ByteBuf buffer, final LocalNodeDescriptors localDescriptors)
             throws BGPParsingException {
         final int type = buffer.readUnsignedShort();
         final int length = buffer.readUnsignedShort();
-        final NodeIdentifier remote = null;
+        final org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.NodeIdentifier remote = null;
         RemoteNodeDescriptors remoteDescriptors = null;
-        if (type == REMOTE_NODE_DESCRIPTORS) {
+        if (type == REMOTE_NODE_DESCRIPTORS_TYPE) {
             remoteDescriptors = (RemoteNodeDescriptors)NodeNlriParser.parseNodeDescriptors(buffer.readSlice(length), NlriType.Link, false);
         }
         builder.setObjectType(new LinkCaseBuilder()
@@ -123,10 +145,10 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
             builder.setIdentifier(identifier);
 
             // if we are dealing with linkstate nodes/links, parse local node descriptor
-            NodeIdentifier localDescriptor = null;
+            org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.NodeIdentifier localDescriptor = null;
             final int localtype = nlri.readUnsignedShort();
             final int locallength = nlri.readUnsignedShort();
-            if (localtype == LOCAL_NODE_DESCRIPTORS) {
+            if (localtype == LOCAL_NODE_DESCRIPTORS_TYPE) {
                 localDescriptor = NodeNlriParser.parseNodeDescriptors(nlri.readSlice(locallength), type, true);
             }
             final int restLength = length - (isVpn ? ROUTE_DISTINGUISHER_LENGTH : 0) - PROTOCOL_ID_LENGTH - IDENTIFIER_LENGTH
@@ -167,8 +189,8 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
         final List<CLinkstateDestination> dst = parseNlri(nlri, this.isVpn);
 
         builder.setWithdrawnRoutes(new WithdrawnRoutesBuilder().setDestinationType(
-            new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCaseBuilder().setDestinationLinkstate(
-                new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder().setCLinkstateDestination(
+            new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.DestinationLinkstateCaseBuilder().setDestinationLinkstate(
+                new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.unreach.nlri.withdrawn.routes.destination.type.destination.linkstate._case.DestinationLinkstateBuilder().setCLinkstateDestination(
                     dst).build()).build()).build());
     }
 
@@ -203,7 +225,7 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
         if (ot instanceof PrefixCase) {
             final PrefixCase pCase = (PrefixCase)destination.getObjectType();
             NodeNlriParser.serializeNodeDescriptors(pCase.getAdvertisingNodeDescriptors(), ldescs);
-            TlvUtil.writeTLV(LOCAL_NODE_DESCRIPTORS, ldescs, nlriByteBuf);
+            TlvUtil.writeTLV(LOCAL_NODE_DESCRIPTORS_TYPE, ldescs, nlriByteBuf);
             if (pCase.getPrefixDescriptors() != null) {
                 PrefixNlriParser.serializePrefixDescriptors(pCase.getPrefixDescriptors(), nlriByteBuf);
                 if (pCase.getPrefixDescriptors().getIpReachabilityInformation().getIpv4Prefix() != null) {
@@ -215,10 +237,10 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
         } else if (ot instanceof LinkCase) {
             final LinkCase lCase = (LinkCase)destination.getObjectType();
             NodeNlriParser.serializeNodeDescriptors(lCase.getLocalNodeDescriptors(), ldescs);
-            TlvUtil.writeTLV(LOCAL_NODE_DESCRIPTORS, ldescs, nlriByteBuf);
+            TlvUtil.writeTLV(LOCAL_NODE_DESCRIPTORS_TYPE, ldescs, nlriByteBuf);
             final ByteBuf rdescs = Unpooled.buffer();
             NodeNlriParser.serializeNodeDescriptors(lCase.getRemoteNodeDescriptors(), rdescs);
-            TlvUtil.writeTLV(REMOTE_NODE_DESCRIPTORS, rdescs, nlriByteBuf);
+            TlvUtil.writeTLV(REMOTE_NODE_DESCRIPTORS_TYPE, rdescs, nlriByteBuf);
             if (lCase.getLinkDescriptors() != null) {
                 LinkNlriParser.serializeLinkDescriptors(lCase.getLinkDescriptors(), nlriByteBuf);
             }
@@ -238,7 +260,7 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
         } else if (ot instanceof NodeCase) {
             final NodeCase nCase = (NodeCase)destination.getObjectType();
             NodeNlriParser.serializeNodeDescriptors(nCase.getNodeDescriptors(), ldescs);
-            TlvUtil.writeTLV(LOCAL_NODE_DESCRIPTORS, ldescs, nlriByteBuf);
+            TlvUtil.writeTLV(LOCAL_NODE_DESCRIPTORS_TYPE, ldescs, nlriByteBuf);
             nlriType = NlriType.Node;
         } else {
             LOG.warn("Unknown NLRI Type.");
@@ -248,18 +270,18 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
 
     @Override
     public void serializeAttribute(final DataObject attribute, final ByteBuf byteAggregator) {
-        Preconditions.checkArgument(attribute instanceof PathAttributes, "Attribute parameter is not a PathAttribute object.");
-        final PathAttributes pathAttributes = (PathAttributes) attribute;
-        final PathAttributes1 pathAttributes1 = pathAttributes.getAugmentation(PathAttributes1.class);
-        final PathAttributes2 pathAttributes2 = pathAttributes.getAugmentation(PathAttributes2.class);
+        Preconditions.checkArgument(attribute instanceof Attributes, "Attribute parameter is not a PathAttribute object.");
+        final Attributes pathAttributes = (Attributes) attribute;
+        final Attributes1 pathAttributes1 = pathAttributes.getAugmentation(Attributes1.class);
+        final Attributes2 pathAttributes2 = pathAttributes.getAugmentation(Attributes2.class);
         if (pathAttributes1 != null) {
             final AdvertizedRoutes routes = (pathAttributes1.getMpReachNlri()).getAdvertizedRoutes();
             if (routes != null &&
                 routes.getDestinationType()
                 instanceof
-                org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase) {
-                final org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase
-                linkstateCase = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.path.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase) routes.getDestinationType();
+                org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase) {
+                final org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase
+                linkstateCase = (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationLinkstateCase) routes.getDestinationType();
 
                 for (final CLinkstateDestination cLinkstateDestination : linkstateCase.getDestinationLinkstate().getCLinkstateDestination()) {
                     serializeNlri(cLinkstateDestination, byteAggregator);
@@ -274,5 +296,96 @@ public final class LinkstateNlriParser implements NlriParser, NlriSerializer {
                 }
             }
         }
+    }
+
+    // FIXME : use codec
+    private static int domProtocolIdValue(final String protocolId) {
+        switch(protocolId) {
+        case "unknown":
+            return 0;
+        case "isis-level1":
+            return 1;
+        case "isis-level2":
+            return 2;
+        case "ospf":
+            return 3;
+        case "direct":
+            return 4;
+        case "static":
+            return 5;
+        default:
+            return 0;
+        }
+    }
+
+    /**
+     * Serializes DOM interpretation of Linkstate NLRI to ByteBuf. Used to create linkstate route key.
+     *
+     * @param linkstate UnkeyedListEntryNode basically CLinkstateDestination in DOM
+     * @param buffer ByteBuf where the key will be serialized
+     */
+    public static void serializeNlri(final UnkeyedListEntryNode linkstate, final ByteBuf buffer) {
+        final ByteBuf nlriByteBuf = Unpooled.buffer();
+
+        // serialize common parts
+        final Optional<DataContainerChild<? extends PathArgument, ?>> distinguisher = linkstate.getChild(DISTINGUISHER_NID);
+        if (distinguisher.isPresent()) {
+            nlriByteBuf.writeBytes(((String)distinguisher.get().getValue()).getBytes());
+        }
+        final Optional<DataContainerChild<? extends PathArgument, ?>> protocolId = linkstate.getChild(PROTOCOL_ID_NID);
+        // DOM representation contains values as are in the model, not as are in generated enum
+        nlriByteBuf.writeLong(domProtocolIdValue((String) protocolId.get().getValue()));
+        final Optional<DataContainerChild<? extends PathArgument, ?>> identifier = linkstate.getChild(IDENTIFIER_NID);
+        nlriByteBuf.writeLong(((BigInteger)identifier.get().getValue()).longValue());
+
+        // serialize node
+        final ByteBuf ldescs = Unpooled.buffer();
+        NlriType nlriType = null;
+        final ChoiceNode objectType = (ChoiceNode) linkstate.getChild(OBJECT_TYPE_NID).get();
+        if (objectType.getChild(ADVERTISING_NODE_DESCRIPTORS_NID).isPresent()) {
+
+            // prefix node descriptors
+            NodeNlriParser.serializeNodeDescriptors((ContainerNode)objectType.getChild(ADVERTISING_NODE_DESCRIPTORS_NID).get(), ldescs);
+            TlvUtil.writeTLV(LinkstateNlriParser.LOCAL_NODE_DESCRIPTORS_TYPE, ldescs, nlriByteBuf);
+            final Optional<DataContainerChild<? extends PathArgument, ?>> prefixDescriptors = objectType.getChild(new NodeIdentifier(PrefixDescriptors.QNAME));
+
+            // prefix descriptors
+            if (prefixDescriptors.isPresent()) {
+                nlriType = PrefixNlriParser.serializePrefixDescriptors((ContainerNode)prefixDescriptors.get(), nlriByteBuf);
+            }
+        } else if (objectType.getChild(LOCAL_NODE_DESCRIPTORS_NID).isPresent()) {
+
+            // link local node descriptors
+            NodeNlriParser.serializeNodeDescriptors((ContainerNode)objectType.getChild(LOCAL_NODE_DESCRIPTORS_NID).get(), ldescs);
+            TlvUtil.writeTLV(LinkstateNlriParser.LOCAL_NODE_DESCRIPTORS_TYPE, ldescs, nlriByteBuf);
+
+            // link remote node descriptors
+            final ByteBuf rdescs = Unpooled.buffer();
+            if (objectType.getChild(REMOTE_NODE_DESCRIPTORS_NID).isPresent()) {
+                NodeNlriParser.serializeNodeDescriptors((ContainerNode)objectType.getChild(REMOTE_NODE_DESCRIPTORS_NID).get(), rdescs);
+                TlvUtil.writeTLV(LinkstateNlriParser.REMOTE_NODE_DESCRIPTORS_TYPE, rdescs, nlriByteBuf);
+            }
+
+            // link descriptors
+            final Optional<DataContainerChild<? extends PathArgument, ?>> linkDescriptors = objectType.getChild(new NodeIdentifier(LinkDescriptors.QNAME));
+            if (linkDescriptors.isPresent()) {
+                LinkNlriParser.serializeLinkDescriptors((ContainerNode)linkDescriptors.get(), nlriByteBuf);
+            }
+            nlriType = NlriType.Link;
+        } else if (objectType.getChild(NODE_DESCRIPTORS_NID).isPresent()) {
+
+            // node descriptors
+            NodeNlriParser.serializeNodeDescriptors((ContainerNode)objectType.getChild(NODE_DESCRIPTORS_NID).get(), ldescs);
+            TlvUtil.writeTLV(LinkstateNlriParser.LOCAL_NODE_DESCRIPTORS_TYPE, ldescs, nlriByteBuf);
+            nlriType = NlriType.Node;
+        } else {
+            LOG.warn("Unknown Object Type.");
+        }
+        TlvUtil.writeTLV(nlriType.getIntValue(), nlriByteBuf, buffer);
+    }
+
+    public static CLinkstateDestination extractLinkstateDestination(final MapEntryNode route) {
+        // FIXME: BUG-3012 - finish this
+        return new CLinkstateDestinationBuilder().build();
     }
 }

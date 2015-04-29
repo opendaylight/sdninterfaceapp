@@ -22,13 +22,13 @@ final class IdentifierUtils {
     private static final Predicate<PathArgument> IS_PEER = new Predicate<PathArgument>() {
         @Override
         public boolean apply(final PathArgument input) {
-            return input.getNodeType().equals(Peer.QNAME);
+            return input instanceof NodeIdentifierWithPredicates && Peer.QNAME.equals(input.getNodeType());
         }
     };
     private static final Predicate<PathArgument> IS_TABLES = new Predicate<PathArgument>() {
         @Override
         public boolean apply(final PathArgument input) {
-            return input.getNodeType().equals(Tables.QNAME);
+            return Tables.QNAME.equals(input.getNodeType());
         }
     };
     private static final QName PEER_ID = QName.cachedReference(QName.create(Peer.QNAME, "peer-id"));
@@ -47,7 +47,8 @@ final class IdentifierUtils {
     private static YangInstanceIdentifier firstIdentifierOf(final YangInstanceIdentifier id, final Predicate<PathArgument> match) {
         final int idx = Iterables.indexOf(id.getPathArguments(), match);
         Preconditions.checkArgument(idx != -1, "Failed to find %s in %s", match, id);
-        return YangInstanceIdentifier.create(Iterables.limit(id.getPathArguments(), idx));
+        // we want the element at index idx to be included in the list
+        return YangInstanceIdentifier.create(Iterables.limit(id.getPathArguments(), idx + 1));
     }
 
     static YangInstanceIdentifier peerPath(final YangInstanceIdentifier id) {
@@ -67,4 +68,7 @@ final class IdentifierUtils {
         return firstKeyOf(id, IS_TABLES);
     }
 
+    static NodeIdentifierWithPredicates domPeerId(final PeerId peer) {
+        return new NodeIdentifierWithPredicates(Peer.QNAME, PEER_ID, peer.getValue());
+    }
 }

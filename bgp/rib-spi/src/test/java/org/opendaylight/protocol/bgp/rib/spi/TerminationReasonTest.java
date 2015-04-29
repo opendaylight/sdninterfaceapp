@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.opendaylight.protocol.bgp.parser.BGPError;
+import org.opendaylight.protocol.bgp.rib.spi.BGPTerminationReason;
 
 public class TerminationReasonTest {
 
