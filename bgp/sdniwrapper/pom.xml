@@ -12,16 +12,13 @@
         <artifactId>bgp-parent</artifactId>
         <version>0.3.5-SNAPSHOT</version>
     </parent>
-    
-  	<artifactId>bgp-sdniwrapper</artifactId>
-   	<description>BGP SDNiWrapper</description>
- 	<packaging>bundle</packaging>
-   	<name>${project.artifactId}</name>
+        <artifactId>bgp-sdniwrapper</artifactId>
+        <description>BGP SDNiWrapper</description>
+        <packaging>bundle</packaging>
+        <name>${project.artifactId}</name>
     <prerequisites>
         <maven>3.0.4</maven>
     </prerequisites>
- 	
-
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -34,19 +31,19 @@
     <dependency>
        <groupId>io.netty</groupId>
        <artifactId>netty-codec</artifactId>
-  	</dependency>
-  	<dependency>
+    </dependency>
+    <dependency>
        <groupId>io.netty</groupId>
        <artifactId>netty-common</artifactId>
-   	</dependency>
-  	<dependency>
+    </dependency>
+    <dependency>
        <groupId>io.netty</groupId>
        <artifactId>netty-transport</artifactId>
-   	</dependency>
-   	<dependency>
+    </dependency>
+    <dependency>
        <groupId>org.slf4j</groupId>
        <artifactId>slf4j-api</artifactId>
-   	</dependency>
+    </dependency>
   </dependencies>
 
     <build>
@@ -60,10 +57,10 @@
                         <Bundle-Name>${project.groupId}.${project.artifactId}</Bundle-Name>
                     </instructions>
                     <Import-Package>
-                    	com.sun.jersey.api.client.*,
-						com.sun.jersey.api.client.config.*,
-						javax.ws.rs.core.*,
-                    </Import-Package>
+                        com.sun.jersey.api.client.*,
+                        com.sun.jersey.api.client.config.*,
+                        javax.ws.rs.core.*,
+                   </Import-Package>
                 </configuration>
             </plugin>
         </plugins>

@@ -53,14 +53,13 @@
         <module>topology-provider</module>
         <module>topology-provider-config</module>
         <module>util</module>
-	<module>sdniwrapper</module>
-
+        <module>sdniwrapper</module>
         <module>controller-config</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-	   <dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>bgp-sdniwrapper</artifactId>
                 <version>${project.version}</version>

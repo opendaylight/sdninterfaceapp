@@ -235,8 +235,7 @@ public class SdniManager {
      * @return List<ClusterBean>
      */
 
-    public String getClusteredControllers(String containerName) {
-        
+     public String getClusteredControllers(String containerName) {
         IClusterGlobalServices clusterServices = (IClusterGlobalServices) ServiceHelper
                 .getGlobalInstance(IClusterGlobalServices.class, this);
         if (clusterServices == null) {
@@ -265,9 +264,7 @@ public class SdniManager {
         }
         Map<Edge, Set<Property>> topo = topologyManager.getEdges();
         List<String> macAddressList = new ArrayList<String>();
-        
-        List<InetAddress> controllers = clusterServices
-                .getClusteredControllers();
+        List<InetAddress> controllers = clusterServices.getClusteredControllers();
         for (InetAddress controller : controllers) {
             log.info("inside controller loop:" + controller.getHostAddress()+ " controller_ip:" + findIpAddress());
             if (controller.getHostAddress().toString().equals(findIpAddress())) {
@@ -279,14 +276,11 @@ public class SdniManager {
                     return "not success";
                 }
                 for (Node node : connectedNodes) {
-                    
                     // Start to switchmanager
                     String nodeName = "";
                     String macAddress = "";
                     nodeName = node.toString().replace("OF|", "");
-                    
-                    Map<String, Property> propMap = switchManager
-                            .getNodeProps(node);
+                    Map<String, Property> propMap = switchManager.getNodeProps(node);
                     Object[] array = propMap.keySet().toArray();
 
                     for (int i = 0; i < array.length; i++) {

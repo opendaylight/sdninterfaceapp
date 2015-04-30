@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1430376739307
+Build-Jdk: 1.7.0_79
+Built-By: root
+Bundle-ManifestVersion: 2
+Bundle-Name: sdniaggregator
+Bundle-SymbolicName: org.opendaylight.sdninterfaceapp.sdniaggregator
+Bundle-Version: 0.5.6.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.opendaylight.controller.sdniaggregator;uses:="com.fa
+ sterxml.jackson.annotation,org.opendaylight.controller.hosttracker.host
+ Aware,org.opendaylight.controller.sal.core";version="0.5.6.SNAPSHOT"
+Import-Package: org.opendaylight.controller.sal.core;version="[0.8,1)",o
+ rg.opendaylight.controller.sal.utils;version="[0.8,1)",org.opendaylight
+ .controller.hosttracker;version="[0.5,1)",org.opendaylight.controller.h
+ osttracker.hostAware;version="[0.5,1)",org.opendaylight.controller.sal.
+ packet.address;version="[0.8,1)",org.opendaylight.controller.switchmana
+ ger;version="[0.7,1)",org.opendaylight.controller.clustering.services;v
+ ersion="[0.5,1)",org.opendaylight.controller.topologymanager;version="[
+ 0.4,1)",com.fasterxml.jackson.annotation;version="[2.3,3)",org.slf4j;ve
+ rsion="[1.7,2)",org.opendaylight.controller.sal.action;version="[0.8,1)
+ ",org.apache.felix.dm;version="[3.0,4)",org.osgi.service.component;vers
+ ion="[1.2,2)",com.fasterxml.jackson.core;version="[2.3,3)",com.fasterxm
+ l.jackson.databind;version="[2.3,3)"
+Tool: Bnd-2.1.0.20130426-122213
