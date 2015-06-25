@@ -10,20 +10,20 @@
    <parent>
     <artifactId>sdninterfaceapp.project</artifactId>
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0-Lithium</version>
   </parent>
    <artifactId>features-sdninterfaceapp</artifactId>
    <groupId>org.opendaylight.sdninterfaceapp</groupId>
-   <version>1.5.0-SNAPSHOT</version>
+   <version>1.5.0-Lithium</version>
    <packaging>jar</packaging>
    <properties>
       <features.file>features.xml</features.file>
-      <branding.version>1.1.0-SNAPSHOT</branding.version>
-      <karaf.resources.version>1.5.0-SNAPSHOT</karaf.resources.version>
-      <karaf.empty.version>1.5.0-SNAPSHOT</karaf.empty.version>
+      <branding.version>1.1.0-Lithium</branding.version>
+      <karaf.resources.version>1.5.0-Lithium</karaf.resources.version>
+      <karaf.empty.version>1.5.0-Lithium</karaf.empty.version>
       <surefire.version>2.16</surefire.version>
-      <yangtools.version>0.7.0-SNAPSHOT</yangtools.version>
-      <odl.karaf.base.version>1.5.0-SNAPSHOT</odl.karaf.base.version>
+      <yangtools.version>0.7.0-Lithium</yangtools.version>
+      <odl.karaf.base.version>1.5.0-Lithium</odl.karaf.base.version>
     </properties>
 
     <dependencies>
@@ -59,49 +59,49 @@
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>clustering.services</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
+      <version>0.6.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>hosttracker</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
+      <version>0.6.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>switchmanager</artifactId>
-      <version>0.8.0-SNAPSHOT</version>
+      <version>0.8.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>topologymanager</artifactId>
-      <version>0.5.0-SNAPSHOT</version>
+      <version>0.5.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>containermanager</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
+      <version>0.6.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>statisticsmanager</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
+      <version>0.6.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.sdninterfaceapp</groupId>
       <artifactId>sdniaggregator</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
+      <version>0.6.0-Lithium</version>
     </dependency>
 
     <dependency>
       <groupId>org.opendaylight.sdninterfaceapp</groupId>
       <artifactId>sdni</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
+      <version>0.6.0-Lithium</version>
     </dependency>
 
     <dependency>
