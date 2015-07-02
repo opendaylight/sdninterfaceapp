@@ -1,0 +1,9 @@
+Verified+1: jenkins-releng <jenkins-releng@opendaylight.org>
+Code-Review+1: David Jorm <djorm@iix.net>
+Code-Review+1: Shahid Shaik <shahid.b@tcs.com>
+Code-Review+2: Rafat Jahan <rafat.jahan@tcs.com>
+Submitted-by: Rafat Jahan <rafat.jahan@tcs.com>
+Submitted-at: Thu, 02 Jul 2015 07:28:32 +0000
+Reviewed-on: https://git.opendaylight.org/gerrit/23217
+Project: sdninterfaceapp
+Branch: refs/heads/stable/lithium
