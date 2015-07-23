@@ -41,6 +41,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.update.attributes.mp.reach.nlri.advertized.routes.destination.type.DestinationIpv4CaseBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Attributes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.AttributesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes1;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.Attributes2;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
@@ -50,6 +51,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mult
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.MpUnreachNlriBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.reach.nlri.AdvertizedRoutesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.update.attributes.mp.unreach.nlri.WithdrawnRoutesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.PeerId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.PeerRole;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily;
@@ -91,12 +93,13 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
         this.rib = Preconditions.checkNotNull(rib);
         this.name = name;
         this.chain = rib.createPeerChain(this);
-        this.ribWriter = AdjRibInWriter.create(rib.getYangRibId(), role, chain);
+        this.ribWriter = AdjRibInWriter.create(rib.getYangRibId(), role, this.chain);
     }
 
     @Override
     public synchronized void close() {
         dropConnection();
+        this.chain.close();
         // TODO should this perform cleanup ?
     }
 
@@ -117,7 +120,7 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
             mpReach = attrs.getAugmentation(Attributes1.class).getMpReachNlri();
         }
         if (mpReach != null) {
-            this.ribWriter.updateRoutes(mpReach, attrs);
+            this.ribWriter.updateRoutes(mpReach, nextHopToAttribute(attrs, mpReach));
             return;
         }
         MpUnreachNlri mpUnreach = null;
@@ -131,13 +134,22 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
         }
     }
 
+    private static Attributes nextHopToAttribute(final Attributes attrs, final MpReachNlri mpReach) {
+        if (attrs.getCNextHop() == null && mpReach.getCNextHop() != null) {
+            final AttributesBuilder attributesBuilder = new AttributesBuilder(attrs);
+            attributesBuilder.setCNextHop(mpReach.getCNextHop());
+            return attributesBuilder.build();
+        }
+        return attrs;
+    }
+
     /**
      * Creates MPReach for the prefixes to be handled in the same way as linkstate routes
      *
      * @param message Update message containing prefixes in NLRI
      * @return MpReachNlri with prefixes from the nlri field
      */
-    private MpReachNlri prefixesToMpReach(final Update message) {
+    private static MpReachNlri prefixesToMpReach(final Update message) {
         final List<Ipv4Prefixes> prefixes = new ArrayList<>();
         for (final Ipv4Prefix p : message.getNlri().getNlri()) {
             prefixes.add(new Ipv4PrefixesBuilder().setPrefix(p).build());
@@ -159,7 +171,7 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
      * @param message Update message containing withdrawn routes
      * @return MpUnreachNlri with prefixes from the withdrawn routes field
      */
-    private MpUnreachNlri prefixesToMpUnreach(final Update message) {
+    private static MpUnreachNlri prefixesToMpUnreach(final Update message) {
         final List<Ipv4Prefixes> prefixes = new ArrayList<>();
         for (final Ipv4Prefix p : message.getWithdrawnRoutes().getWithdrawnRoutes()) {
             prefixes.add(new Ipv4PrefixesBuilder().setPrefix(p).build());
@@ -175,6 +187,7 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
         LOG.info("Session with peer {} went up with tables: {}", this.name, session.getAdvertisedTableTypes());
         this.session = session;
         this.rawIdentifier = InetAddresses.forString(session.getBgpId().getValue()).getAddress();
+        final PeerId peerId = RouterIds.createPeerId(session.getBgpId());
 
         for (final BgpTableType t : session.getAdvertisedTableTypes()) {
             final TablesKey key = new TablesKey(t.getAfi(), t.getSafi());
@@ -182,10 +195,10 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
 
             // not particularly nice
             if (session instanceof BGPSessionImpl) {
-                AdjRibOutListener.create(key, this.rib.getYangRibId(), ((RIBImpl)this.rib).getService(), this.rib.getRibSupportContext(), ((BGPSessionImpl) session).getLimiter());
+                AdjRibOutListener.create(peerId, key, this.rib.getYangRibId(), ((RIBImpl)this.rib).getService(), this.rib.getRibSupportContext(), ((BGPSessionImpl) session).getLimiter());
             }
         }
-        this.ribWriter = this.ribWriter.transform(RouterIds.createPeerId(session.getBgpId()), this.rib.getRibSupportContext(), this.tables, false);
+        this.ribWriter = this.ribWriter.transform(peerId, this.rib.getRibSupportContext(), this.tables, false);
         this.sessionEstablishedCounter++;
         if (this.registrator != null) {
             this.runtimeReg = this.registrator.register(this);
@@ -195,7 +208,6 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
     private synchronized void cleanup() {
         // FIXME: BUG-196: support graceful restart
         this.ribWriter.cleanTables(this.tables);
-        this.chain.close();
         this.tables.clear();
     }
 
@@ -298,11 +310,17 @@ public class BGPPeer implements ReusableBGPPeer, Peer, AutoCloseable, BGPPeerRun
     public void onTransactionChainFailed(final TransactionChain<?, ?> chain, final AsyncTransaction<?, ?> transaction, final Throwable cause) {
         LOG.error("Transaction chain failed.", cause);
         this.dropConnection();
+        this.chain.close();
         this.chain = this.rib.createPeerChain(this);
     }
 
     @Override
     public void onTransactionChainSuccessful(final TransactionChain<?, ?> chain) {
         LOG.debug("Transaction chain {} successfull.", chain);
+    }
+
+    @Override
+    public void markUptodate(final TablesKey tablesKey) {
+        this.ribWriter.markTableUptodate(tablesKey);
     }
 }

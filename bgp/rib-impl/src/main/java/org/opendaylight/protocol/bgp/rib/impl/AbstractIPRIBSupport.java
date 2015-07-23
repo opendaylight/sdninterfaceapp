@@ -41,22 +41,23 @@ import org.slf4j.LoggerFactory;
  * Common {@link org.opendaylight.protocol.bgp.rib.spi.RIBSupport} class for IPv4 and IPv6 addresses.
  */
 abstract class AbstractIPRIBSupport extends AbstractRIBSupport {
-    private static abstract class ApplyRoute {
+    private abstract static class ApplyRoute {
         abstract void apply(DOMDataWriteTransaction tx, YangInstanceIdentifier base, NodeIdentifierWithPredicates routeKey, DataContainerNode<?> route, final ContainerNode attributes);
     }
 
     private static final class DeleteRoute extends ApplyRoute {
         @Override
-        void apply(final DOMDataWriteTransaction tx, final YangInstanceIdentifier base, NodeIdentifierWithPredicates routeKey, final DataContainerNode<?> route, final ContainerNode attributes) {
+        void apply(final DOMDataWriteTransaction tx, final YangInstanceIdentifier base, final NodeIdentifierWithPredicates routeKey, final DataContainerNode<?> route, final ContainerNode attributes) {
             tx.delete(LogicalDatastoreType.OPERATIONAL, base.node(routeKey));
         }
     }
 
     private final class PutRoute extends ApplyRoute {
         @Override
-        void apply(final DOMDataWriteTransaction tx, final YangInstanceIdentifier base, NodeIdentifierWithPredicates routeKey, final DataContainerNode<?> route, final ContainerNode attributes) {
+        void apply(final DOMDataWriteTransaction tx, final YangInstanceIdentifier base, final NodeIdentifierWithPredicates routeKey, final DataContainerNode<?> route, final ContainerNode attributes) {
             final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> b = ImmutableNodes.mapEntryBuilder();
             b.withNodeIdentifier(routeKey);
+            b.withChild(ImmutableNodes.leafNode(routeKeyLeafIdentifier(), routeKey.getKeyValues().get(routeQName())));
 
             // FIXME: All route children, there should be a utility somewhere to do this
             for (final DataContainerChild<? extends PathArgument, ?> child : route.getValue()) {
@@ -109,16 +110,11 @@ abstract class AbstractIPRIBSupport extends AbstractRIBSupport {
     }
 
     @Override
-    public final ImmutableCollection<Class<? extends DataObject>> cacheableNlriObjects() {
-        return ImmutableSet.of();
-    }
-
-    @Override
     public final boolean isComplexRoute() {
         return false;
     }
 
-    private final void processDestination(final DOMDataWriteTransaction tx, final YangInstanceIdentifier tablePath,
+    private void processDestination(final DOMDataWriteTransaction tx, final YangInstanceIdentifier tablePath,
             final ContainerNode destination, final ContainerNode attributes, final ApplyRoute function) {
         if (destination != null) {
             final Optional<DataContainerChild<? extends PathArgument, ?>> maybeRoutes = destination.getChild(nlriRoutesListIdentifier());
@@ -126,9 +122,10 @@ abstract class AbstractIPRIBSupport extends AbstractRIBSupport {
                 final DataContainerChild<? extends PathArgument, ?> routes = maybeRoutes.get();
                 if (routes instanceof UnkeyedListNode) {
                     // Instance identifier to table/(choice routes)/(map of route)
+                    // FIXME: cache on per-table basis (in TableContext, for example)
                     final YangInstanceIdentifier base = tablePath.node(ROUTES).node(routesContainerIdentifier()).node(routeIdentifier());
                     for (final UnkeyedListEntryNode e : ((UnkeyedListNode)routes).getValue()) {
-                        NodeIdentifierWithPredicates routeKey = createRouteKey(e);
+                        final NodeIdentifierWithPredicates routeKey = createRouteKey(e);
                         function.apply(tx, base, routeKey,  e, attributes);
                     }
                 } else {
@@ -138,10 +135,13 @@ abstract class AbstractIPRIBSupport extends AbstractRIBSupport {
         }
     }
 
-    private NodeIdentifierWithPredicates createRouteKey(UnkeyedListEntryNode e) {
-        Optional<DataContainerChild<? extends PathArgument, ?>> maybeKeyLeaf = e.getChild(routeKeyLeafIdentifier());
+    private NodeIdentifierWithPredicates createRouteKey(final UnkeyedListEntryNode e) {
+        final Optional<DataContainerChild<? extends PathArgument, ?>> maybeKeyLeaf = e.getChild(routeKeyLeafIdentifier());
         Preconditions.checkState(maybeKeyLeaf.isPresent());
-        Object keyValue = ((LeafNode<?>) maybeKeyLeaf.get()).getValue();
+
+        // FIXME: a cache here would mean we instantiate the same identifier for each route
+        //        making comparison quicker.
+        final Object keyValue = ((LeafNode<?>) maybeKeyLeaf.get()).getValue();
         return new NodeIdentifierWithPredicates(routeQName(), keyLeafQName(), keyValue);
     }
 

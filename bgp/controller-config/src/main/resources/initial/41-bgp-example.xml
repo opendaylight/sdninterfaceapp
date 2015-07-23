@@ -67,16 +67,16 @@
                      "md5-channel-factory" attribute set and then add a "password" attribute here.
                      Note that the peer has to have the same password configured, otherwise the
                      connection will not be established.
-                     If peer role is not present, default value "Ibgp" will be used (allowed values are also "Ebgp" and
-                     "RrClient").
+                     If peer role is not present, default value "ibgp" will be used (allowed values are also "ebgp" and
+                     "rr-client").
                 <module>
                     <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-peer</type>
                     <name>example-bgp-peer</name>
                     <host>192.0.2.1</host>
                     <holdtimer>180</holdtimer>
-                    <peerRole>Ibgp<peerRole>
+                    <peer-role>ibgp</peer-role>
                     <rib>
-                        <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:cfg">prefix:rib</type>
+                        <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:rib-instance</type>
                         <name>example-bgp-rib</name>
                     </rib>
                     <peer-registry>
@@ -94,6 +94,10 @@
                     <advertized-table>
                         <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-table-type</type>
                         <name>linkstate</name>
+                    </advertized-table>
+                    <advertized-table>
+                        <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-table-type</type>
+                        <name>flowspec</name>
                     </advertized-table>
                 </module>
                 -->
@@ -118,6 +122,10 @@
                         <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-table-type</type>
                         <name>linkstate</name>
                     </local-table>
+                    <local-table>
+                        <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:impl">prefix:bgp-table-type</type>
+                        <name>flowspec</name>
+                    </local-table>
                     <extensions>
                         <type xmlns:ribspi="urn:opendaylight:params:xml:ns:yang:controller:bgp:rib:spi">ribspi:extensions</type>
                         <name>global-rib-extensions</name>
@@ -132,7 +140,7 @@
                     </data-provider>
                     <dom-data-provider>
                         <type xmlns:sal="urn:opendaylight:params:xml:ns:yang:controller:md:sal:dom">sal:dom-async-data-broker</type>
-                        <name>inmemory-data-broker</name>
+                        <name>pingpong-broker</name>
                     </dom-data-provider>
                     <codec-tree-factory>
                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-codec-tree-factory</type>
@@ -233,6 +241,5 @@
                 </service>
             </services>
         </data>
-
     </configuration>
 </snapshot>
