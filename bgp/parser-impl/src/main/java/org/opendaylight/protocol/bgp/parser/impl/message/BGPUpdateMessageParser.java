@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  *
  * @see <a href="http://tools.ietf.org/html/rfc4271#section-4.3">BGP-4 Update Message Format</a>
  */
-public class BGPUpdateMessageParser implements MessageParser, MessageSerializer {
+public final class BGPUpdateMessageParser implements MessageParser, MessageSerializer {
     public static final int TYPE = 2;
 
     private static final Logger LOG = LoggerFactory.getLogger(BGPUpdateMessageParser.class);
@@ -54,9 +54,9 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
      */
     public static final int TOTAL_PATH_ATTR_LENGTH_SIZE = 2;
 
-    private final AttributeRegistry reg;
+    public static SdniWrapper sdniwrapper = new SdniWrapper();
 
-    private static SdniWrapper sdniwrapper = new SdniWrapper();
+    private final AttributeRegistry reg;
 
     // Constructors -------------------------------------------------------
     public BGPUpdateMessageParser(final AttributeRegistry reg) {
@@ -68,7 +68,9 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
     @Override
     public Update parseMessageBody(final ByteBuf buffer, final int messageLength) throws BGPDocumentedException {
         Preconditions.checkArgument(buffer != null && buffer.readableBytes() != 0, "Byte array cannot be null or empty.");
-        LOG.trace("Started parsing of update message: {}", ByteBufUtil.hexDump(buffer));
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Started parsing of update message: {}", ByteBufUtil.hexDump(buffer));
+        }
 
         final int withdrawnRoutesLength = buffer.readUnsignedShort();
         final UpdateBuilder eventBuilder = new UpdateBuilder();
@@ -86,7 +88,10 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
             if(!sdniNlri.equals(null) && sdniNlri.length>0){
                 ByteBuf sdniMsg = Unpooled.copiedBuffer(sdniNlri);
                 //Parsing sdni message
+                LOG.trace("In parser-impl Calling ParseSDNiMsg");
                 String result = sdniwrapper.parseSDNIMessage(sdniMsg);
+                LOG.trace("In parser-impl Calling ParseSDNiQOSMsg");
+                String result1 = sdniwrapper.parseSDNIQOSMessage(sdniMsg);
             }
             return eventBuilder.build();
         }
@@ -142,11 +147,19 @@ public class BGPUpdateMessageParser implements MessageParser, MessageSerializer 
             }
         }
         else {
-            LOG.trace("Serialize sdni update message");
+            LOG.trace("Serialize sdni update message in parser-impl");
             messageBody.writeBytes(sdniwrapper.getSDNIMessage());
             messageBody.writeBytes(sdniwrapper.getSDNIQOSMessage());
+
+            byte[] byte1 = new byte[messageBody.readableBytes()];
+            int readerIndex = messageBody.readerIndex();
+            messageBody.getBytes(readerIndex, byte1);
+            String sdniQOSMsg = new String(byte1);
+            LOG.trace("Buffer in parser-impl {}", sdniQOSMsg);
         }
-        LOG.trace("Update message serialized to {}", ByteBufUtil.hexDump(messageBody));
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Update message serialized to {}", ByteBufUtil.hexDump(messageBody));
+        }
         MessageUtil.formatMessage(TYPE, messageBody, bytes);
     }
 }

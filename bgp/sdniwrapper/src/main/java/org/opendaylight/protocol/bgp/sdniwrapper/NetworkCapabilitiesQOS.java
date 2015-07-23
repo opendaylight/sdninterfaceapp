@@ -33,9 +33,19 @@ public class NetworkCapabilitiesQOS {
     private String node;
     @XmlElement
     private String port;
+    @XmlElement
+    private String controller;
 
 
     public NetworkCapabilitiesQOS() {
+    }
+
+    public String getController() {
+        return controller;
+    }
+
+    public void setController(String controller) {
+        this.controller = controller;
     }
 
     public String getReceivePackets() {

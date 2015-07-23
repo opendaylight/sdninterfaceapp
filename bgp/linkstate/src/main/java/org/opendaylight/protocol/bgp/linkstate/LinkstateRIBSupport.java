@@ -58,7 +58,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 final class LinkstateRIBSupport extends AbstractRIBSupport {
-    private static abstract class ApplyRoute {
+    private abstract static class ApplyRoute {
         abstract void apply(DOMDataWriteTransaction tx, YangInstanceIdentifier base, NodeIdentifierWithPredicates routeKey, DataContainerNode<?> route, final ContainerNode attributes);
     }
 
@@ -160,7 +160,9 @@ final class LinkstateRIBSupport extends AbstractRIBSupport {
 
     private NodeIdentifierWithPredicates createRouteKey(final UnkeyedListEntryNode linkstate) {
         final ByteBuf buffer = Unpooled.buffer();
-        LinkstateNlriParser.serializeNlri(linkstate, buffer);
+        final CLinkstateDestination cLinkstateDestination = LinkstateNlriParser.extractLinkstateDestination(linkstate);
+        LinkstateNlriParser.serializeNlri(cLinkstateDestination, buffer);
+
         return new NodeIdentifierWithPredicates(LinkstateRoute.QNAME, ROUTE_KEY, ByteArray.readAllBytes(buffer));
     }
 
