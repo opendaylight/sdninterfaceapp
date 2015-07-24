@@ -56,6 +56,8 @@ import org.slf4j.LoggerFactory;
 final class EffectiveRibInWriter implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(EffectiveRibInWriter.class);
     private static final NodeIdentifier TABLE_ROUTES = new NodeIdentifier(Routes.QNAME);
+    private static final NodeIdentifier ADJRIBIN_NID = new NodeIdentifier(AdjRibIn.QNAME);
+    private static final NodeIdentifier TABLES_NID = new NodeIdentifier(Tables.QNAME);
 
     /**
      * Maintains {@link TableRouteListener} instances.
@@ -71,7 +73,7 @@ final class EffectiveRibInWriter implements AutoCloseable {
             this.chain = Preconditions.checkNotNull(chain);
             this.ribId = Preconditions.checkNotNull(ribId);
 
-            final YangInstanceIdentifier tableId = ribId.node(Peer.QNAME).node(Peer.QNAME).node(AdjRibIn.QNAME).node(Tables.QNAME).node(Tables.QNAME);
+            final YangInstanceIdentifier tableId = ribId.node(Peer.QNAME).node(Peer.QNAME);
             final DOMDataTreeIdentifier treeId = new DOMDataTreeIdentifier(LogicalDatastoreType.OPERATIONAL, tableId);
             LOG.debug("Registered Effective RIB on {}", tableId);
             this.reg = service.registerDataTreeChangeListener(treeId, this);
@@ -79,43 +81,27 @@ final class EffectiveRibInWriter implements AutoCloseable {
 
         private void processRoute(final DOMDataWriteTransaction tx, final RIBSupport ribSupport, final AbstractImportPolicy policy, final YangInstanceIdentifier routesPath, final DataTreeCandidateNode route) {
             LOG.debug("Process route {}", route);
+            final YangInstanceIdentifier routeId = ribSupport.routePath(routesPath, route.getIdentifier());
             switch (route.getModificationType()) {
             case DELETE:
-                // Delete has already been affected by the store in caller, so this is a no-op.
-                break;
-            case MERGE:
-                LOG.info("Merge on {} reported, this should never have happened, ignoring", route);
+                tx.delete(LogicalDatastoreType.OPERATIONAL, routeId);
                 break;
             case UNMODIFIED:
                 // No-op
                 break;
             case SUBTREE_MODIFIED:
             case WRITE:
+                tx.put(LogicalDatastoreType.OPERATIONAL, routeId, route.getDataAfter().get());
                 // Lookup per-table attributes from RIBSupport
                 final ContainerNode advertisedAttrs = (ContainerNode) NormalizedNodes.findNode(route.getDataAfter(), ribSupport.routeAttributesIdentifier()).orNull();
                 final ContainerNode effectiveAttrs;
 
                 if (advertisedAttrs != null) {
                     effectiveAttrs = policy.effectiveAttributes(advertisedAttrs);
-
-                    /*
-                     * Speed hack: if we determine that the policy has passed the attributes
-                     * back unmodified, the corresponding change has already been written in
-                     * our caller. There is no need to perform any further processing.
-                     *
-                     * We also use direct object comparison to make the check very fast, as
-                     * it may not be that common, in which case it does not make sense to pay
-                     * the full equals price.
-                     */
-                    if (effectiveAttrs == advertisedAttrs) {
-                        LOG.trace("Effective and local attributes are equal. Quit processing route {}", route);
-                        return;
-                    }
                 } else {
                     effectiveAttrs = null;
                 }
 
-                final YangInstanceIdentifier routeId = ribSupport.routePath(routesPath, route.getIdentifier());
                 LOG.debug("Route {} effective attributes {} towards {}", route.getIdentifier(), effectiveAttrs, routeId);
 
                 if (effectiveAttrs != null) {
@@ -135,27 +121,31 @@ final class EffectiveRibInWriter implements AutoCloseable {
             final AbstractImportPolicy policy = EffectiveRibInWriter.this.peerPolicyTracker.policyFor(IdentifierUtils.peerId(peerKey));
 
             for (final DataTreeCandidateNode child : children) {
-                LOG.debug("Process table children {}", child);
+                LOG.debug("Process table {} type {}", child, child.getModificationType());
+                final YangInstanceIdentifier childPath = tablePath.node(child.getIdentifier());
                 switch (child.getModificationType()) {
                 case DELETE:
                     tx.delete(LogicalDatastoreType.OPERATIONAL, tablePath.node(child.getIdentifier()));
-                    break;
-                case MERGE:
-                    LOG.info("Merge on {} reported, this should never have happened, ignoring", child);
                     break;
                 case UNMODIFIED:
                     // No-op
                     break;
                 case SUBTREE_MODIFIED:
+                    if (TABLE_ROUTES.equals(child.getIdentifier())) {
+                        for (final DataTreeCandidateNode route : ribSupport.changedRoutes(child)) {
+                            processRoute(tx, ribSupport, policy, childPath, route);
+                        }
+                    } else {
+                        tx.put(LogicalDatastoreType.OPERATIONAL, childPath, child.getDataAfter().get());
+                    }
+                    break;
                 case WRITE:
-                    tx.put(LogicalDatastoreType.OPERATIONAL, tablePath.node(child.getIdentifier()), child.getDataAfter().get());
-
+                    tx.put(LogicalDatastoreType.OPERATIONAL, childPath, child.getDataAfter().get());
                     // Routes are special, as they may end up being filtered. The previous put conveniently
                     // ensured that we have them in at target, so a subsequent delete will not fail :)
                     if (TABLE_ROUTES.equals(child.getIdentifier())) {
-                        final YangInstanceIdentifier routesPath = tablePath.node(Routes.QNAME);
                         for (final DataTreeCandidateNode route : ribSupport.changedRoutes(child)) {
-                            processRoute(tx, ribSupport, policy, routesPath, route);
+                            processRoute(tx, ribSupport, policy, childPath, route);
                         }
                     }
                     break;
@@ -195,45 +185,55 @@ final class EffectiveRibInWriter implements AutoCloseable {
         public void onDataTreeChanged(final Collection<DataTreeCandidate> changes) {
             LOG.trace("Data changed called to effective RIB. Change : {}", changes);
             final DOMDataWriteTransaction tx = this.chain.newWriteOnlyTransaction();
-
             for (final DataTreeCandidate tc : changes) {
                 final YangInstanceIdentifier rootPath = tc.getRootPath();
 
                 // Obtain the peer's key
                 final NodeIdentifierWithPredicates peerKey = IdentifierUtils.peerKey(rootPath);
-
-                // Extract the table key, this should be safe based on the path where we subscribed,
-                // but let's verify explicitly.
-                final PathArgument lastArg = rootPath.getLastPathArgument();
-                Verify.verify(lastArg instanceof NodeIdentifierWithPredicates, "Unexpected type %s in path %s", lastArg.getClass(), rootPath);
-                final NodeIdentifierWithPredicates tableKey = (NodeIdentifierWithPredicates) lastArg;
-
                 final DataTreeCandidateNode root = tc.getRootNode();
-                switch (root.getModificationType()) {
-                case DELETE:
-                    // delete the corresponding effective table
-                    tx.delete(LogicalDatastoreType.OPERATIONAL, effectiveTablePath(peerKey, tableKey));
-                    break;
-                case MERGE:
-                    // TODO: upstream API should never give us this, as it leaks how the delta was created.
-                    LOG.info("Merge on {} reported, this should never have happened, but attempting to cope", rootPath);
-                    modifyTable(tx, peerKey, tableKey, root);
-                    break;
-                case SUBTREE_MODIFIED:
-                    modifyTable(tx, peerKey, tableKey, root);
-                    break;
-                case UNMODIFIED:
-                    LOG.info("Ignoring spurious notification on {} data {}", rootPath, root);
-                    break;
-                case WRITE:
-                    writeTable(tx, peerKey, tableKey, root);
-                    break;
-                default:
-                    LOG.warn("Ignoring unhandled root {}", root);
-                    break;
+
+                // call out peer-role has changed
+                final DataTreeCandidateNode roleChange =  root.getModifiedChild(AbstractPeerRoleTracker.PEER_ROLE_NID);
+                if (roleChange != null) {
+                    EffectiveRibInWriter.this.peerPolicyTracker.onDataTreeChanged(roleChange, IdentifierUtils.peerPath(rootPath));
+                }
+
+                // filter out any change outside AdjRibsIn
+                final DataTreeCandidateNode ribIn =  root.getModifiedChild(ADJRIBIN_NID);
+                if (ribIn == null) {
+                    LOG.debug("Skipping change {}", tc.getRootNode());
+                    continue;
+                }
+                final DataTreeCandidateNode tables = ribIn.getModifiedChild(TABLES_NID);
+                if (tables == null) {
+                    LOG.debug("Skipping change {}", tc.getRootNode());
+                    continue;
+                }
+                for (final DataTreeCandidateNode table : tables.getChildNodes()) {
+                    final PathArgument lastArg = table.getIdentifier();
+                    Verify.verify(lastArg instanceof NodeIdentifierWithPredicates, "Unexpected type %s in path %s", lastArg.getClass(), rootPath);
+                    final NodeIdentifierWithPredicates tableKey = (NodeIdentifierWithPredicates) lastArg;
+
+                    switch (root.getModificationType()) {
+                    case DELETE:
+                        // delete the corresponding effective table
+                        tx.delete(LogicalDatastoreType.OPERATIONAL, effectiveTablePath(peerKey, tableKey));
+                        break;
+                    case SUBTREE_MODIFIED:
+                        modifyTable(tx, peerKey, tableKey, table);
+                        break;
+                    case UNMODIFIED:
+                        LOG.info("Ignoring spurious notification on {} data {}", rootPath, table);
+                        break;
+                    case WRITE:
+                        writeTable(tx, peerKey, tableKey, table);
+                        break;
+                    default:
+                        LOG.warn("Ignoring unhandled root {}", root);
+                        break;
+                    }
                 }
             }
-
             tx.submit();
         }
 
@@ -254,13 +254,12 @@ final class EffectiveRibInWriter implements AutoCloseable {
 
     private EffectiveRibInWriter(final DOMDataTreeChangeService service, final DOMTransactionChain chain, final YangInstanceIdentifier ribId,
         final PolicyDatabase pd, final RIBSupportContextRegistry registry) {
-        this.peerPolicyTracker = new ImportPolicyPeerTracker(service, ribId, pd);
+        this.peerPolicyTracker = new ImportPolicyPeerTracker(pd);
         this.adjInTracker = new AdjInTracker(service, registry, chain, ribId);
     }
 
     @Override
     public void close() {
         this.adjInTracker.close();
-        this.peerPolicyTracker.close();
     }
 }

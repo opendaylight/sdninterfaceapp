@@ -12,19 +12,27 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.Iterator;
+import org.opendaylight.protocol.util.Values;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.AsPath;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.ClusterId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.Communities;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.ExtendedCommunities;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.Origin;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.OriginatorId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.UnrecognizedAttributes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.attributes.as.path.Segments;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.ClusterIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.as.path.segment.CSegment;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.as.path.segment.c.segment.a.list._case.AList;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.as.path.segment.c.segment.a.list._case.a.list.AsSequence;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.next.hop.CNextHop;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.common.QNameModule;
+import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.AugmentationIdentifier;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeWithValue;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.PathArgument;
@@ -60,7 +68,20 @@ final class AttributeOperations {
                 return new AttributeOperations(key);
             }
         });
-
+    private static final LoadingCache<QNameModule, ImmutableSet<QName>> TRANSITIVE_CACHE = CacheBuilder.newBuilder()
+        .weakKeys()
+        .weakValues().build(
+            new CacheLoader<QNameModule, ImmutableSet<QName>>() {
+                @Override
+                public ImmutableSet<QName> load(final QNameModule key) {
+                    return ImmutableSet.of(QName.cachedReference(QName.create(key, Origin.QNAME.getLocalName())),
+                        QName.cachedReference(QName.create(key, AsPath.QNAME.getLocalName())),
+                        QName.cachedReference(QName.create(key, CNextHop.QNAME.getLocalName())),
+                        QName.cachedReference(QName.create(key, Communities.QNAME.getLocalName())),
+                        QName.cachedReference(QName.create(key, ExtendedCommunities.QNAME.getLocalName())));
+                }
+            });
+    private final ImmutableSet<QName> transitiveCollection;
     private final Iterable<PathArgument> originatorIdPath;
     private final Iterable<PathArgument> clusterListPath;
     private final NodeIdentifier originatorIdContainer;
@@ -73,6 +94,7 @@ final class AttributeOperations {
     private final NodeIdentifier asPathList;
     private final NodeIdentifier asPathSequence;
     private final NodeIdentifier asPathId;
+    private final NodeIdentifier transitiveLeaf;
 
     private AttributeOperations(final QNameModule namespace) {
         this.asPathContainer = new NodeIdentifier(QName.cachedReference(QName.create(namespace, AsPath.QNAME.getLocalName())));
@@ -88,17 +110,20 @@ final class AttributeOperations {
         this.originatorIdContainer = new NodeIdentifier(QName.cachedReference(QName.create(namespace, OriginatorId.QNAME.getLocalName())));
         this.originatorIdLeaf = new NodeIdentifier(QName.cachedReference(QName.create(namespace, "originator")));
         this.originatorIdPath = ImmutableList.<PathArgument>of(this.originatorIdContainer, this.originatorIdLeaf);
+
+        this.transitiveLeaf = new NodeIdentifier(QName.cachedReference(QName.create(UnrecognizedAttributes.QNAME, "transitive")));
+        this.transitiveCollection = TRANSITIVE_CACHE.getUnchecked(namespace);
     }
 
     static AttributeOperations getInstance(final ContainerNode attributes) {
-        return ATTRIBUTES_CACHE.getUnchecked(QNameModule.cachedReference(attributes.getNodeType().getModule()));
+        return ATTRIBUTES_CACHE.getUnchecked(attributes.getNodeType().getModule());
     }
 
     private Collection<UnkeyedListEntryNode> reusableSequence(final UnkeyedListEntryNode segment) {
         final Optional<NormalizedNode<?, ?>> maybeAsSequence = NormalizedNodes.findNode(segment, this.asPathChoice, this.asPathList, this.asPathSequence);
         if (maybeAsSequence.isPresent()) {
             final UnkeyedListNode asList = (UnkeyedListNode) maybeAsSequence.get();
-            if (asList.getSize() < 255) {
+            if (asList.getSize() < Values.UNSIGNED_BYTE_MAX_VALUE) {
                 return asList.getValue();
             }
         }
@@ -126,7 +151,7 @@ final class AttributeOperations {
         if (maybeOldAsSegments.isPresent() && !((UnkeyedListNode) maybeOldAsSegments.get()).getValue().isEmpty()) {
             // Builder of inner list
             final CollectionNodeBuilder<UnkeyedListEntryNode, UnkeyedListNode> ilb = Builders.unkeyedListBuilder();
-            ilb.withNodeIdentifier(this.asPathSegments);
+            ilb.withNodeIdentifier(this.asPathSequence);
             ilb.withChild(Builders.unkeyedListEntryBuilder().withNodeIdentifier(this.asPathSequence).withChild(ImmutableNodes.leafNode(this.asPathId, localAs)).build());
 
             /*
@@ -181,13 +206,12 @@ final class AttributeOperations {
         return b.build();
     }
 
-
     // Attributes when reflecting a route
     ContainerNode reflectedAttributes(final ContainerNode attributes, final Ipv4Address originatorId, final ClusterIdentifier clusterId) {
         final DataContainerNodeAttrBuilder<NodeIdentifier, ContainerNode> b = Builders.containerBuilder(attributes);
 
         // Create a new CLUSTER_LIST builder
-        final ListNodeBuilder<Object, LeafSetEntryNode<Object>> clb = Builders.leafSetBuilder();
+        final ListNodeBuilder<Object, LeafSetEntryNode<Object>> clb = Builders.orderedLeafSetBuilder();
         clb.withNodeIdentifier(this.clusterListLeaf);
 
         // prepend local CLUSTER_ID
@@ -230,8 +254,26 @@ final class AttributeOperations {
     }
 
     private boolean isTransitiveAttribute(final DataContainerChild<? extends PathArgument, ?> child) {
-        // FIXME: perform a filtering operation
-        return true;
+        if (child.getIdentifier() instanceof AugmentationIdentifier) {
+            final AugmentationIdentifier ai = (AugmentationIdentifier) child.getIdentifier();
+            for (final QName name : ai.getPossibleChildNames()) {
+                LOG.trace("Augmented QNAME {}", name);
+                if (this.transitiveCollection.contains(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (this.transitiveCollection.contains(child.getNodeType())) {
+            return true;
+        }
+        if (UnrecognizedAttributes.QNAME.equals(child.getNodeType())) {
+            final Optional<NormalizedNode<?, ?>> maybeTransitive = NormalizedNodes.findNode(child, this.transitiveLeaf);
+            if (maybeTransitive.isPresent()) {
+                return (Boolean) maybeTransitive.get().getValue();
+            }
+        }
+        return false;
     }
 
     private boolean spliceTransitives(final DataContainerNodeAttrBuilder<NodeIdentifier, ContainerNode> target, final ContainerNode attributes) {
@@ -287,11 +329,10 @@ final class AttributeOperations {
 
         final NormalizedNode<?, ?> originatorId = maybeOriginatorId.get();
         if (originatorId instanceof LeafNode) {
-            return ((LeafNode<?>)originatorId).getValue();
+            return ((LeafNode<?>) originatorId).getValue();
         }
 
         LOG.warn("Unexpected ORIGINATOR_ID node {}, ignoring it", originatorId);
         return null;
     }
-
 }

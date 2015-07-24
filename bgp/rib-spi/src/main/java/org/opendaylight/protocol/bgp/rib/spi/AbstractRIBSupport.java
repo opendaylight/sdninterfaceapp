@@ -71,13 +71,13 @@ public abstract class AbstractRIBSupport implements RIBSupport {
      * @param listClass Binding class of the route list, nust not be null;
      */
     protected AbstractRIBSupport(final Class<? extends Routes> cazeClass, final Class<? extends DataObject> containerClass, final Class<? extends Route> listClass) {
-        final QName qname = BindingReflections.findQName(containerClass);
+        final QName qname = QName.cachedReference(BindingReflections.findQName(containerClass));
         this.routesContainerIdentifier = new NodeIdentifier(qname);
         this.routeAttributesIdentifier = new NodeIdentifier(QName.cachedReference(QName.create(qname, Attributes.QNAME.getLocalName())));
         this.cazeClass = Preconditions.checkNotNull(cazeClass);
         this.containerClass = Preconditions.checkNotNull(containerClass);
         this.listClass = Preconditions.checkNotNull(listClass);
-        this.routesListIdentifier = new NodeIdentifier(BindingReflections.findQName(listClass));
+        this.routesListIdentifier = new NodeIdentifier(QName.cachedReference(BindingReflections.findQName(listClass)));
     }
 
     @Override
@@ -179,20 +179,16 @@ public abstract class AbstractRIBSupport implements RIBSupport {
 
     @Override
     public final Collection<DataTreeCandidateNode> changedRoutes(final DataTreeCandidateNode routes) {
-        LOG.trace("Changed routes called with {} identifier {}", routes, routes.getIdentifier());
         final DataTreeCandidateNode myRoutes = routes.getModifiedChild(this.routesContainerIdentifier);
         if (myRoutes == null) {
             return Collections.emptySet();
         }
-        LOG.trace("MyRoutes {} identifier {}", myRoutes, myRoutes.getIdentifier());
         final DataTreeCandidateNode routesMap = myRoutes.getModifiedChild(this.routesListIdentifier);
         if (routesMap == null) {
             return Collections.emptySet();
         }
-        LOG.trace("RoutesMap {} identifier {}", routesMap, routesMap.getIdentifier());
         // Well, given the remote possibility of augmentation, we should perform a filter here,
         // to make sure the type matches what routeType() reports.
-        LOG.trace("Returning children {}", routesMap.getChildNodes());
         return routesMap.getChildNodes();
     }
 
@@ -254,11 +250,11 @@ public abstract class AbstractRIBSupport implements RIBSupport {
         ab.setCNextHop(null);
 
         if (!advertised.isEmpty()) {
-            MpReachNlri mb = buildReach(advertised, hop);
+            final MpReachNlri mb = buildReach(advertised, hop);
             ab.addAugmentation(Attributes1.class, new Attributes1Builder().setMpReachNlri(mb).build());
         }
         if (!withdrawn.isEmpty()) {
-            MpUnreachNlri mb = buildUnreach(withdrawn);
+            final MpUnreachNlri mb = buildUnreach(withdrawn);
             ab.addAugmentation(Attributes2.class, new Attributes2Builder().setMpUnreachNlri(mb).build());
         }
 

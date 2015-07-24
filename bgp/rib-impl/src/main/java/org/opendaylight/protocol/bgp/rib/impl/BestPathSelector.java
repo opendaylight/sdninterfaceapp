@@ -29,13 +29,13 @@ final class BestPathSelector {
     private static final Logger LOG = LoggerFactory.getLogger(BestPathSelector.class);
     private static final Collection<PathArgument> ORIGINATOR_ID = ImmutableList.<PathArgument>of(new NodeIdentifier(OriginatorId.QNAME), new NodeIdentifier(QName.create(OriginatorId.QNAME, "originator")));
 
-    private final Long ourAs;
+    private final long ourAs;
     private UnsignedInteger bestOriginatorId = null;
     private UnsignedInteger bestRouterId = null;
     private BestPathState bestState = null;
 
-    BestPathSelector(final Long ourAs) {
-        this.ourAs = Preconditions.checkNotNull(ourAs);
+    BestPathSelector(final long ourAs) {
+        this.ourAs = ourAs;
     }
 
     void processPath(final UnsignedInteger routerId, final ContainerNode attrs) {
@@ -60,8 +60,8 @@ final class BestPathSelector {
              * are better.
              */
             final BestPathState state = new BestPathState(attrs);
-            if (this.bestOriginatorId == null || !selectPath(originatorId, state)) {
-                LOG.trace("Selecting path from router {} state {}", routerId, state);
+            if (this.bestOriginatorId == null || !isExistingPathBetter(originatorId, state)) {
+                LOG.trace("Selecting path from router {}", routerId);
                 this.bestOriginatorId = originatorId;
                 this.bestRouterId = routerId;
                 this.bestState = state;
@@ -80,7 +80,7 @@ final class BestPathSelector {
      * @param state attributes of the new route
      * @return true if the existing path is better, false if the new path is better
      */
-    private boolean selectPath(@Nonnull final UnsignedInteger originatorId, @Nonnull final BestPathState state) {
+    private boolean isExistingPathBetter(@Nonnull final UnsignedInteger originatorId, @Nonnull final BestPathState state) {
         // 1. prefer path with accessible nexthop
         // - we assume that all nexthops are accessible
 
@@ -99,13 +99,16 @@ final class BestPathSelector {
         if (state.getLocalPref() != null && state.getLocalPref() > this.bestState.getLocalPref()) {
             return false;
         }
+        if (state.getLocalPref() != null && state.getLocalPref() < this.bestState.getLocalPref()) {
+            return true;
+        }
 
         // 3. prefer learned path
         // - we assume that all paths are learned
 
         // 4. prefer the path with the shortest AS_PATH.
-        if (this.bestState.getAsPathLength() > state.getAsPathLength()) {
-            return true;
+        if (this.bestState.getAsPathLength() != state.getAsPathLength()) {
+            return this.bestState.getAsPathLength() < state.getAsPathLength();
         }
 
         // 5. prefer the path with the lowest origin type
@@ -116,6 +119,8 @@ final class BestPathSelector {
 
             // This trick relies on the order in which the values are declared in the model.
             if (no.ordinal() < bo.ordinal()) {
+                return false;
+            } else {
                 return true;
             }
         }
@@ -137,6 +142,8 @@ final class BestPathSelector {
                 final Long bmed = this.bestState.getMultiExitDisc();
                 final Long nmed = state.getMultiExitDisc();
                 if (nmed < bmed) {
+                    return false;
+                } else {
                     return true;
                 }
             }
@@ -149,7 +156,7 @@ final class BestPathSelector {
              *
              * FIXME: we should know this information from the peer directly.
              */
-            if (!this.ourAs.equals(bestAs) && this.ourAs.equals(newAs)) {
+            if (this.ourAs != bestAs && this.ourAs == newAs) {
                 return true;
             }
         }

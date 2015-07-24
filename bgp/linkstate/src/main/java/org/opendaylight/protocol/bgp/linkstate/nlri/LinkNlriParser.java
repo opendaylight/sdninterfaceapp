@@ -13,19 +13,13 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.opendaylight.protocol.bgp.linkstate.spi.TlvUtil;
 import org.opendaylight.protocol.bgp.parser.BGPParsingException;
-import org.opendaylight.protocol.bgp.sdniwrapper.SdniWrapper;
-import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.protocol.util.Ipv4Util;
 import org.opendaylight.protocol.util.Ipv6Util;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv6Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.Ipv4InterfaceIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.Ipv6InterfaceIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.TopologyIdentifier;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkDescriptors;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkDescriptorsBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkSdniDescriptors;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.linkstate.object.type.link._case.LinkSdniDescriptorsBuilder;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.ContainerNode;
@@ -46,16 +40,18 @@ public final class LinkNlriParser {
     private static final int IPV4_NEIGHBOR_ADDRESS = 260;
     private static final int IPV6_IFACE_ADDRESS = 261;
     private static final int IPV6_NEIGHBOR_ADDRESS = 262;
-    private static final int SDNI_LINK_STATE = 256;
-    private static final int SDNI_QOS_STATE = 257;
 
     /* Link Descriptor QNames */
-    private static final NodeIdentifier IPV4_IFACE_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "ipv4-interface-address")));
+    @VisibleForTesting
+    public static final NodeIdentifier IPV4_IFACE_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "ipv4-interface-address")));
     private static final NodeIdentifier IPV6_IFACE_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "ipv6-interface-address")));
-    private static final NodeIdentifier IPV4_NEIGHBOR_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "ipv4-neighbor-address")));
+    @VisibleForTesting
+    public static final NodeIdentifier IPV4_NEIGHBOR_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "ipv4-neighbor-address")));
     private static final NodeIdentifier IPV6_NEIGHBOR_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "ipv6-neighbor-address")));
-    private static final NodeIdentifier LINK_LOCAL_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "link-local-identifier")));
-    private static final NodeIdentifier LINK_REMOTE_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "link-remote-identifier")));
+    @VisibleForTesting
+    public static final NodeIdentifier LINK_LOCAL_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "link-local-identifier")));
+    @VisibleForTesting
+    public static final NodeIdentifier LINK_REMOTE_NID = new NodeIdentifier(QName.cachedReference(QName.create(LinkDescriptors.QNAME, "link-remote-identifier")));
 
     static LinkDescriptors parseLinkDescriptors(final ByteBuf buffer) throws BGPParsingException {
         final LinkDescriptorsBuilder builder = new LinkDescriptorsBuilder();
@@ -128,77 +124,28 @@ public final class LinkNlriParser {
         }
     }
 
-    static void serializeLinkDescriptors(final ContainerNode descriptors, final ByteBuf buffer) {
+    static LinkDescriptors serializeLinkDescriptors(final ContainerNode descriptors) {
+        final LinkDescriptorsBuilder linkDescBuilder = new LinkDescriptorsBuilder();
+
         if (descriptors.getChild(LINK_LOCAL_NID).isPresent() && descriptors.getChild(LINK_REMOTE_NID).isPresent()) {
-            final ByteBuf identifierBuf = Unpooled.buffer();
-            identifierBuf.writeInt(((Long)descriptors.getChild(LINK_LOCAL_NID).get().getValue()).intValue());
-            identifierBuf.writeInt(((Long)descriptors.getChild(LINK_REMOTE_NID).get().getValue()).intValue());
-            TlvUtil.writeTLV(LINK_LR_IDENTIFIERS, identifierBuf, buffer);
+            linkDescBuilder.setLinkLocalIdentifier((Long) descriptors.getChild(LINK_LOCAL_NID).get().getValue());
+            linkDescBuilder.setLinkRemoteIdentifier((Long) descriptors.getChild(LINK_REMOTE_NID).get().getValue());
         }
         if (descriptors.getChild(IPV4_IFACE_NID).isPresent()) {
-            TlvUtil.writeTLV(IPV4_IFACE_ADDRESS, Ipv4Util.byteBufForAddress(new Ipv4Address((String)descriptors.getChild(IPV4_IFACE_NID).get().getValue())), buffer);
+            linkDescBuilder.setIpv4InterfaceAddress(new Ipv4InterfaceIdentifier((String) descriptors.getChild(IPV4_IFACE_NID).get().getValue()));
         }
         if (descriptors.getChild(IPV6_IFACE_NID).isPresent()) {
-            TlvUtil.writeTLV(IPV6_IFACE_ADDRESS, Ipv6Util.byteBufForAddress(new Ipv6Address((String)descriptors.getChild(IPV6_IFACE_NID).get().getValue())), buffer);
+            linkDescBuilder.setIpv6InterfaceAddress(new Ipv6InterfaceIdentifier((String) descriptors.getChild(IPV6_IFACE_NID).get().getValue()));
         }
         if (descriptors.getChild(IPV4_NEIGHBOR_NID).isPresent()) {
-            TlvUtil.writeTLV(IPV4_NEIGHBOR_ADDRESS, Ipv4Util.byteBufForAddress(new Ipv4Address((String)descriptors.getChild(IPV4_NEIGHBOR_NID).get().getValue())), buffer);
+            linkDescBuilder.setIpv4NeighborAddress(new Ipv4InterfaceIdentifier((String) descriptors.getChild(IPV4_NEIGHBOR_NID).get().getValue()));
         }
         if (descriptors.getChild(IPV6_NEIGHBOR_NID).isPresent()) {
-            TlvUtil.writeTLV(IPV6_NEIGHBOR_ADDRESS, Ipv6Util.byteBufForAddress(new Ipv6Address((String)descriptors.getChild(IPV6_NEIGHBOR_NID).get().getValue())), buffer);
+            linkDescBuilder.setIpv6NeighborAddress(new Ipv6InterfaceIdentifier((String) descriptors.getChild(IPV6_NEIGHBOR_NID).get().getValue()));
         }
         if (descriptors.getChild(TlvUtil.MULTI_TOPOLOGY_NID).isPresent()) {
-            TlvUtil.writeTLV(TlvUtil.MULTI_TOPOLOGY_ID, Unpooled.copyShort((Short)descriptors.getChild(TlvUtil.MULTI_TOPOLOGY_NID).get().getValue()), buffer);
+            linkDescBuilder.setMultiTopologyId(new TopologyIdentifier((Integer) descriptors.getChild(TlvUtil.MULTI_TOPOLOGY_NID).get().getValue()));
         }
-    }
-    static LinkSdniDescriptors parseLinkSdniDescriptors(final ByteBuf buffer) throws BGPParsingException {
-        LOG.debug("parse Link SDNI descriptors: {0}", buffer);
-        final LinkSdniDescriptorsBuilder builder = new LinkSdniDescriptorsBuilder();
-        while (buffer.isReadable()) {
-            final int type = buffer.readUnsignedShort();
-            final int length = buffer.readUnsignedShort();
-            final byte[] value = ByteArray.readBytes(buffer, length);
-            SdniWrapper sdni = new SdniWrapper();
-            LOG.debug("Parsing Link Sdni Descriptor: {}", new String(value));
-            switch (type) {
-            case SDNI_LINK_STATE:
-                String sdniData = new String(value);
-                builder.setSdniIdentifier(sdniData);
-                sdni.parseSDNIMessage(sdniData);
-                LOG.trace("SDNI wrapper data to be parsed: ",sdniData);
-
-                final int qostype = buffer.readUnsignedShort();
-                if (qostype == SDNI_QOS_STATE) {
-                    final int qoslength = buffer.readUnsignedShort();
-                    final byte[] qosvalue = ByteArray.readBytes(buffer, qoslength);
-                    String sdniqosData = new String(qosvalue);
-                    builder.setSdniIdentifier(sdniqosData);
-                    sdni.parseSDNIQOSMessage(sdniqosData);
-                    LOG.trace("SDNI-QOS wrapper data to be parsed: ",sdniqosData);
-                }
-            default:
-                throw new BGPParsingException("Link Sdni Descriptor not recognized, type: " + type);
-            }
-        }
-        LOG.trace("Finished parsing Link descriptors.");
-        return builder.build();
-    }
-
-    static byte[] serializeLinkSdniDescriptors() {
-        SdniWrapper sdniWrapper = new SdniWrapper();
-        ByteBuf buffer = Unpooled.buffer();
-
-        buffer = sdniWrapper.getSDNIMessage();
-        LOG.debug("serialise sdni: {0} buffer: {1}", ByteArray.readAllBytes(buffer), buffer);
-        return ByteArray.readAllBytes(buffer);
-    }
-
-    static byte[] serializeLinkSdniQOSDescriptors() {
-        SdniWrapper sdniWrapper = new SdniWrapper();
-        ByteBuf buffer = Unpooled.buffer();
-
-        buffer = sdniWrapper.getSDNIQOSMessage();
-        LOG.debug("serialise sdni qos: {0} buffer: {1}", ByteArray.readAllBytes(buffer), buffer);
-        return ByteArray.readAllBytes(buffer);
+        return linkDescBuilder.build();
     }
 }
