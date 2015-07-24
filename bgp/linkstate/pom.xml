@@ -34,11 +34,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>bgp-sdniwrapper</artifactId>
-            <version>0.4.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>concepts</artifactId>
         </dependency>
         <dependency>
