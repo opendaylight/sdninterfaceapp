@@ -28,29 +28,6 @@
 
     <dependencies>
     <dependency>
-       <groupId>org.opendaylight.controller</groupId>
-       <artifactId>features-base</artifactId>
-       <version>${odl.karaf.base.version}</version>
-       <classifier>features</classifier>
-       <type>xml</type>
-    </dependency>
-
-    <dependency>
-       <groupId>org.opendaylight.controller</groupId>
-       <artifactId>features-adsal</artifactId>
-       <version>${sal.version}</version>
-       <classifier>features</classifier>
-       <type>xml</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>features-nsf</artifactId>
-      <classifier>features</classifier>
-      <type>xml</type>
-    </dependency>
-
-    <dependency>
       <groupId>org.jboss.spec.javax.transaction</groupId>
       <artifactId>jboss-transaction-api_1.1_spec</artifactId>
       <version>1.0.1.Final</version>
