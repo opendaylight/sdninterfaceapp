@@ -10,23 +10,25 @@
 <features name="odl-sdninterfaceapp-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
-    <repository>mvn:org.opendaylight.controller/features-nsf/${nsf.version}/xml/features</repository>
-    <repository>mvn:org.opendaylight.controller/features-adsal/${sal.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.openflowjava/features-openflowjava/${openflowjava.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/${mdsal.model.version}/xml/features</repository>
 
     <feature name="odl-sdninterfaceapp-all" version="1.6.0-SNAPSHOT" description="OpenDaylight :: sdninterfaceapp">
-        <feature version="${sal.version}">odl-adsal-all</feature>
-        <feature version="${nsf.version}">odl-adsal-northbound</feature>
-        <bundle start="true">mvn:com.fasterxml.jackson.core/jackson-annotations/${jackson.version}</bundle>
-        <bundle start="true">mvn:com.fasterxml.jackson.core/jackson-core/${jackson.version}</bundle>
-        <bundle start="true">mvn:com.fasterxml.jackson.core/jackson-databind/${jackson.version}</bundle>
-        <bundle>mvn:org.jboss.spec.javax.transaction/jboss-transaction-api_1.1_spec/1.0.1.Final</bundle>
-        <bundle>mvn:org.opendaylight.controller/clustering.services/0.7.0-SNAPSHOT</bundle>
-        <bundle>mvn:org.opendaylight.controller/hosttracker/0.7.0-SNAPSHOT</bundle>
-        <bundle>mvn:org.opendaylight.controller/switchmanager/0.9.0-SNAPSHOT</bundle>
-        <bundle>mvn:org.opendaylight.controller/topologymanager/0.6.0-SNAPSHOT</bundle>
-        <bundle>mvn:org.opendaylight.controller/containermanager/0.7.0-SNAPSHOT</bundle>
-        <bundle>mvn:org.opendaylight.controller/statisticsmanager/0.7.0-SNAPSHOT</bundle>
-        <bundle>mvn:org.opendaylight.sdninterfaceapp/sdniaggregator/0.7.0-SNAPSHOT</bundle>
+        <feature version="${mdsal.version}">odl-mdsal-broker</feature>
+        <feature version="${project.version}">odl-sdninterfaceapp-model</feature>
+        <feature version="${openflowjava.version}">odl-openflowjava-protocol</feature>
         <bundle>mvn:org.opendaylight.sdninterfaceapp/sdni/0.7.0-SNAPSHOT</bundle>
+        <bundle>mvn:org.opendaylight.sdninterfaceapp/sdniaggregator/0.7.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name='odl-sdninterfaceapp-model' version='${project.version}'
+        description="OpenDaylight :: Sdninterfaceapp :: Model">
+        <!-- general models -->
+        <feature version='${yangtools.version}'>odl-mdsal-models</feature>
+	    <bundle>mvn:org.opendaylight.controller.model/model-inventory/1.3.0-SNAPSHOT</bundle>
+	    <bundle>mvn:org.opendaylight.controller.model/model-topology/1.3.0-SNAPSHOT</bundle>
+        <!-- sdninterfaceapp specific models -->
+        <bundle>mvn:org.opendaylight.sdninterfaceapp.model/model-flow-statistics/0.7.0-SNAPSHOT</bundle>
     </feature>
 </features>

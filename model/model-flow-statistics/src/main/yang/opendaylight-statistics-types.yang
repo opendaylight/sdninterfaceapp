@@ -1,0 +1,57 @@
+module opendaylight-statistics-types {
+    namespace "urn:opendaylight:model:statistics:types";
+    prefix stat-types;
+
+    import ietf-yang-types {prefix yang; revision-date "2010-09-24";}
+
+    description "Sdninterfaceapp statistics common types.";
+
+    revision "2015-10-06" {
+        description "Initial revision of QoS Statistics data";
+    }
+
+    grouping node-connector-statistics {
+        description "Openflow node connector (port) statistics structure.";
+
+        container packets {
+            leaf received {
+                type uint64;
+            }
+            leaf transmitted {
+                type uint64;
+            }
+        }
+        container bytes {
+            leaf received {
+                type uint64;
+            }
+            leaf transmitted {
+                type uint64;
+            }
+        }
+        leaf receive-drops {
+            type uint64;
+        }
+        leaf transmit-drops {
+            type uint64;
+        }
+        leaf receive-errors {
+            type uint64;
+        }
+        leaf transmit-errors {
+            type uint64;
+        }
+        leaf receive-frame-error {
+            type uint64;
+        }
+        leaf receive-over-run-error {
+            type uint64;
+        }
+        leaf receive-crc-error {
+            type uint64;
+        }
+        leaf collision-count {
+            type uint64;
+        }
+    }
+}

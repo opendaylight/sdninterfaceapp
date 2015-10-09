@@ -75,14 +75,14 @@
       <type>xml</type>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.opendaylight.openflowplugin</groupId>
       <artifactId>features-openflowplugin</artifactId>
       <version>0.2.0-SNAPSHOT</version>
       <classifier>features</classifier>
       <type>xml</type>
       <scope>runtime</scope>
-    </dependency>
+    </dependency>-->
   </dependencies>
 
   <build>
@@ -176,7 +176,6 @@
           <bootFeatures>
             <feature>standard</feature>
             <feature>odl-sdninterfaceapp-all</feature>
-            <feature>odl-restconf</feature>
           </bootFeatures>
         </configuration>
         <executions>

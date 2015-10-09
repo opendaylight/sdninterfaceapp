@@ -7,170 +7,153 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
+   
    <parent>
     <artifactId>sdninterfaceapp.project</artifactId>
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
     <version>1.6.0-SNAPSHOT</version>
   </parent>
-   <artifactId>features-sdninterfaceapp</artifactId>
+
    <groupId>org.opendaylight.sdninterfaceapp</groupId>
+   <artifactId>features-sdninterfaceapp</artifactId>
    <version>1.6.0-SNAPSHOT</version>
    <packaging>jar</packaging>
+
    <properties>
-      <features.file>features.xml</features.file>
-      <branding.version>1.2.0-SNAPSHOT</branding.version>
-      <karaf.resources.version>1.6.0-SNAPSHOT</karaf.resources.version>
-      <karaf.empty.version>1.6.0-SNAPSHOT</karaf.empty.version>
-      <surefire.version>2.16</surefire.version>
-      <yangtools.version>0.8.0-SNAPSHOT</yangtools.version>
-      <odl.karaf.base.version>1.6.0-SNAPSHOT</odl.karaf.base.version>
+       <features.file>features.xml</features.file>
+       <yangtools.version>0.8.0-SNAPSHOT</yangtools.version>
+       <config.version>0.4.0-SNAPSHOT</config.version>
+       <mdsal.version>1.3.0-SNAPSHOT</mdsal.version>
+       <mdsal.model.version>0.8.0-SNAPSHOT</mdsal.model.version>
+       <openflowjava.version>0.7.0-SNAPSHOT</openflowjava.version>
+       <openflowplugin.version>0.2.0-SNAPSHOT</openflowplugin.version>
+       <lldp.version>0.10.0-SNAPSHOT</lldp.version>
+       <restconf.version>1.3.0-SNAPSHOT</restconf.version>
+       <surefire.version>2.16</surefire.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- This project -->
+            <dependency>
+                <groupId>org.opendaylight.sdninterfaceapp</groupId>
+                <artifactId>sdninterfaceapp-artifacts</artifactId>
+                <version>0.7.0-SNAPSHOT</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!-- YANG tools -->
+            <dependency>
+                <groupId>org.opendaylight.yangtools</groupId>
+                <artifactId>yangtools-artifacts</artifactId>
+                <version>${yangtools.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!-- Controller infrastructure -->
+            <dependency>
+                <groupId>org.opendaylight.controller</groupId>
+                <artifactId>config-artifacts</artifactId>
+                <version>${config.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.opendaylight.controller</groupId>
+                <artifactId>mdsal-artifacts</artifactId>
+                <version>${mdsal.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!-- restconf -->
+            <dependency>
+                <groupId>org.opendaylight.netconf</groupId>
+                <artifactId>restconf-artifacts</artifactId>
+                <version>${restconf.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+
+            <!-- OpenFlowJava -->
+            <dependency>
+                <groupId>org.opendaylight.openflowjava</groupId>
+                <artifactId>openflowjava-artifacts</artifactId>
+                <version>${openflowjava.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-    <dependency>
-       <groupId>org.opendaylight.controller</groupId>
-       <artifactId>features-base</artifactId>
-       <version>${odl.karaf.base.version}</version>
-       <classifier>features</classifier>
-       <type>xml</type>
-    </dependency>
+        <!-- feature dependencies -->
+        <dependency>
+            <groupId>org.opendaylight.mdsal.model</groupId>
+            <artifactId>features-mdsal-model</artifactId>
+            <version>${mdsal.model.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+            <scope>runtime</scope>
+        </dependency>
 
-    <dependency>
-       <groupId>org.opendaylight.controller</groupId>
-       <artifactId>features-adsal</artifactId>
-       <version>${sal.version}</version>
-       <classifier>features</classifier>
-       <type>xml</type>
-    </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>features-mdsal</artifactId>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>features-yangtools</artifactId>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.openflowjava</groupId>
+            <artifactId>features-openflowjava</artifactId>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
 
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>features-nsf</artifactId>
-      <classifier>features</classifier>
-      <type>xml</type>
-    </dependency>
+        <!-- bundle dependencies -->
+        <dependency>
+            <groupId>org.opendaylight.sdninterfaceapp.model</groupId>
+            <artifactId>model-flow-statistics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.sdninterfaceapp</groupId>
+            <artifactId>sdniaggregator</artifactId>
+            <version>0.7.0-SNAPSHOT</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.jboss.spec.javax.transaction</groupId>
-      <artifactId>jboss-transaction-api_1.1_spec</artifactId>
-      <version>1.0.1.Final</version>
-    </dependency>
+        <dependency>
+            <groupId>org.opendaylight.sdninterfaceapp</groupId>
+            <artifactId>sdni</artifactId>
+            <version>0.7.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller.model</groupId>
+            <artifactId>model-inventory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller.model</groupId>
+            <artifactId>model-topology</artifactId>
+        </dependency>
+       <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>liblldp</artifactId>
+            <version>${lldp.version}</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>clustering.services</artifactId>
-      <version>0.7.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>hosttracker</artifactId>
-      <version>0.7.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>switchmanager</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>topologymanager</artifactId>
-      <version>0.6.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>containermanager</artifactId>
-      <version>0.7.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>statisticsmanager</artifactId>
-      <version>0.7.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.sdninterfaceapp</groupId>
-      <artifactId>sdniaggregator</artifactId>
-      <version>0.7.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opendaylight.sdninterfaceapp</groupId>
-      <artifactId>sdni</artifactId>
-      <version>0.7.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.catalina</artifactId>
-      <version>7.0.53.v201406061610</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.catalina.ha</artifactId>
-      <version>7.0.53.v201406070630</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.catalina.tribes</artifactId>
-      <version>7.0.53.v201406070630</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.coyote</artifactId>
-      <version>7.0.53.v201406070630</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.el</artifactId>
-      <version>7.0.53.v201406060720</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.jasper</artifactId>
-      <version>7.0.53.v201406070630</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.juli.extras</artifactId>
-      <version>7.0.53.v201406060720</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.tomcat.api</artifactId>
-      <version>7.0.53.v201406060720</version>
-    </dependency>
-    <dependency>
-      <groupId>orbit</groupId>
-      <artifactId>org.apache.tomcat.util</artifactId>
-      <version>7.0.53.v201406070630</version>
-    </dependency>
-
-    <!-- test to validate features.xml -->
-    <dependency>
-      <groupId>org.opendaylight.odlparent</groupId>
-      <artifactId>features-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- dependency for opendaylight-karaf-empty for use by testing -->
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>opendaylight-karaf-empty</artifactId>
-      <version>${karaf.empty.version}</version>
-      <type>zip</type>
-    </dependency>
-    <!-- Uncomment this if you get an error : java.lang.NoSuchMethodError: org.slf4j.helpers.MessageFormatter.format(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)Lorg/slf4j/helpers/FormattingTuple;
-    <dependency>
+        <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>1.7.2</version>
     </dependency>
-    -->
-
    </dependencies>
    <build>
       <resources>
