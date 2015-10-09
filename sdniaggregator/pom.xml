@@ -2,68 +2,47 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.opendaylight.controller</groupId>
-    <artifactId>commons.opendaylight</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
-    <relativePath/>
+    <groupId>org.opendaylight.sdninterfaceapp</groupId>
+    <artifactId>sdninterfaceapp-parent</artifactId>
+    <version>0.7.0-SNAPSHOT</version>
+    <relativePath>../parent</relativePath>
   </parent>
-  <groupId>org.opendaylight.sdninterfaceapp</groupId>
+
   <artifactId>sdniaggregator</artifactId>
-  <version>0.7.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
+
   <dependencies>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-base</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>clustering.services</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>connectionmanager</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>forwardingrulesmanager</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>hosttracker</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal.connection</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>statisticsmanager</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>switchmanager</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>topologymanager</artifactId>
-    </dependency>
+            <groupId>org.opendaylight.sdninterfaceapp.model</groupId>
+            <artifactId>model-flow-statistics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller.model</groupId>
+            <artifactId>model-inventory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.openflowplugin</groupId>
+            <artifactId>openflowplugin-api</artifactId>
+            <version>${openflowplugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.openflowplugin</groupId>
+            <artifactId>openflowplugin-impl</artifactId>
+            <version>${openflowplugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.openflowplugin</groupId>
+            <artifactId>openflowplugin</artifactId>
+            <version>${openflowplugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>sal-binding-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>sal-common-util</artifactId>
+        </dependency>
   </dependencies>
 
   <build>
@@ -75,41 +54,9 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Import-Package>
-              org.opendaylight.controller.sal.core,
-              org.opendaylight.controller.sal.utils,
-              org.opendaylight.controller.sal.reader,
-              org.opendaylight.controller.hosttracker,
-              org.opendaylight.controller.hosttracker.hostAware,
-              org.opendaylight.controller.sal.packet.address,
-              org.opendaylight.controller.sal.action,
-              org.opendaylight.controller.switchmanager,
-              org.opendaylight.controller.statisticsmanager,
-              org.opendaylight.controller.clustering.services,
-              org.opendaylight.controller.topologymanager,
-              org.apache.felix.dm,
-              org.osgi.service.component,
-              org.slf4j,
-              javax.ws.rs,
-              javax.ws.rs.core,
-              javax.xml.bind,
-              javax.xml.bind.annotation,
-              com.fasterxml.jackson.core,
-              com.fasterxml.jackson.databind,
-              com.fasterxml.jackson.jaxrs.base,
-              com.fasterxml.jackson.annotation,
-              com.fasterxml.jackson.jaxrs.json,
-              com.fasterxml.jackson.core.type,
-              org.opendaylight.controller.connectionmanager,
-              org.opendaylight.controller.forwardingrulesmanager,
-              org.opendaylight.controller.sal.flowprogrammer,
-              org.opendaylight.controller.sal.match,
-              org.opendaylight.controller.sal.packet,
-              org.opendaylight.controller.sal.routing,
-              org.opendaylight.controller.sal.topology
-            </Import-Package>
+            <Import-Package>*</Import-Package>
             <Export-Package>
-              org.opendaylight.controller.sdniaggregator
+              org.opendaylight.sdniaggregator
             </Export-Package>
           </instructions>
           <manifestLocation>${project.basedir}/META-INF</manifestLocation>
@@ -118,10 +65,10 @@
     </plugins>
   </build>
   <scm>
-    <connection>scm:git:ssh://git.opendaylight.org:29418/controller.git</connection>
+    <connection>scm:git:ssh://git.opendaylight.org:29418/sdninterfaceapp.git</connection>
     <developerConnection>scm:git:ssh://git.opendaylight.org:29418/sdninterfaceapp.git</developerConnection>
+    <url>https://wiki.opendaylight.org/view/ODL-SDNi_App:Main</url>
     <tag>HEAD</tag>
-    <url>https://wiki.opendaylight.org/view/OpenDaylight_Controller:Main</url>
   </scm>
 
 </project>
