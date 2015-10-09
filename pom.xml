@@ -18,6 +18,7 @@
     <module>artifacts</module>
     <module>parent</module>
     <module>sdniaggregator</module>
+    <module>sdni</module>
     <module>distribution-karaf</module>
     <module>features</module>
     <module>model</module>

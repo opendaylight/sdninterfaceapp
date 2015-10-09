@@ -9,8 +9,8 @@ module opendaylight-port-statistics {
     description "Openflow port statistics structures.";
 
     contact
-        "Anilkumar Vishnoi
-        Email: avishnoi@in.ibm.com";
+        "Singadi Swetha
+        Email: swetha.s8@tcs.com";
 
     revision "2015-10-06" {
         description "Initial revision of port statistics model";
