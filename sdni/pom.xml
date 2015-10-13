@@ -49,10 +49,6 @@
       <artifactId>openflowplugin</artifactId>
       <version>${openflowplugin.version}</version>
     </dependency>
-   <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>commons.northbound</artifactId>
-    </dependency>
    <!-- <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>sal</artifactId>
