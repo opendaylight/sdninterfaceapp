@@ -18,8 +18,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
-import org.codehaus.enunciate.jaxrs.ResponseCode;
-import org.codehaus.enunciate.jaxrs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.opendaylight.sdniaggregator.OpendaylightSdniManager;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev151006.node.connector.statistics.and.port.number.map.NodeConnectorStatisticsAndPortNumberMap;
 

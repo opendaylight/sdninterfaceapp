@@ -22,7 +22,7 @@
       <version>0.7.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.enunciate</groupId>
+      <groupId>com.webcohesion.enunciate</groupId>
       <artifactId>enunciate-core-annotations</artifactId>
     </dependency>
     <dependency>
@@ -58,7 +58,10 @@
 
   <build>
     <plugins>
-
+      <plugin>
+        <groupId>com.webcohesion.enunciate</groupId>
+        <artifactId>enunciate-maven-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -74,25 +77,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <!-- enunciate plugin does not work with JDK8 onwards -->
-  <profiles>
-    <profile>
-      <id>non-java8</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.enunciate</groupId>
-            <artifactId>maven-enunciate-plugin</artifactId>
-            <version>${enunciate.version}</version>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
   <scm>
     <connection>scm:git:ssh://git.opendaylight.org:29418/sdninterfaceapp.git</connection>
