@@ -1,0 +1,45 @@
+module opendaylight-sdni-qos-msg {
+    namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:qos:msg";
+    prefix qosmsg;
+    
+    import yang-ext {prefix ext; revision-date "2013-07-09";}
+    import opendaylight-inventory {prefix inv;revision-date "2013-08-19";}
+    //import opendaylight-sdni-qos-params {prefix qos-params;revision-date "2015-10-06";}
+    import opendaylight-port-statistics {prefix portstat; revision-date "2013-12-14";}
+    import opendaylight-statistics-types {prefix stat-types;revision-date "2013-09-25";}
+
+    description "Sdni QoS Data structures.";
+
+    revision "2015-10-06" {
+        description "Initial revision of port statistics model";
+    }
+
+    //Augment port statistics data to the flow-capable-node-connector
+//    augment "/inv:nodes/inv:node/inv:node-connector" {
+//        description "Openflow port statistics data into the node connector node.";
+//        ext:augment-identifier "flow-capable-node-connector-statistics-data";
+//        uses flow-capable-node-connector-statistics;
+//    }
+    
+//    grouping flow-capable-node-connector-statistics {
+//        description "TODO:: simplify";
+//        container flow-capable-node-connector-statistics {
+//            //uses qos-params:node-connector-statistics;
+//            uses stat-types:node-connector-statistics;
+//       }
+//    }
+
+    // RPC calls
+    rpc get-all-node-connectors-statistics {
+
+        description "Get statistics for all node connectors from the node";
+        output {
+                    list node-qos {
+                            leaf node-id {
+                              type string;
+                            }   
+                            uses portstat:node-connector-statistics-and-port-number-map;
+                   }
+        }
+    }
+}
