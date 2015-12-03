@@ -1,0 +1,139 @@
+module sdni-topology {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:topology:params";
+    prefix sdntp;
+
+    import ietf-inet-types { prefix inet; revision-date 2010-09-24; }
+    import network-topology { prefix nt; revision-date 2013-10-21; }
+    import ietf-yang-types {prefix yang;}
+
+    organization "TATA CONSULTANCY SERVICES";
+
+    contact "WILL-BE-DEFINED-LATER";
+
+    description
+        "This module defines a model for the topology parameters of a network.";
+
+    revision "2015-10-06" {
+        description
+            "Initial revision.";
+    }
+   
+  grouping sdn-topology{
+    container network-topology {
+        list topology {
+            description "
+                This is the model of an abstract topology.
+                A topology contains nodes and links.
+                Each topology MUST be identified by
+                unique topology-id for reason that a network could contain many
+                topologies.
+            ";
+            key "topology-id";
+            leaf topology-id {
+                type nt:topology-id;
+                description "
+                    It is presumed that a datastore will contain many topologies. To
+                    distinguish between topologies it is vital to have UNIQUE
+                    topology identifiers.
+                ";
+            }
+            leaf server-provided {
+                type boolean;
+                config false;
+                description "
+                    Indicates whether the topology is configurable by clients,
+                    or whether it is provided by the server.  This leaf is
+
+                    populated by the server implementing the model.
+                    It is set to false for topologies that are created by a client;
+                    it is set to true otherwise.  If it is set to true, any
+                    attempt to edit the topology MUST be rejected.
+                ";
+            }
+            container topology-types {
+                description
+                    "This container is used to identify the type, or types
+                    (as a topology can support several types simultaneously),
+                    of the topology.
+                    Topology types are the subject of several integrity constraints
+                    that an implementing server can validate in order to
+                    maintain integrity of the datastore.
+                    Topology types are indicated through separate data nodes;
+                    the set of topology types is expected to increase over time.
+                    To add support for a new topology, an augmenting module
+                    needs to augment this container with a new empty optional
+                    container to indicate the new topology type.
+                    The use of a container allows to indicate a subcategorization
+                    of topology types.
+                    The container SHALL NOT be augmented with any data nodes
+                    that serve a purpose other than identifying a particular
+                    topology type.
+                ";
+            }
+            list underlay-topology {
+                key "topology-ref";
+                leaf topology-ref {
+                    type nt:topology-ref;
+                }
+                // a list, not a leaf-list, to allow for potential augmentation
+                // with properties specific to the underlay topology,
+                // such as statistics, preferences, or cost.
+                description
+                    "Identifies the topology, or topologies, that this topology
+                    is dependent on.";
+            }
+
+            list node {
+                description "The list of network nodes defined for the topology.";
+                key "node-id";
+                uses nt:node-attributes;
+                must "boolean(../underlay-topology[*]/node[./supporting-nodes/node-ref])";
+                    // This constraint is meant to ensure that a referenced node is in fact
+                    // a node in an underlay topology.
+                list termination-point {
+                    description
+
+                        "A termination point can terminate a link.
+                        Depending on the type of topology, a termination point could,
+                        for example, refer to a port or an interface.";
+                    key "tp-id";
+                    uses nt:tp-attributes;
+                }
+            }
+
+            list link {
+                description "
+                    A Network Link connects a by Local (Source) node and
+                    a Remote (Destination) Network Nodes via a set of the
+                    nodes' termination points.
+                    As it is possible to have several links between the same
+                    source and destination nodes, and as a link could potentially
+                    be re-homed between termination points, to ensure that we
+                    would always know to distinguish between links, every link
+                    is identified by a dedicated link identifier.
+                    Note that a link models a point-to-point link, not a multipoint
+                    link.
+                    Layering dependencies on links in underlay topologies are
+                    not represented as the layering information of nodes and of
+                    termination points is sufficient.
+                ";
+                key "link-id";
+                uses nt:link-attributes;
+                must "boolean(../underlay-topology/link[./supporting-link])";
+                    // Constraint: any supporting link must be part of an underlay topology
+                must "boolean(../node[./source/source-node])";
+                    // Constraint: A link must have as source a node of the same topology
+                must "boolean(../node[./destination/dest-node])";
+                    // Constraint: A link must have as source a destination of the same topology
+                must "boolean(../node/termination-point[./source/source-tp])";
+                    // Constraint: The source termination point must be contained in the source node
+                must "boolean(../node/termination-point[./destination/dest-tp])";
+                    // Constraint: The destination termination point must be contained
+                    // in the destination node
+            }
+        }
+    }
+  }
+}
