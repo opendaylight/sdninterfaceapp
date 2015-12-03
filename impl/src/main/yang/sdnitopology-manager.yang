@@ -1,0 +1,55 @@
+module sdnitopology-manager {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:impl:topo";
+    prefix sdnitopology-manager;
+
+    import config { prefix config; revision-date 2013-04-05; }
+    import opendaylight-md-sal-binding { prefix md-sal-binding; revision-date 2013-10-28;}
+
+    description
+        "This module contains the base YANG definitions for
+        sdnitopology-manager implementation.";
+
+    revision "2015-10-06" {
+        description
+            "Initial revision.";
+    }
+
+  identity sdnitopology-manager {
+    base config:module-type;
+    config:java-name-prefix SdniTopologyManager;
+  }
+
+    augment "/config:modules/config:module/config:configuration" {
+  case sdnitopology-manager {
+      when "/config:modules/config:module/config:type = 'sdnitopology-manager'";
+  
+      //container rpc-registry {
+           //uses config:service-ref {
+                //refine type {
+                    //mandatory true;
+                    //config:required-identity mdsal:binding-rpc-registry;
+                //}
+           //}
+      //}
+      //container notification-service {
+        //uses config:service-ref {
+          //refine type {
+            //mandatory true;
+            //config:required-identity mdsal:binding-notification-service;
+          //}
+        //}
+      //} 
+
+      container broker {
+        uses config:service-ref {
+          refine type {
+            mandatory false;
+            config:required-identity md-sal-binding:binding-broker-osgi-registry;
+          }
+        }
+      }
+
+    }
+  }
+}

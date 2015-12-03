@@ -1,0 +1,26 @@
+module opendaylight-sdni-topology-msg {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:topology:msg";
+    prefix sdntm;
+
+    import sdni-topology { prefix sdntp; revision-date 2015-10-06; }
+
+    organization "TATA CONSULTANCY SERVICES";
+
+    contact "WILL-BE-DEFINED-LATER";
+
+    description
+        "This module defines a model for the topology of a network.";
+
+    revision "2015-10-06" {
+        description
+            "Initial revision.";
+    }
+
+    rpc getTopology {
+        output {          
+            uses sdntp:sdn-topology;
+        }
+    }   
+}
