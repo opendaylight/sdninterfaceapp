@@ -25,12 +25,10 @@ public class QosDataServiceProvider implements BindingAwareProvider, AutoCloseab
     private final Logger logger = LoggerFactory.getLogger(QosDataServiceProvider.class);
     private RpcRegistration<OpendaylightSdniQosMsgService> qosDataServiceRpcReg;
     private OpendaylightSdniQosMsgServiceImpl qosDataRpcServiceImpl = new OpendaylightSdniQosMsgServiceImpl();
-    private org.opendaylight.controller.sal.binding.api.RpcProviderRegistry rpcProviderregistry = null;
 
     @Override
     public void onSessionInitiated(ProviderContext session) {
         logger.info("Provider Session initialized");
-//        qosDataRpcServiceImpl = new OpendaylightSdniQosMsgServiceImpl();
         qosDataServiceRpcReg = session.addRpcImplementation(OpendaylightSdniQosMsgService.class, qosDataRpcServiceImpl);
     }
     
@@ -41,12 +39,5 @@ public class QosDataServiceProvider implements BindingAwareProvider, AutoCloseab
             qosDataServiceRpcReg.close();
         }
     }
-    
-    public void setRpcRegistry(org.opendaylight.controller.sal.binding.api.RpcProviderRegistry rpcProviderRegisrty)
-    {
-    	this.rpcProviderregistry = rpcProviderRegisrty;
-    	qosDataRpcServiceImpl.setRpcRegistry(rpcProviderRegisrty);
-    }
-
 }
 

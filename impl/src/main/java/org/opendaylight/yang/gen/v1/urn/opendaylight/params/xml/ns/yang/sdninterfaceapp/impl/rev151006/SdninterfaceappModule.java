@@ -21,7 +21,6 @@ public class SdninterfaceappModule extends org.opendaylight.yang.gen.v1.urn.open
     public java.lang.AutoCloseable createInstance() {
         QosDataServiceProvider provider = new QosDataServiceProvider();
         getBrokerDependency().registerProvider(provider);
-        provider.setRpcRegistry(getRpcRegistryDependency());
         return provider;
     }
 
