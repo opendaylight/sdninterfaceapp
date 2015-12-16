@@ -52,26 +52,7 @@ module sdni-topology {
                     attempt to edit the topology MUST be rejected.
                 ";
             }
-            container topology-types {
-                description
-                    "This container is used to identify the type, or types
-                    (as a topology can support several types simultaneously),
-                    of the topology.
-                    Topology types are the subject of several integrity constraints
-                    that an implementing server can validate in order to
-                    maintain integrity of the datastore.
-                    Topology types are indicated through separate data nodes;
-                    the set of topology types is expected to increase over time.
-                    To add support for a new topology, an augmenting module
-                    needs to augment this container with a new empty optional
-                    container to indicate the new topology type.
-                    The use of a container allows to indicate a subcategorization
-                    of topology types.
-                    The container SHALL NOT be augmented with any data nodes
-                    that serve a purpose other than identifying a particular
-                    topology type.
-                ";
-            }
+            
             list underlay-topology {
                 key "topology-ref";
                 leaf topology-ref {

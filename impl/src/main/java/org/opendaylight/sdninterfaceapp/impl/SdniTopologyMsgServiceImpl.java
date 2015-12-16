@@ -45,6 +45,9 @@ private static final int CPUS = Runtime.getRuntime().availableProcessors();
     RpcResultBuilder rpcResultBuilder = null;
 
     
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutputBuilder getTopologyOutputBuilder= new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutputBuilder();
+
+
     public SdniTopologyMsgServiceImpl(){
 
     }  
@@ -54,8 +57,7 @@ private static final int CPUS = Runtime.getRuntime().availableProcessors();
 	log.debug("SdniTopology Plugin Started");
 
 	List<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology> topoList = getAllTopologies();
-     List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology> myTopoList = 
-    		 new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology>();
+     List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology> myTopoList = new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology>();
 
 	if(topoList == null){
                 log.info("------------ mdsal topolist is null ---- returning null");
@@ -63,21 +65,115 @@ private static final int CPUS = Runtime.getRuntime().availableProcessors();
 	}
     for (org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology topo : topoList) {
     
-        log.info("---------------mdsal topolist : {}", topo.toString());	org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder myTopo = 
-    	new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder();
+        log.info("---------------mdsal topolist : {}", topo.toString());	org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder myTopo = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder();
    		          org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyKey  tkey = topo.getKey();
-
+	
         log.info("------------mdsal topology Key : {}", tkey.toString());
-        log.info("------------mdsal topology link : {}", topo.getLink());
-        log.info("------------mdsal topology Id : {}", topo.getTopologyId());
-		
-   }
-        networkTopologyBuilder.setTopology(myTopoList);
+	
+        myTopo.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyKey(topo.getTopologyId()));
+        myTopo.setLink(getLinks(topo.getLink()));
+        myTopo.setNode(getNodes(topo.getNode()));
+        myTopo.setTopologyId(topo.getTopologyId());
+        myTopo.setServerProvided(topo.isServerProvided());
+	myTopo.setUnderlayTopology(getUnderlayTopos(topo.getUnderlayTopology()));
 
-        rpcResultBuilder = RpcResultBuilder.success(networkTopologyBuilder.build());
+        myTopoList.add(myTopo.build());
+   }
+        
+        networkTopologyBuilder.setTopology(myTopoList);
+	
+        getTopologyOutputBuilder.setNetworkTopology(networkTopologyBuilder.build());
+        log.info("------------getTopologyOutputBuilder----------------");
+        rpcResultBuilder = RpcResultBuilder.success(getTopologyOutputBuilder.build());
+        log.info("------------rpcResultBuilder----------------");
         return rpcResultBuilder.buildFuture();
  }
+ 
+    private List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link> getLinks(List<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Link> mdsalLinkList) {
+
+if(mdsalLinkList == null || mdsalLinkList.isEmpty()){
+   return null;
+}
+
+List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link> result 
+= new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link>();
+
+for(org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Link l: mdsalLinkList) {
+ org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.LinkBuilder myLink = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.LinkBuilder();
+
+myLink.setDestination(l.getDestination());
+myLink.setLinkId(l.getLinkId());
+myLink.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.LinkKey(l.getLinkId()));
+myLink.setSource(l.getSource());
+myLink.setSupportingLink(l.getSupportingLink());
+result.add(myLink.build());
+}
+
+return result;
     
+}
+  
+
+private List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.UnderlayTopology> getUnderlayTopos(List<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.UnderlayTopology> mdsalUnderlayTopoList) {
+if(mdsalUnderlayTopoList == null || mdsalUnderlayTopoList.isEmpty()){
+   return null;
+}
+List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.UnderlayTopology> result 
+= new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.UnderlayTopology>();
+
+for(org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.UnderlayTopology utp: mdsalUnderlayTopoList) {
+
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.UnderlayTopologyBuilder myUnderlayTopo = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.UnderlayTopologyBuilder(); 
+
+myUnderlayTopo.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.UnderlayTopologyKey(utp.getTopologyRef()));
+myUnderlayTopo.setTopologyRef(utp.getTopologyRef());
+
+
+result.add(myUnderlayTopo.build());
+}
+
+return result;
+
+}
+  
+private List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Node> getNodes(List<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Node> mdsalNodeList) {
+
+if(mdsalNodeList == null || mdsalNodeList.isEmpty()){
+   return null;
+}
+
+
+List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Node> result 
+= new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Node>();
+
+for(org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Node n: mdsalNodeList) {
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.NodeBuilder myNode = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.NodeBuilder();
+
+myNode.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.NodeKey(n.getNodeId()));
+myNode.setNodeId(n.getNodeId());
+myNode.setSupportingNode(n.getSupportingNode());
+
+//Termination point list setting
+List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.node.TerminationPoint> myTpList 
+= new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.node.TerminationPoint>();
+  for (org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.node.TerminationPoint mdsalNodeTp: n.getTerminationPoint()) {
+org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.node.TerminationPointBuilder myNodeTp= new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.node.TerminationPointBuilder();
+
+myNodeTp.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.node.TerminationPointKey(mdsalNodeTp.getTpId()));
+myNodeTp.setTpId(mdsalNodeTp.getTpId());
+myNodeTp.setTpRef(mdsalNodeTp.getTpRef());
+
+myTpList.add(myNodeTp.build());
+}
+myNode.setTerminationPoint(myTpList);
+result.add(myNode.build());
+}
+
+return result;
+}
+
+
+
     // Get all topologies in MD-SAL
     private List<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology> getAllTopologies() {
 
