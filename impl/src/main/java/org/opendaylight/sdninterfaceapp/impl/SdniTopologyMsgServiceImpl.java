@@ -8,6 +8,11 @@
 package org.opendaylight.sdninterfaceapp.impl;
 
 import java.util.concurrent.Future;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+import java.net.InetAddress;
+import java.net.Inet4Address;
+import java.net.SocketException;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -47,6 +52,33 @@ private static final int CPUS = Runtime.getRuntime().availableProcessors();
     
 org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutputBuilder getTopologyOutputBuilder= new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutputBuilder();
 
+     private String findIpAddress() {
+        Enumeration e = null;
+        try {
+            e = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e1) {
+            log.error("Failed to get list of interfaces", e1);
+            return null;
+        }
+        while (e.hasMoreElements()) {
+
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+
+            Enumeration ee = n.getInetAddresses();
+            while (ee.hasMoreElements()) {
+                InetAddress i = (InetAddress) ee.nextElement();
+                log.debug("Trying address {}", i);
+                if ((i instanceof Inet4Address) && (!i.isLoopbackAddress())) {
+                    String hostAddress = i.getHostAddress();
+                    log.debug("Settled on controller address {}", hostAddress);
+                    return hostAddress;
+                }
+            }
+        }
+        log.error("Failed to find a suitable controller address");
+        return null;
+    }
+
 
     public SdniTopologyMsgServiceImpl(){
 
@@ -60,17 +92,15 @@ org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp
      List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology> myTopoList = new ArrayList<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology>();
 
 	if(topoList == null){
-                log.info("------------ mdsal topolist is null ---- returning null");
 		return null;
 	}
     for (org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology topo : topoList) {
-    
-        log.info("---------------mdsal topolist : {}", topo.toString());	org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder myTopo = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder();
+    	org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder myTopo = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyBuilder();
    		          org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyKey  tkey = topo.getKey();
 	
-        log.info("------------mdsal topology Key : {}", tkey.toString());
 	
         myTopo.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyKey(topo.getTopologyId()));
+        myTopo.setControllerIp(findIpAddress());
         myTopo.setLink(getLinks(topo.getLink()));
         myTopo.setNode(getNodes(topo.getNode()));
         myTopo.setTopologyId(topo.getTopologyId());
@@ -88,7 +118,8 @@ org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp
         log.info("------------rpcResultBuilder----------------");
         return rpcResultBuilder.buildFuture();
  }
- 
+
+     
     private List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link> getLinks(List<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Link> mdsalLinkList) {
 
 if(mdsalLinkList == null || mdsalLinkList.isEmpty()){
@@ -206,4 +237,5 @@ return result;
     	this.dataService = dataBroker;
     }
     
+   
 }
