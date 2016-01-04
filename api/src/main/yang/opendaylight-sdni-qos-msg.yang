@@ -2,7 +2,6 @@ module opendaylight-sdni-qos-msg {
     namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:qos:msg";
     prefix qosmsg;
     
-    import yang-ext {prefix ext; revision-date "2013-07-09";}
     import opendaylight-statistics-types {prefix stat-types;revision-date "2013-09-25";}
 
     description "Sdni QoS Data structures.";
@@ -16,6 +15,11 @@ module opendaylight-sdni-qos-msg {
 
         description "Get statistics for all node connectors from the node";
         output {
+              leaf controller-ip {
+                type string;
+                description "
+                    It gives the IP Address of contoller.";
+            }
                     list node-list {
                              key "node-id";
                              leaf node-id {

@@ -14,6 +14,11 @@ import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+import java.net.InetAddress;
+import java.net.Inet4Address;
+import java.net.SocketException;
 import java.util.List;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
@@ -86,6 +91,7 @@ OpendaylightSdniQosMsgService, OpendaylightPortStatisticsListener {
 			builder = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns
 					.yang.sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutputBuilder();
 			builder.setNodeList(outputNodesList);
+			builder.setControllerIp(findIpAddress());
 
 			output = builder.build();
 
@@ -118,7 +124,7 @@ OpendaylightSdniQosMsgService, OpendaylightPortStatisticsListener {
 		// do nothing
 	}
 
-	public NodeList getAllPortStats(Node node, ReadOnlyTransaction readTx) 
+	private NodeList getAllPortStats(Node node, ReadOnlyTransaction readTx) 
 			throws ExecutionException, InterruptedException, ReadFailedException {
 
 		org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics
@@ -185,5 +191,32 @@ OpendaylightSdniQosMsgService, OpendaylightPortStatisticsListener {
 
 		return nodeListBuilder.build();
 	}
+	
+    private String findIpAddress() {
+        Enumeration e = null;
+        try {
+            e = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e1) {
+        	logger.error("Failed to get list of interfaces", e1);
+            return null;
+        }
+        while (e.hasMoreElements()) {
+
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+
+            Enumeration ee = n.getInetAddresses();
+            while (ee.hasMoreElements()) {
+                InetAddress i = (InetAddress) ee.nextElement();
+                logger.debug("Trying address {}", i);
+                if ((i instanceof Inet4Address) && (!i.isLoopbackAddress())) {
+                    String hostAddress = i.getHostAddress();
+                    logger.debug("Settled on controller address {}", hostAddress);
+                    return hostAddress;
+                }
+            }
+        }
+        logger.error("Failed to find a suitable controller address");
+        return null;
+    }
 }
 
