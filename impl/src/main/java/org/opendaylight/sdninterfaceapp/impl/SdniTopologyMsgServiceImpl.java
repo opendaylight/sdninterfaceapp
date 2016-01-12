@@ -44,6 +44,7 @@ private static final int CPUS = Runtime.getRuntime().availableProcessors();
 
     private static final Logger log = LoggerFactory.getLogger(SdniTopologyMsgServiceImpl.class);
     private DataBroker dataService = null;
+    private static SdniTopologyMsgServiceImpl sdniTopologyMsgServiceImpl = new SdniTopologyMsgServiceImpl();
     OpendaylightSdniTopologyMsgService SdniTopologyMsgService = null;
     org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.NetworkTopologyBuilder networkTopologyBuilder = 
     		new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.NetworkTopologyBuilder();
@@ -80,10 +81,14 @@ org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp
     }
 
 
-    public SdniTopologyMsgServiceImpl(){
+    private SdniTopologyMsgServiceImpl(){
 
     }  
 
+
+    public static SdniTopologyMsgServiceImpl getInstance() {
+      return sdniTopologyMsgServiceImpl;
+   }
     @Override
     public Future<RpcResult<GetTopologyOutput>> getTopology(){
 	log.debug("SdniTopology Plugin Started");
@@ -100,7 +105,6 @@ org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp
 	
 	
         myTopo.setKey(new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.TopologyKey(topo.getTopologyId()));
-        myTopo.setControllerIp(findIpAddress());
         myTopo.setLink(getLinks(topo.getLink()));
         myTopo.setNode(getNodes(topo.getNode()));
         myTopo.setTopologyId(topo.getTopologyId());
@@ -111,6 +115,7 @@ org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp
    }
         
         networkTopologyBuilder.setTopology(myTopoList);
+        networkTopologyBuilder.setControllerIp(findIpAddress());
 	
         getTopologyOutputBuilder.setNetworkTopology(networkTopologyBuilder.build());
         log.info("------------getTopologyOutputBuilder----------------");

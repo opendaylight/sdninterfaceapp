@@ -31,7 +31,7 @@ public class SdniTopologyProvider implements BindingAwareProvider, AutoCloseable
     @Override
     public void onSessionInitiated(ProviderContext session) {
     	LOG.info("SdniTopology Plugin Started");
-        SdniTopologyMsgServiceImpl sdniTopologyMsgServiceImpl = new SdniTopologyMsgServiceImpl();
+        SdniTopologyMsgServiceImpl sdniTopologyMsgServiceImpl = SdniTopologyMsgServiceImpl.getInstance();
         sdniTopologyServiceRpc = session.addRpcImplementation(OpendaylightSdniTopologyMsgService.class,  sdniTopologyMsgServiceImpl);
         dataBroker = session.getSALService(DataBroker.class);   
         sdniTopologyMsgServiceImpl.setBroker(dataBroker);

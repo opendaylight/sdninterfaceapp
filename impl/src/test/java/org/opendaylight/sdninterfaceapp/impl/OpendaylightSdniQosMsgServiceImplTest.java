@@ -142,7 +142,7 @@ public class OpendaylightSdniQosMsgServiceImplTest {
 
 	
 			RpcProviderRegistry rpcRegisrty = Mockito.mock(RpcProviderRegistry.class);
-			serviceImpl=new OpendaylightSdniQosMsgServiceImpl();
+			serviceImpl= OpendaylightSdniQosMsgServiceImpl.getInstance();
 			GetAllNodeConnectorsStatisticsInputBuilder input = new GetAllNodeConnectorsStatisticsInputBuilder() ;
 			OpendaylightPortStatisticsService openPortStatsServiceTest=Mockito.mock(OpendaylightPortStatisticsService.class);
 			Mockito.when(rpcRegisrty.getRpcService(OpendaylightPortStatisticsService.class)).thenReturn(openPortStatsServiceTest);

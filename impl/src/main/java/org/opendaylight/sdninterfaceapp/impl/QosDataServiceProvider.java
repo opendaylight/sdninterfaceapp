@@ -24,12 +24,11 @@ public class QosDataServiceProvider implements BindingAwareProvider, AutoCloseab
 
     private final Logger logger = LoggerFactory.getLogger(QosDataServiceProvider.class);
     private RpcRegistration<OpendaylightSdniQosMsgService> qosDataServiceRpcReg;
-    private OpendaylightSdniQosMsgServiceImpl qosDataRpcServiceImpl = new OpendaylightSdniQosMsgServiceImpl();
 
     @Override
     public void onSessionInitiated(ProviderContext session) {
         logger.info("Provider Session initialized");
-        qosDataServiceRpcReg = session.addRpcImplementation(OpendaylightSdniQosMsgService.class, qosDataRpcServiceImpl);
+        qosDataServiceRpcReg = session.addRpcImplementation(OpendaylightSdniQosMsgService.class, OpendaylightSdniQosMsgServiceImpl.getInstance());
     }
     
     @Override

@@ -39,6 +39,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninter
 import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.FlowCapableNodeConnectorStatisticsData;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.NodeConnectorStatisticsUpdate;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.OpendaylightPortStatisticsListener;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.OpendaylightSdniQosMsgService;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
@@ -49,12 +50,25 @@ import org.slf4j.LoggerFactory;
 
 
 
-public class OpendaylightSdniQosMsgServiceImpl implements
-org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.
-OpendaylightSdniQosMsgService, OpendaylightPortStatisticsListener {
+public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsgService, OpendaylightPortStatisticsListener {
 
+	private static OpendaylightSdniQosMsgServiceImpl serviceObj = null;
 	private final Logger logger = LoggerFactory.getLogger(OpendaylightSdniQosMsgServiceImpl.class);
 
+	
+	private OpendaylightSdniQosMsgServiceImpl(){
+	}
+	
+	public static OpendaylightSdniQosMsgServiceImpl getInstance()
+	{
+		if ( serviceObj == null )
+		{
+			serviceObj = new OpendaylightSdniQosMsgServiceImpl();
+		}
+		return serviceObj;
+	}
+	
+	
 	@Override
 	public Future<RpcResult<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.
 	sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutput>> 

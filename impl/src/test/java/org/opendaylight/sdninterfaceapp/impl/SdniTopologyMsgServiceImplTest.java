@@ -70,7 +70,7 @@ public class SdniTopologyMsgServiceImplTest  {
 	@Before
 	public final void setUp() throws InterruptedException, ExecutionException
 	{
-		serviceimpl = new SdniTopologyMsgServiceImpl();
+		serviceimpl = SdniTopologyMsgServiceImpl.getInstance();
 		InstanceIdentifier<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NetworkTopology> ntII
 			 = InstanceIdentifier.builder(org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NetworkTopology.class).build();
 		final Logger log = LoggerFactory.getLogger(SdniTopologyMsgServiceImplTest.class);

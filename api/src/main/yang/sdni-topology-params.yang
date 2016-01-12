@@ -22,6 +22,12 @@ module sdni-topology {
    
   grouping sdn-topology{
     container network-topology {
+        leaf controller-ip {
+		type string;
+                description "
+                    It gives the IP Address of contoller.";
+        }
+
         list topology {
             description "
                 This is the model of an abstract topology.
@@ -31,11 +37,6 @@ module sdni-topology {
                 topologies.
             ";
             key "topology-id";
-            leaf controller-ip {
-		type string;
-                description "
-                    It gives the IP Address of contoller.";
-            }
             leaf topology-id {
                 type nt:topology-id;
                 description "
