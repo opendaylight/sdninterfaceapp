@@ -1,0 +1,123 @@
+module bgp-multiprotocol {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:bgp-multiprotocol";
+    prefix "bgp-mp";
+
+    import ietf-inet-types { prefix inet; revision-date 2010-09-24; }
+    import bgp-message { prefix bgp-msg; revision-date 2013-09-19; }
+    import bgp-types { prefix bgp-t; revision-date 2013-09-19; }
+    import yang-ext { prefix ext; revision-date 2013-07-09; }
+
+    organization "Cisco Systems, Inc.";
+    contact "Dana Kutenicsova <dkutenic@cisco.com>";
+
+    description
+        "This module contains the base data model of a BGP message.
+        It rolls up the definitions contained in RFC4271
+        and draft-ietf-idr-ls-distribution-03.
+
+        Copyright (c)2013 Cisco Systems, Inc. All rights reserved.
+
+        This program and the accompanying materials are made available
+        under the terms of the Eclipse Public License v1.0 which
+        accompanies this distribution, and is available at
+        http://www.eclipse.org/legal/epl-v10.html";
+
+    revision "2013-09-19" {
+        description
+            "Split off basic types";
+    }
+
+    revision "2013-09-18" {
+        description
+            "Initial revision.";
+        reference "RFC4760";
+    }
+
+    grouping bgp-table-type {
+        leaf afi {
+            type identityref {
+                base bgp-t:address-family;
+            }
+        }
+        leaf safi {
+            type identityref {
+                base bgp-t:subsequent-address-family;
+            }
+        }
+    }
+
+    grouping destination {
+        choice destination-type {
+            // to be augmented
+        }
+    }
+
+    augment "/bgp-msg:open/bgp-msg:bgp-parameters/bgp-msg:optional-capabilities/bgp-msg:c-parameters" {
+        container multiprotocol-capability {
+            reference "http://tools.ietf.org/html/rfc4760#section-8";
+            uses bgp-table-type;
+        }
+        container graceful-restart-capability {
+            reference "http://tools.ietf.org/html/rfc4724#section-3";
+
+            leaf restart-flags {
+                type bits {
+                    bit restart-state {
+                        position 0;
+                        }
+                    }
+                mandatory true;
+            }
+
+            leaf restart-time {
+                type uint16 {
+                    range 0..4095;
+                }
+                units seconds;
+                mandatory true;
+            }
+
+            list tables {
+                uses bgp-table-type;
+                key "afi safi";
+
+                leaf afi-flags {
+                    type bits {
+                        bit forwarding-state {
+                            position 0;
+                        }
+                    }
+                    mandatory true;
+                }
+            }
+        }
+    }
+
+    augment "/bgp-msg:update/bgp-msg:attributes" {
+        ext:augment-identifier attributes-1;
+        container mp-reach-nlri {
+            reference "http://tools.ietf.org/html/rfc4760#section-3";
+
+            uses bgp-table-type;
+            uses bgp-t:next-hop;
+
+            container advertized-routes {
+                uses destination;
+            }
+        }
+    }
+
+    augment "/bgp-msg:update/bgp-msg:attributes" {
+        ext:augment-identifier attributes-2;
+        container mp-unreach-nlri {
+            reference "http://tools.ietf.org/html/rfc4760#section-4";
+
+            uses bgp-table-type;
+
+            container withdrawn-routes {
+                uses destination;
+            }
+        }
+    }
+}
