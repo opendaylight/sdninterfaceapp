@@ -21,7 +21,6 @@
   <properties>
     <mdsal.version>1.3.0-SNAPSHOT</mdsal.version>
     <restconf.version>1.3.0-SNAPSHOT</restconf.version>
-    <skipTests>true</skipTests>
     <controller-model-version>1.3.0-SNAPSHOT</controller-model-version>
     <openflow.plugin.version>0.2.0-SNAPSHOT</openflow.plugin.version>
     <yangtools.version>0.8.0-SNAPSHOT</yangtools.version>
