@@ -149,7 +149,6 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 
 
 		List<NodeConnector> ncList = node.getNodeConnector();
-		logger.info("In getAllPortStats ncList : "  + node.getId().getValue() + " : " + ncList);
 
 		if ( ncList == null || ncList.isEmpty() )
 		{
@@ -163,18 +162,14 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		{
 			final InstanceIdentifier<NodeConnector> nodeConnectorII = InstanceIdentifier.create(Nodes.class)
 					.child(Node.class, nodeKey).child(NodeConnector.class, nc.getKey());
-			logger.info("In getAllPortStats nodeConnectorII : "  + node.getId().getValue() + " : " +  nodeConnectorII);
 
 			final Optional<FlowCapableNodeConnectorStatisticsData> flowCapableNodeConnectorStatisticsDataOptional =
 					readTx.read(LogicalDatastoreType.OPERATIONAL,
 							nodeConnectorII.augmentation(FlowCapableNodeConnectorStatisticsData.class)).checkedGet();
 
-			logger.info("In getAllPortStats flowCapableNodeConnectorStatisticsDataOptional : " 
-					+ node.getId().getValue() + " : " + flowCapableNodeConnectorStatisticsDataOptional);
 
 			if(flowCapableNodeConnectorStatisticsDataOptional.isPresent())
 			{
-				logger.info("In getAllPortStats: flow is present for "  + node.getId().getValue() + " : ncID : " + nc.getId().getValue());
 				flow = flowCapableNodeConnectorStatisticsDataOptional.get().getFlowCapableNodeConnectorStatistics();
 
 				List<PortParams> portparams = new ArrayList<PortParams>();
