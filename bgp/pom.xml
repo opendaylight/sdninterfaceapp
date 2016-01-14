@@ -31,6 +31,7 @@
     <name>${project.artifactId}</name>
 
     <modules>
+        <module>sdniwrapper</module>
         <module>parser-impl</module>
         <module>rib-impl</module>
   </modules>
