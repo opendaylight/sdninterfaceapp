@@ -30,11 +30,11 @@
 
 
     <dependencies>
-<!--        <dependency>
+        <dependency>
             <groupId>org.opendaylight.sdninterfaceapp</groupId>
             <artifactId>sdninterfaceapp-bgp-wrapper</artifactId>
             <version>0.5.0-SNAPSHOT</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.opendaylight.bgpcep</groupId>
             <artifactId>concepts</artifactId>
