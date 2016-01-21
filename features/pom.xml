@@ -23,7 +23,7 @@
     <restconf.version>1.4.0-SNAPSHOT</restconf.version>
     <controller-model-version>1.4.0-SNAPSHOT</controller-model-version>
     <openflow.plugin.version>0.3.0-SNAPSHOT</openflow.plugin.version>
-    <yangtools.version>0.9.0-SNAPSHOT</yangtools.version>
+    <yangtools.version>1.0.0-SNAPSHOT</yangtools.version>
     <l2switch.version>0.4.0-SNAPSHOT</l2switch.version>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <openflowjava.version>0.8.0-SNAPSHOT</openflowjava.version>
