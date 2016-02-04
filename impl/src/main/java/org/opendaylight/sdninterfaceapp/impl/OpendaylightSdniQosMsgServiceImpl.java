@@ -89,32 +89,36 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 			
 			InstanceIdentifier<Nodes> NODES_IDENTIFIER = InstanceIdentifier.create(Nodes.class);
 			Nodes nodes = getDataObject(readTx, NODES_IDENTIFIER);
-			List<Node> nodesList = nodes.getNode();
-			for ( Node node : nodesList )
-			{
-				try {
-					nodeList = getAllPortStats(node, readTx);
-				} catch (ReadFailedException | ExecutionException
-						| InterruptedException e) {
-					logger.error("Exception in getAllNodeConnectorsStatistics : "+e.getMessage());
-				}
+            if(nodes!=null) {
+			    List<Node> nodesList = nodes.getNode();
+                if(nodesList!=null&& !nodesList.isEmpty()) {
+			        for ( Node node : nodesList )
+			        {
+				        try {
+					         nodeList = getAllPortStats(node, readTx);
+				         } catch (ReadFailedException | ExecutionException
+						 | InterruptedException e) {
+					         logger.error("Exception in getAllNodeConnectorsStatistics : "+e.getMessage());
+				         }
 
-				outputNodesList.add(nodeList);
-			}
+				         outputNodesList.add(nodeList);
+			         }
 
-			builder = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns
-					.yang.sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutputBuilder();
-			builder.setNodeList(outputNodesList);
-			builder.setControllerIp(findIpAddress());
-
-			output = builder.build();
-
-			rpcBuilder = RpcResultBuilder.success(output);
+			     }
+            }
 
 		} catch (Exception e) {
 			logger.error("Exception in getAllNodeConnectorsStatistics : "+e.getMessage());
 			rpcBuilder = RpcResultBuilder.failed();
 		}
+        builder = new org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns
+					.yang.sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutputBuilder();
+		builder.setNodeList(outputNodesList);
+		builder.setControllerIp(findIpAddress());
+
+		output = builder.build();
+
+		rpcBuilder = RpcResultBuilder.success(output);
 		return rpcBuilder.buildFuture();
 	}
 

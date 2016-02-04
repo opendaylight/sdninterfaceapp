@@ -18,7 +18,7 @@
         <relativePath>../../../bgpcep/parent</relativePath>
     </parent>
 
-    <artifactId>sdninterfaceapp-bgp-wrapper</artifactId>
+    <artifactId>bgp-sdniwrapper</artifactId>
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
     <description>BGP SDNiWrapper</description>
     <packaging>bundle</packaging>
