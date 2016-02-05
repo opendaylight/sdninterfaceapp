@@ -30,14 +30,16 @@ import java.util.concurrent.Future;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.OpendaylightSdniQosMsgService;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.NodeList;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.OpendaylightSdniTopologyMsgService;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.LinkId;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SdniWrapper {
-
 
     private static final Logger LOG = LoggerFactory.getLogger(SdniWrapper.class);
 
@@ -47,6 +49,28 @@ public class SdniWrapper {
     private static final String JDBC_DRIVER = "org.sqlite.JDBC";
     private static final String DB_URL = "jdbc:sqlite:/home/tcs/sdni/database/CONTROLLER_TOPOLOGY_DATABASE";
     private static final String QOS_DB_URL = "jdbc:sqlite:/home/tcs/sdni/database/CONTROLLER_QOS_DATABASE";
+    private static SdniWrapper serviceObj = null;
+    private static RpcProviderRegistry rpcRegistryDependency;
+
+
+    private SdniWrapper() {
+
+    }
+
+    public static SdniWrapper getInstance(){
+        if ( serviceObj == null )
+        {
+            serviceObj = new SdniWrapper();
+
+        }
+        return serviceObj;
+    }
+
+    public static void setRPCRegistry(RpcProviderRegistry rpcRegistry)
+    {
+        rpcRegistryDependency = rpcRegistry;
+    }
+
 
     /**
      * Finds IPv4 address of the local VM TODO: This method is
@@ -91,42 +115,80 @@ public class SdniWrapper {
         NetworkCapabilities nCap = new NetworkCapabilities();
         StringBuilder data = new StringBuilder();
         try {
-            org.opendaylight.sdninterfaceapp.impl.SdniTopologyMsgServiceImpl sdniTopoData = org.opendaylight.sdninterfaceapp.impl.SdniTopologyMsgServiceImpl.getInstance();
-            // Parse rest api content and populate TOPOLOGY_DATABASE data in sqlite
+
+            OpendaylightSdniTopologyMsgService sdniTopoData = rpcRegistryDependency.getRpcService(OpendaylightSdniTopologyMsgService.class);
+            LOG.info("SdniWrapper  - getSDNITopoMessage -got topo rpc : {}" , sdniTopoData);
             Future<RpcResult<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutput>> finalobject = sdniTopoData
                     .getTopology();
 
+            LOG.info("SdniWrapper  - getSDNITopoMessage -got FUTURE : {}" ,  finalobject);
+
             RpcResult<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutput> rpcobject = finalobject
                     .get();
+
 
             org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.GetTopologyOutput outputobject = rpcobject
                     .getResult();
             org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.NetworkTopology network = outputobject
                     .getNetworkTopology();
 
+
+            LOG.info("SdniWrapper  - getSDNITopoMessage -got CONTROLLER IP : {}" , network.getControllerIp());
+            LOG.info(" SdniWrapper  - getSDNITopoMessage  : " + "CONTROLLER : " + network.getControllerIp() + " NETWORK TOPOLOGY :" +network);
             nCap.setController(network.getControllerIp());
+
 
             List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology> list_topo = network
                     .getTopology();
-            for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology topo : list_topo) {
+            LOG.debug("SdniWrapper  - getSDNITopoMessage  " + "CONTROLLER : " + network.getControllerIp() + "TOPO LIST : " + list_topo);
+            LOG.info("SdniWrapper  - getSDNITopoMessage  " + "CONTROLLER : " + network.getControllerIp() + "TOPO LIST SIZE : " + list_topo.size());
 
-                List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link> listl = topo
-                        .getLink();
-                for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link l : listl) {
+            if ( list_topo != null && !list_topo.isEmpty() ){
+                for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.Topology topo : list_topo) {
 
-                    LinkId lid = l.getLinkId();
-                    linkList.add(lid.toString());
+                    List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link> listl = topo
+                            .getLink();
+                    LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + " LINKS : " + listl);
+
+                    if (listl != null && !listl.isEmpty()) {
+                        LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + " LINKS SIZE: " + listl.size());
+
+                        for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.params.rev151006.sdn.topology.network.topology.topology.Link l : listl) {
+
+                            LinkId lid = l.getLinkId();
+                            LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + " LINKS - l.getLinkId() : " + l.getLinkId());
+                            LOG.debug("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + " LINKS - lid.toString(): " + lid.toString());
+                            linkList.add(lid.toString());
+                        }
+                    }
+                    else
+                    {
+                        LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + " : No links found");
+                    }
                 }
             }
+            else
+            {
+                LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + " : Empty topology list");
+            }
             nCap.setLink(linkList);
-            data.append("{\"output\":"+nCap.toString()+"}");
-            LOG.info("message: ",data);
+
+
+            LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + "Updating DB");
+            updateControllerTopoTable(nCap);
+            LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + "DB updated Successfully");
+
+            data.append("{\"TOPOoutput\":"+nCap.toString()+"};");
+            LOG.info("SdniWrapper  - getSDNITopoMessage " + "CONTROLLER : " + network.getControllerIp() + "-MESSAGE : " + data.toString());
             defaultBytes = data.toString().getBytes();
             sdniBytes = Unpooled.copiedBuffer(defaultBytes);
         } catch (InterruptedException | ExecutionException e) {
             LOG.trace(e.getMessage());
         }
-        LOG.info("SdniWrapper  - getSDNITopoMessage -Start");
+        catch (Exception e) {
+            LOG.trace(e.getMessage());
+        }
+        LOG.info("SdniWrapper  - getSDNITopoMessage -END");
         return sdniBytes;
     }
 
@@ -151,69 +213,71 @@ public class SdniWrapper {
         try {
 
             String message = sdnimsg.replace('"', '\"');
-            JSONObject json = new JSONObject(message);
-            List<String> temp = new ArrayList<String>();
-            network.setController(json.getJSONObject("output").get("controller").toString());
-            JSONArray jArray = json.getJSONObject("output").getJSONArray("links");
-            for (int i = 0; i < jArray.length(); i++) {
-                temp.add(jArray.get(i).toString());
+            String[] outputArray = message.split(";");
+            for(String token: outputArray) {
+                if(token.contains("TOPOoutput")) {
+                    JSONObject json = new JSONObject(token);
+                    List<String> temp = new ArrayList<String>();
+                    network.setController(json.getJSONObject("TOPOoutput").get("controller").toString());
+                    JSONArray jArray = json.getJSONObject("TOPOoutput").getJSONArray("links");
+                    for (int i = 0; i < jArray.length(); i++) {
+                        temp.add(jArray.get(i).toString());
+                    }
+                    network.setLink(temp);
+                }
             }
-            network.setLink(temp);
 
         } catch (Exception e) {
             LOG.error("Exception: {0}", e);
             return "IOException";
         }
-        boolean peer = false;
-        String controllerIP = network.getController();
-        if (!controllerIP.equals(findIpAddress())) {
-            peer = true;
-        }
-        if (peer) {
-            LOG.trace("TOPO: Before calling updatePeerTable");
-            updatePeerTable(network);
-        } else {
-            updateControllerTable(network);
-        }
+
+        updatePeerTopoTable(network);
         LOG.trace("Sdniwrapper : parseSDNIMessage (sdni msg)- END");
         return "success";
 
     }
 
-    public void updateControllerTable(NetworkCapabilities networkData) {
-        LOG.trace("Sdniwrapper : updateControllerTable- Start");
+    public void updateControllerTopoTable(NetworkCapabilities networkData) {
+        LOG.trace("Sdniwrapper : updateControllerTopoTable- Start");
 
         Connection conn = null;
         Statement stmt = null;
-        int peer_count = 0;
-        LOG.trace("TOPO: inside updateControllerTable PeerCount:0");
+        LOG.trace("TOPO: inside updateControllerTopoTable PeerCount:0");
+        String controllerIp = null;
 
         try {
+
+            controllerIp = networkData.getController().replace('.', '_');
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL);
 
             LOG.trace("TOPO: sql connection established");
 
             stmt = conn.createStatement();
-            String sql = "drop table if exists TOPOLOGY_DATABASE ";
-            stmt.executeUpdate(sql);
-            LOG.trace("TOPO: SQL query to delete controller table: {}", sql);
-
-            sql = "create table TOPOLOGY_DATABASE (controller varchar(50), links varchar(128));";
-            stmt.executeUpdate(sql);
+            try{
+                String sql = "drop table if exists TOPOLOGY_DATABASE_" + controllerIp;
+                LOG.trace("TOPO: SQL query to delete controller table: {}", sql);
+                stmt.executeUpdate(sql);
+            }
+            catch (Exception e) {
+                LOG.error("Exception: {0}", e);
+            }
+            String sql = "create table TOPOLOGY_DATABASE_" + controllerIp + " (controller varchar(50), links varchar(128));";
             LOG.trace("TOPO: SQL query to create controller table: {}", sql);
+            stmt.executeUpdate(sql);
 
-            String insertQueries = formInsertQuery(networkData, peer_count);
+            String insertQueries = formTopoInsertQuery(networkData, false);
             String[] insertQuery = insertQueries.split("--");
             for (int j = 0; j < insertQuery.length; j++) {
                 stmt.executeUpdate(insertQuery[j]);
             }
         } catch (SQLException se) {
             LOG.error("SQLException: {0}", se);
-            return;
+            //            return;
         } catch (Exception e) {
             LOG.error("Exception: {0}", e);
-            return;
+            //            return;
         } finally {
             try {
                 if (stmt != null) {
@@ -221,29 +285,42 @@ public class SdniWrapper {
                 }
             } catch (SQLException se2) {
                 LOG.error("SQLException2: {0}", se2);
-                return;
+                //                return;
             }
             try {
                 if (conn != null)
                     conn.close();
             } catch (SQLException se) {
                 LOG.error("SQLException3: {0}", se);
-                return;
+                //                return;
             }
         }
-        LOG.trace("Sdniwrapper : updateControllerTable- End");
+        LOG.trace("Sdniwrapper : updateControllerTopoTable- End");
     }
 
-    public void updatePeerTable(NetworkCapabilities networkData) {
-        LOG.trace("Sdniwrapper : updatePeerTable- Start");
-        String ipAddress = networkData.getController().toString().replace("[", "").replace("]", "");
+
+    public void updatePeerTopoTable(NetworkCapabilities networkData) {
+        LOG.trace("Sdniwrapper : updatePeerTopoTable- Start");
+        //   String ipAddress = networkData.getController().toString().replace("[", "").replace("]", "");
+        String ipAddress = networkData.getController();
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        boolean tableExist = false;
-        LOG.trace("TOPO:Inside updatePeerTable PeerCount: {}", peer_count);
+        String sql = null;
+        String controllerIp = null;
+
+
+        //      boolean tableExist = false;
+        LOG.trace("TOPO:Inside updatePeerTopoTable PeerCount: {}", peer_count);
 
         try {
+            if (networkData.getLink() == null && !networkData.getLink().isEmpty())
+            {
+                return;
+            }
+
+            controllerIp = networkData.getController().replace('.', '_');
+
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL);
             stmt = conn.createStatement();
@@ -254,52 +331,26 @@ public class SdniWrapper {
 
             // check for the self controller ip
             if (ipAddress != findIpAddress()) {
-                // if not, get the peercount and loop it
-                for (int i = 1; i <= peer_count; i++) {
-                    // check for the exist of peer controller 1 table
-                    String tableName = "TOPOLOGY_DATABASE_PEER_" + i;
-                    String sql = "SELECT controller FROM " + tableName + " LIMIT 1";
-                    rs = stmt.executeQuery(sql);
-                    long peerIP = 0L;
-                    while (rs.next()) {
-                        peerIP = rs.getLong("controller");
-                    }
-                    String peerIPAddress = ntoa(peerIP);
-                    LOG.trace("TOPO: Inside for loop, ipAddress: {} peerIPAdrress:{}", ipAddress, peerIPAddress);
-                    if (ipAddress.equals(peerIPAddress)) {
-
-                        sql = "drop table TOPOLOGY_DATABASE_PEER_" + i;
-                        stmt.executeUpdate(sql);
-                        LOG.trace("TOPO: inside if, SQL query to delete topology peer table: {}", sql);
-
-                        sql = "create table TOPOLOGY_DATABASE_PEER_" + i
-                                + " (ccontroller varchar(50), links varchar(128));";
-                        LOG.trace("TOPO: inside if SQL query to create topology peer table: {}", sql);
-                        stmt.executeUpdate(sql);
-
-                        String insertQueries = formInsertQuery(networkData, i);
-                        String[] insertQuery = insertQueries.split("--");
-                        for (int j = 0; j < insertQuery.length; j++) {
-                            stmt.executeUpdate(insertQuery[j]);
-                        }
-                        tableExist = true;
-                    }
+                try {
+                    sql = "drop table if exists TOPOLOGY_DATABASE_PEER_" + controllerIp;
+                    stmt.executeUpdate(sql);
+                } catch (Exception e)
+                {
+                    LOG.warn("SQL: Warning {0}", e.getMessage());
                 }
 
-                if (!tableExist) {
-                    peer_count++;
-                    LOG.trace("TOPO: now peerCount: {}", peer_count);
-                    // create a new table TOPOLOGY_DATABASE_PEER + count
-                    String sql = "create table TOPOLOGY_DATABASE_PEER_" + peer_count
-                            + " (controller varchar(50), links varchar(128));";
-                    LOG.trace("TOPO:SQL query to create topology peer table for first time: {}", sql);
-                    stmt = conn.createStatement();
-                    stmt.executeUpdate(sql);
-                    String insertQueries = formInsertQuery(networkData, peer_count);
-                    String[] insertQuery = insertQueries.split("--");
-                    for (int i = 0; i < insertQuery.length - 1; i++) {
-                        stmt.executeUpdate(insertQuery[i]);
-                    }
+
+                LOG.trace("TOPO: inside if, SQL query to delete topology peer table: {}", sql);
+
+                sql = "create table TOPOLOGY_DATABASE_PEER_" + controllerIp
+                        + " (controller varchar(50), links varchar(128));";
+                LOG.trace("TOPO: inside if SQL query to create topology peer table: {}", sql);
+                stmt.executeUpdate(sql);
+
+                String insertQueries = formTopoInsertQuery(networkData, true);
+                String[] insertQuery = insertQueries.split("--");
+                for (int j = 0; j < insertQuery.length; j++) {
+                    stmt.executeUpdate(insertQuery[j]);
                 }
             } else {
                 // update self controller table
@@ -331,28 +382,28 @@ public class SdniWrapper {
                 return;
             }
         }
-        LOG.trace("Sdniwrapper : updatePeerTable- End");
+        LOG.trace("Sdniwrapper : updatePeerTopoTable- End");
     }
 
-    public String formInsertQuery(NetworkCapabilities networkData, int peer_count) {
-        LOG.trace("QoS: Inside formQOSInsertQuery peercount {}", peer_count);
+    public String formTopoInsertQuery(NetworkCapabilities networkData, boolean isPeer) {
+        LOG.trace("QoS: Inside formTopoInsertQuery peer {}", isPeer);
         String insertQuery = "";
 
-        String controller = networkData.getController();
+        String controller = networkData.getController().replace('.', '_');
         List<String> link_id_list = networkData.getLink();
-        long controllerIP = ipToLong(controller);
+        long controllerIP = ipToLong(networkData.getController());
 
         for (int i = 0; i < link_id_list.size(); i++) {
             String link = link_id_list.get(i);
-            if (peer_count == 0) {
-                insertQuery += "insert into TOPOLOGY_DATABASE values (\"" + controllerIP + "\",\"" + link + "\"); -- ";
+            if (!isPeer) {
+                insertQuery += "insert into TOPOLOGY_DATABASE_" + controller + " values (\"" + controllerIP + "\",\"" + link + "\"); -- ";
             } else {
-                insertQuery += "insert into TOPOLOGY_DATABASE_PEER_" + peer_count + " values( \"" + controllerIP
+                insertQuery += "insert into TOPOLOGY_DATABASE_PEER_" + controller + " values( \"" + controllerIP
                         + "\",\"" + link + "\"); -- ";
             }
 
         }
-        LOG.trace("QoS: At the end of formQOSInsertQuery() method insertQuery:{}", insertQuery);
+        LOG.trace("QoS: At the end of formTopoInsertQuery() method insertQuery:{}", insertQuery);
         return insertQuery;
     }
 
@@ -363,10 +414,12 @@ public class SdniWrapper {
         String controller = null;
         final List<NetworkCapabilitiesQOS> list_QoS = new ArrayList();
         StringBuilder data = new StringBuilder();
-
+        boolean flag = false;
         try {
-            org.opendaylight.sdninterfaceapp.impl.OpendaylightSdniQosMsgServiceImpl sdniQoSData = org.opendaylight.sdninterfaceapp.impl.OpendaylightSdniQosMsgServiceImpl.getInstance();
-            // Parse rest api content and populate TOPOLOGY_DATABASE data in sqlite
+
+            OpendaylightSdniQosMsgService sdniQoSData = rpcRegistryDependency.getRpcService(OpendaylightSdniQosMsgService.class);
+            LOG.info("SdniWrapper  - getSDNIQoSMessage -got Qos rpc : {}" , sdniQoSData);
+
             Future<RpcResult<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutput>> allNodeConnectorStats = sdniQoSData
                     .getAllNodeConnectorsStatistics();
 
@@ -376,49 +429,75 @@ public class SdniWrapper {
 
             org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutput qosDetails = rpcObj
                     .getResult();
-            List<NodeList> ndList = qosDetails.getNodeList();
+            List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.NodeList> ndList = qosDetails.getNodeList();
             controller = qosDetails.getControllerIp();
 
-            for (NodeList nList : ndList) {
-                String nodeID = nList.getNodeId();
-                List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.PortList> portlist = nList
-                        .getPortList();
-                for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.PortList Plist : portlist) {
-                    String portID = Plist.getPortId();
-                    List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.port.list.PortParams> Pparamslist = Plist
-                            .getPortParams();
-
-                    data.append("{\"output\":[");
-                    for(int i=0; i<Pparamslist.size();i++)
+            data.append("{\"QoSoutput\":[");
+            if ( ndList != null && !ndList.isEmpty() )
+            {
+                for (NodeList nList : ndList) {
+                    String nodeID = nList.getNodeId();
+                    List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.PortList> portlist = nList
+                            .getPortList();
+                    if ( portlist!= null && !portlist.isEmpty())
                     {
-                        org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.port.list.PortParams Pparams = Pparamslist.get(i);
-                        NetworkCapabilitiesQOS ncQoS = new NetworkCapabilitiesQOS();
 
-                        ncQoS.setController(controller);
-                        ncQoS.setNode(nodeID);
-                        ncQoS.setPort(portID);
-                        ncQoS.setReceiveCrcError(Pparams.getReceiveCrcError().toString());
-                        ncQoS.setReceiveFrameError(Pparams.getReceiveFrameError().toString());
-                        ncQoS.setReceiveOverRunError(Pparams.getReceiveOverRunError().toString());
-                        ncQoS.setCollisionCount(Pparams.getCollisionCount().toString());
-                        ncQoS.setTransmitPackets(Pparams.getTransmitDrops().toString());
-                        ncQoS.setReceivePackets(Pparams.getReceiveDrops().toString());
+                        for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.PortList Plist : portlist) {
+                            String portID = Plist.getPortId();
+                            List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.port.list.PortParams> Pparamslist = Plist
+                                    .getPortParams();
 
-                        list_QoS.add(ncQoS);
-                        if(i==0)
-                            data.append(ncQoS.toString());
-                        else
-                            data.append(","+ncQoS.toString());
+                            if ( Pparamslist != null && !Pparamslist.isEmpty())
+                            {
+                                LOG.info("Pparamslist size: {}", Pparamslist.size());
+                                LOG.info("Pparamslist: {}", Pparamslist);
+
+                                org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.port.list.PortParams Pparams = Pparamslist.get(0);
+                                NetworkCapabilitiesQOS ncQoS = new NetworkCapabilitiesQOS();
+
+                                ncQoS.setController(controller);
+                                ncQoS.setNode(nodeID);
+                                ncQoS.setPort(portID);
+                                ncQoS.setReceiveCrcError(Pparams.getReceiveCrcError().toString());
+                                ncQoS.setReceiveFrameError(Pparams.getReceiveFrameError().toString());
+                                ncQoS.setReceiveOverRunError(Pparams.getReceiveOverRunError().toString());
+                                ncQoS.setCollisionCount(Pparams.getCollisionCount().toString());
+                                ncQoS.setTransmitPackets(Pparams.getTransmitDrops().toString());
+                                ncQoS.setReceivePackets(Pparams.getReceiveDrops().toString());
+
+                                list_QoS.add(ncQoS);
+
+                                if(!flag) {
+                                    data.append(ncQoS.toString());
+                                    flag = true;
+                                }
+                                else {
+                                    data.append(","+ncQoS.toString());
+                                }
+
+
+                            }
+                        }
                     }
-                    data.append("]}");
-                }
-            }
 
+                }
+                LOG.info("Sdniwrapper : getSDNIQoSMessage : Updating QoS DB");
+
+                updateControllerQOSTable(list_QoS, controller);
+                LOG.info("Sdniwrapper : getSDNIQoSMessage : DB updated successfully");
+            }
+            data.append("]};");
+            LOG.info("final: data is {}",data);
+            LOG.info("Sdniwrapper : getSDNIQoSMessage : MESSAGE : {}" , data.toString());
             defaultBytes = data.toString().getBytes();
             sdniQOSBytes = Unpooled.copiedBuffer(defaultBytes);
+
         } catch (InterruptedException | ExecutionException e) {
 
-            LOG.error("Exception : ",e.getMessage());
+            LOG.error("Exception : {0}",e.getMessage());
+        }
+        catch (Exception e) {
+            LOG.trace(e.getMessage());
         }
         return sdniQOSBytes;
     }
@@ -443,67 +522,76 @@ public class SdniWrapper {
         try {
 
             String message = sdniQOSMsg.replace('"', '\"');
-            JSONObject json=new JSONObject(message);
-            for(int i=0;i<json.getJSONArray("output").length();i++)
-            {
-                NetworkCapabilitiesQOS qosData = new NetworkCapabilitiesQOS();
-                JSONObject subJson = (JSONObject)json.getJSONArray("output").get(i);
+            String[] outputArray = message.split(";");
+            LOG.info("TOKENS SIZE: {}", outputArray.length);
 
-                qosData.setController(subJson.get("controller").toString());
-                controller = subJson.get("controller").toString();
-                qosData.setNode(subJson.get("node").toString());
-                qosData.setPort(subJson.get("port").toString());
-                qosData.setReceiveCrcError(subJson.get("receiveCrcError").toString());
-                qosData.setReceiveFrameError(subJson.get("receiveFrameError").toString());
-                qosData.setReceiveOverRunError(subJson.get("receiveOverRunError").toString());
-                qosData.setCollisionCount(subJson.get("collisionCount").toString());
-                qosData.setTransmitPackets(subJson.get("transmitPackets").toString());
-                qosData.setReceivePackets(subJson.get("receivePackets").toString());
-                list_QoS.add(qosData);
+            for(String token: outputArray) {
+                LOG.info("TOKEN MESSAGE : {}", token);
+
+                if(token.contains("QoSoutput")) {
+                    JSONObject json=new JSONObject(token);
+                    LOG.info("sdni QOS Msg: {}", sdniQOSMsg);
+
+                    for(int i=0;i<json.getJSONArray("QoSoutput").length();i++)
+                    {
+                        NetworkCapabilitiesQOS qosData = new NetworkCapabilitiesQOS();
+                        JSONObject subJson = (JSONObject)json.getJSONArray("QoSoutput").get(i);
+                        controller = subJson.get("controller").toString();
+                        qosData.setController(controller);
+                        qosData.setNode(subJson.get("node").toString());
+                        qosData.setPort(subJson.get("port").toString());
+                        qosData.setReceiveCrcError(subJson.get("receiveCrcError").toString());
+                        qosData.setReceiveFrameError(subJson.get("receiveFrameError").toString());
+                        qosData.setReceiveOverRunError(subJson.get("receiveOverRunError").toString());
+                        qosData.setCollisionCount(subJson.get("collisionCount").toString());
+                        qosData.setTransmitPackets(subJson.get("transmitPackets").toString());
+                        qosData.setReceivePackets(subJson.get("receivePackets").toString());
+                        list_QoS.add(qosData);
+                    }
+                }
             }
 
         }catch (Exception e) {
-            LOG.error("Exception Message is: ", e);
+            LOG.error("Exception Message is: {0}", e);
         }
 
-        //Update peer/controller table in database
-        if (!controller.equals(findIpAddress())) {
-            peer = false;
-        }
-
-        if (peer) {
-            LOG.trace("Before calling updatePeerQOSTable");
-            updatePeerQOSTable(list_QoS);
-        } else {
-            LOG.trace("Before calling updateControllerQOSTable");
-            updateControllerQOSTable(list_QoS);
-        }
+        updatePeerQOSTable(list_QoS, controller);
         return "";
     }
 
-    public void updateControllerQOSTable(List<NetworkCapabilitiesQOS> list) {
+    private void updateControllerQOSTable(List<NetworkCapabilitiesQOS> list, String controller) {
 
         Connection conn = null;
         Statement stmt = null;
-        int qos_peer_count = 0;
-
+        String sql = null;
         LOG.trace("QoS: Inside updateControllerQOSTable PeerCount:0");
 
         try {
+            controller = controller.replace('.', '_');
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(QOS_DB_URL);
 
             LOG.trace("sql connection established");
 
             stmt = conn.createStatement();
-            String sql = "drop table if exists QOS_DATABASE ";
-            stmt.executeUpdate(sql);
-            LOG.trace("QoS: SQL query to delete Controller QoS table: {}", sql);
 
-            sql = "create table QOS_DATABASE (controller varchar(20), node varchar(20), port varchar(20), receiveFrameError varchar(10) , receiveOverRunError varchar(10), receiveCrcError varchar(10), collisionCount varchar(10), receivePackets varchar(10), transmitPackets varchar(10));";
-            stmt.executeUpdate(sql);
+
+            //Drop Table
+            try{
+                sql = "drop table if exists QOS_DATABASE_" + controller;
+                LOG.trace("QoS: SQL query to delete Controller QoS table: {}", sql);
+                stmt.executeUpdate(sql);
+            }
+            catch(Exception e)
+            {
+                LOG.error("SQLException3: {0}", e);
+            }
+
+            //Create Table
+            sql = "create table  QOS_DATABASE_" + controller + " (controller varchar(20), node varchar(20), port varchar(20), receiveFrameError varchar(10) , receiveOverRunError varchar(10), receiveCrcError varchar(10), collisionCount varchar(10), receivePackets varchar(10), transmitPackets varchar(10));";
             LOG.trace("QoS: SQL query to create Controller QoS table: {}", sql);
-            String insertQueries = formQOSInsertQuery(list, qos_peer_count);
+            stmt.executeUpdate(sql);
+            String insertQueries = formQOSInsertQuery(list, false);
             String[] insertQuery = insertQueries.split("--");
 
             for (int j = 0; j < insertQuery.length; j++) {
@@ -539,80 +627,53 @@ public class SdniWrapper {
         }
     }
 
-    public void updatePeerQOSTable(List<NetworkCapabilitiesQOS> list) {
+    public void updatePeerQOSTable(List<NetworkCapabilitiesQOS> list, String ipAddress) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        boolean tableExist = false;
-        String ipAddress = null;
-        for (NetworkCapabilitiesQOS qosData : list) {
-            ipAddress = qosData.getController();
-        }
+        String sql = null;
+        String controllerIp = null;
         LOG.trace("QoS: Inside updatePeerQOSTable PeerCount: {}", qos_peer_count);
         try {
 
+            if (ipAddress == null)
+            {
+                return;
+            }
+
+            controllerIp = ipAddress.replace('.', '_');
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(QOS_DB_URL);
             stmt = conn.createStatement();
             LOG.trace("sql connection established");
 
             LOG.trace("QoS: ipAddress: {} findIpAddress(): {}", ipAddress, findIpAddress());
-            String sql;
             // check for the self controller ip
             if (ipAddress != findIpAddress()) {
-                // if not, get the peercount and loop it
 
-                for (int i = 1; i <= qos_peer_count; i++) {
-                    LOG.trace("QoS: Inside trp block in updatePeerTable");
-                    // check for the exist of peer controller 1 table
-                    String tableName = "QOS_DATABASE_PEER_" + i;
-                    sql = "SELECT controller FROM " + tableName + " LIMIT 1";
-                    rs = stmt.executeQuery(sql);
-                    long peerIP = 0L;
-                    while (rs.next()) {
-                        peerIP = rs.getLong("controller");
-                    }
-                    String peerIPAddress = ntoa(peerIP);
-                    LOG.trace("QoS: Before if block, IPaddress: {} peerIPaddress: {}", ipAddress, peerIPAddress);
-                    if (ipAddress.equals(peerIPAddress)) {
-
-                        sql = "drop table QOS_DATABASE_PEER_" + i;
-                        stmt.executeUpdate(sql);
-                        sql = "create table QOS_DATABASE_PEER_" + i
-                                + " (controller varchar(20), node varchar(30), port varchar(30), receiveFrameError varchar(10) , receiveOverRunError varchar(10), receiveCrcError varchar(10), collisionCount varchar(10), receivePackets varchar(10), transmitPackets varchar(10));";
-                        LOG.trace("QoS: SQL query to create QoS peer table: {}", sql);
-                        stmt.executeUpdate(sql);
-
-                        String insertQueries = formQOSInsertQuery(list, i);
-                        String[] insertQuery = insertQueries.split("--");
-                        for (int j = 0; j < insertQuery.length; j++) {
-                            String query = insertQuery[j].replace("LOCAL", "0");
-                            stmt.executeUpdate(query);
-                        }
-                        tableExist = true;
-                    }
+                //Drop the PEER Table
+                try{
+                    sql = "drop table if exists QOS_DATABASE_PEER_" + controllerIp;
+                    LOG.trace("QoS: SQL query to delete Controller QoS table: {}", sql);
+                    stmt.executeUpdate(sql);
+                }
+                catch(Exception e)
+                {
+                    LOG.error("SQLException3: {0}", e);
                 }
 
-                if (!tableExist) {
-                    qos_peer_count++;
-                    LOG.info("QoS: now peerCount: {}", qos_peer_count);
-                    // create a new table QOS_DATABASE_PEER + count
-                    sql = "create table QOS_DATABASE_PEER_" + qos_peer_count
-                            + "(controller varchar(20), node varchar(30), port varchar(30), receiveFrameError varchar(10) , receiveOverRunError varchar(10), receiveCrcError varchar(10), collisionCount varchar(10), receivePackets varchar(10), transmitPackets varchar(10));";
-                    stmt = conn.createStatement();
-                    stmt.executeUpdate(sql);
-                    String insertQueries = formQOSInsertQuery(list, qos_peer_count);
-                    String[] insertQuery = insertQueries.split("--");
-                    for (int i = 0; i < insertQuery.length - 1; i++) {
-                        String query = insertQuery[i].replace("LOCAL", "0");
-                        stmt.executeUpdate(query);
-                    }
+                sql = "create table QOS_DATABASE_PEER_" + controllerIp
+                        + " (controller varchar(20), node varchar(30), port varchar(30), receiveFrameError varchar(10) , receiveOverRunError varchar(10), receiveCrcError varchar(10), collisionCount varchar(10), receivePackets varchar(10), transmitPackets varchar(10));";
+                LOG.trace("QoS: SQL query to create QoS peer table: {}", sql);
+                stmt.executeUpdate(sql);
 
-                    LOG.trace("QoS: Peer table creation for first time");
+                String insertQueries = formQOSInsertQuery(list, true);
+                String[] insertQuery = insertQueries.split("--");
+                for (int j = 0; j < insertQuery.length; j++) {
+                    String query = insertQuery[j].replace("LOCAL", "0");
+                    stmt.executeUpdate(query);
                 }
             }
-            LOG.trace("QoS: Peer count at the end of try in updatetable {}", qos_peer_count);
-
         } catch (SQLException se) {
             LOG.error("SQLException: {0}", se);
             return;
@@ -639,12 +700,12 @@ public class SdniWrapper {
         }
     }
 
-    public String formQOSInsertQuery(List<NetworkCapabilitiesQOS> list, int qos_peer_count) {
+    public String formQOSInsertQuery(List<NetworkCapabilitiesQOS> list, boolean isPeer) {
         LOG.trace("QoS: Inside formQOSInsertQuery peercount {}", qos_peer_count);
         String insertQuery = "";
 
         for (NetworkCapabilitiesQOS qosData : list) {
-            String controller = qosData.getController();
+            String controller = qosData.getController().replace('.', '_');
 
             String node = qosData.getNode();
             String port = qosData.getPort();
@@ -654,27 +715,23 @@ public class SdniWrapper {
             String collisionCount = qosData.getCollisionCount();
             String receivePackets = qosData.getReceivePackets();
             String transmitPackets = qosData.getTransmitPackets();
-//            LOG.trace(
-//                    "QoS: Contents in list: Controller {} Node {} port {} ReceiveFrameError {} ReceiveOverRunError {} ReceiveCrcError {} CollisionCount {} ReceivePackets {} TransmitPackets {}",
-//                    controller, node, port, receiveFrameError, receiveOverRunError, receiveCrcError, collisionCount,
-//                    receivePackets, transmitPackets);
-            long controllerIP = ipToLong(controller);
+            long controllerIP = ipToLong(qosData.getController());
             if (node == null || port == null) {
-                if (qos_peer_count == 0) {
-                    insertQuery += "insert into QOS_DATABASE (controller) values (" + controllerIP + "); -- ";
+                if (!isPeer) {
+                    insertQuery += "insert into QOS_DATABASE_" + controller + " (controller) values (" + controllerIP + "); -- ";
                 } else {
-                    insertQuery += "insert into QOS_DATABASE_PEER_" + qos_peer_count + " (controller) values( "
+                    insertQuery += "insert into QOS_DATABASE_PEER_"+controller + " (controller) values( "
                             + controllerIP + "); -- ";
                 }
             } else {
-                if (qos_peer_count == 0) {
-                    insertQuery += "insert into QOS_DATABASE values (\"" + controllerIP + "\",\""
+                if (!isPeer) {
+                    insertQuery += "insert into QOS_DATABASE_" + controller + " values (\"" + controllerIP + "\",\""
                             + node + "\",\""
                             + port + "\",\"" + receiveFrameError + "\",\""
                             + receiveOverRunError + "\",\"" + receiveCrcError + "\",\"" + collisionCount + "\",\"" + receivePackets
                             + "\",\"" + transmitPackets + "\"); -- ";
                 } else {
-                    insertQuery += "insert into QOS_DATABASE_PEER_" + qos_peer_count + " values (\"" + controllerIP + "\",\""
+                    insertQuery += "insert into QOS_DATABASE_PEER_" + controller + " values (\"" + controllerIP + "\",\""
                             + node + "\",\""
                             + port + "\",\"" + receiveFrameError + "\",\""
                             + receiveOverRunError + "\",\"" + receiveCrcError + "\",\"" + collisionCount + "\",\"" + receivePackets

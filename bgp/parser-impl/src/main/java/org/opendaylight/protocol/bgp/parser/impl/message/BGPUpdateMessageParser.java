@@ -50,7 +50,7 @@ public final class BGPUpdateMessageParser implements MessageParser, MessageSeria
 
     private static final int TOTAL_PATH_ATTR_LENGTH_SIZE = 2;
 
-    public static SdniWrapper sdniwrapper = new SdniWrapper();
+    public static SdniWrapper sdniwrapper = SdniWrapper.getInstance();
 
     private final AttributeRegistry reg;
 
