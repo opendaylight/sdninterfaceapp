@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.opendaylight.bgpcep</groupId>
         <artifactId>bgp-parent</artifactId>
-        <version>0.5.0-Beryllium</version>
+        <version>0.5.1-SNAPSHOT</version>
         <relativePath>../../../bgpcep/parent</relativePath>
     </parent>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.opendaylight.sdninterfaceapp</groupId>
             <artifactId>bgp-sdniwrapper</artifactId>
-            <version>0.5.0-Beryllium</version>
+            <version>0.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.bgpcep</groupId>
