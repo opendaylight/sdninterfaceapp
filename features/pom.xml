@@ -27,6 +27,7 @@
     <l2switch.version>0.4.0-SNAPSHOT</l2switch.version>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <openflowjava.version>0.8.0-SNAPSHOT</openflowjava.version>
+    <sdninterfaceapp.version>0.8.0-SNAPSHOT</sdninterfaceapp.version>
   </properties>
 
   <build>
@@ -69,44 +70,39 @@
       <type>xml</type>
       <scope>runtime</scope>
     </dependency>
-		<dependency>
-			<groupId>org.opendaylight.netconf</groupId>
-			<artifactId>features-restconf</artifactId>
-			<classifier>features</classifier>
-			<version>${restconf.version}</version>
-			<type>xml</type>
-			<scope>runtime</scope>
-		</dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>sdninterfaceapp-impl</artifactId>
-      <version>0.8.0-SNAPSHOT</version>
+      <groupId>org.opendaylight.netconf</groupId>
+      <artifactId>features-restconf</artifactId>
+      <classifier>features</classifier>
+      <version>${restconf.version}</version>
+      <type>xml</type>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>sdninterfaceapp-impl</artifactId>
-      <version>0.8.0-SNAPSHOT</version>
+      <version>${sdninterfaceapp.version}</version>
       <type>xml</type>
       <classifier>config</classifier>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>sdninterfaceapp-api</artifactId>
-      <version>0.8.0-SNAPSHOT</version>
+      <version>${sdninterfaceapp.version}</version>
     </dependency>
-        <dependency>
-            <groupId>org.opendaylight.openflowjava</groupId>
-            <artifactId>features-openflowjava</artifactId>
-            <classifier>features</classifier>
-            <version>${openflowjava.version}</version>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.opendaylight.openflowplugin</groupId>
-            <artifactId>features-openflowplugin</artifactId>
-            <classifier>features</classifier>
-            <version>0.3.0-SNAPSHOT</version>
-            <type>xml</type>
-        </dependency>
+    <dependency>
+      <groupId>org.opendaylight.openflowjava</groupId>
+      <artifactId>features-openflowjava</artifactId>
+      <classifier>features</classifier>
+      <version>${openflowjava.version}</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.openflowplugin</groupId>
+      <artifactId>features-openflowplugin</artifactId>
+      <classifier>features</classifier>
+      <version>${openflow.plugin.version}</version>
+      <type>xml</type>
+    </dependency>
   </dependencies>
 </project>
