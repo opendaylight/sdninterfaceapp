@@ -12,21 +12,28 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.concurrent.GuardedBy;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.BgpSessionState;
 import org.opendaylight.protocol.bgp.parser.AsNumberUtil;
+import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
+import org.opendaylight.protocol.bgp.parser.BgpExtendedMessageUtil;
 import org.opendaylight.protocol.bgp.parser.BgpTableTypeImpl;
+import org.opendaylight.protocol.bgp.parser.spi.MultiPathSupport;
+import org.opendaylight.protocol.bgp.parser.spi.pojo.MultiPathSupportImpl;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPPeerRegistry;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionPreferences;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPSessionStatistics;
@@ -47,7 +54,10 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.message.bgp.parameters.optional.capabilities.CParameters;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.CParameters1;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCapability;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.RouteRefresh;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.AddPathCapability;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.MultiprotocolCapability;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.add.path.capability.AddressFamilies;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
 import org.opendaylight.yangtools.yang.binding.Notification;
 import org.slf4j.Logger;
@@ -61,6 +71,10 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
     private static final Notification KEEP_ALIVE = new KeepaliveBuilder().build();
     private static final Notification UPDATE = new UpdateBuilder().build();
     private static final int KA_TO_DEADTIMER_RATIO = 3;
+
+    private static final String EXTENDED_MSG_DECODER = "EXTENDED_MSG_DECODER";
+
+    static final String END_OF_INPUT = "End of input detected. Close the session.";
 
     /**
      * Internal session state.
@@ -105,6 +119,7 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
     private State state = State.OPEN_CONFIRM;
 
     private final Set<BgpTableType> tableTypes;
+    private final List<AddressFamilies> addPathTypes;
     private final int holdTimerValue;
     private final int keepAlive;
     private final AsNumber asNumber;
@@ -117,7 +132,7 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
     public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final BGPSessionPreferences localPreferences,
             final BGPPeerRegistry peerRegistry) {
         this(listener, channel, remoteOpen, localPreferences.getHoldTime(), peerRegistry);
-        this.sessionStats = new BGPSessionStats(remoteOpen, this.holdTimerValue, this.keepAlive, channel, Optional.of(localPreferences), this.tableTypes);
+        this.sessionStats = new BGPSessionStats(remoteOpen, this.holdTimerValue, this.keepAlive, channel, Optional.of(localPreferences), this.tableTypes, this.addPathTypes);
     }
 
     public BGPSessionImpl(final BGPSessionListener listener, final Channel channel, final Open remoteOpen, final int localHoldTimer,
@@ -131,28 +146,45 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
         this.keepAlive = this.holdTimerValue / KA_TO_DEADTIMER_RATIO;
         this.asNumber = AsNumberUtil.advertizedAsNumber(remoteOpen);
         this.peerRegistry = peerRegistry;
+        final boolean enableExMess = BgpExtendedMessageUtil.advertizedBgpExtendedMessageCapability(remoteOpen);
+        if (enableExMess) {
+            this.channel.pipeline().replace(BGPMessageHeaderDecoder.class, EXTENDED_MSG_DECODER, BGPMessageHeaderDecoder.getExtendedBGPMessageHeaderDecoder());
+        }
 
         final Set<TablesKey> tts = Sets.newHashSet();
         final Set<BgpTableType> tats = Sets.newHashSet();
+        final List<AddressFamilies> addPathCapabilitiesList = Lists.newArrayList();
         if (remoteOpen.getBgpParameters() != null) {
             for (final BgpParameters param : remoteOpen.getBgpParameters()) {
                 for (final OptionalCapabilities optCapa : param.getOptionalCapabilities()) {
                     final CParameters cParam = optCapa.getCParameters();
-                    if ( cParam.getAugmentation(CParameters1.class) == null ||
-                            cParam.getAugmentation(CParameters1.class).getMultiprotocolCapability() == null ) {
+                    if ( cParam.getAugmentation(CParameters1.class) == null) {
                         continue;
                     }
-                    final MultiprotocolCapability multi = cParam.getAugmentation(CParameters1.class).getMultiprotocolCapability();
-                    final TablesKey tt = new TablesKey(multi.getAfi(), multi.getSafi());
-                    LOG.trace("Added table type to sync {}", tt);
-                    tts.add(tt);
-                    tats.add(new BgpTableTypeImpl(tt.getAfi(), tt.getSafi()));
+                    if(cParam.getAugmentation(CParameters1.class).getMultiprotocolCapability() != null) {
+                        final MultiprotocolCapability multi = cParam.getAugmentation(CParameters1.class).getMultiprotocolCapability();
+                        final TablesKey tt = new TablesKey(multi.getAfi(), multi.getSafi());
+                        LOG.trace("Added table type to sync {}", tt);
+                        tts.add(tt);
+                        tats.add(new BgpTableTypeImpl(tt.getAfi(), tt.getSafi()));
+                    } else if (cParam.getAugmentation(CParameters1.class).getAddPathCapability() != null) {
+                        final AddPathCapability addPathCap = cParam.getAugmentation(CParameters1.class).getAddPathCapability();
+                        addPathCapabilitiesList.addAll(addPathCap.getAddressFamilies());
+                    }
                 }
             }
         }
 
         this.sync = new BGPSynchronization(this.listener, tts);
         this.tableTypes = tats;
+        this.addPathTypes = addPathCapabilitiesList;
+
+        if (! this.addPathTypes.isEmpty()) {
+            final ChannelPipeline pipeline = this.channel.pipeline();
+            final BGPByteToMessageDecoder decoder = pipeline.get(BGPByteToMessageDecoder.class);
+            decoder.addDecoderConstraint(MultiPathSupport.class,
+                    MultiPathSupportImpl.createParserMultiPathSupport(this.addPathTypes));
+        }
 
         if (this.holdTimerValue != 0) {
             channel.eventLoop().schedule(new Runnable() {
@@ -171,20 +203,16 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
         }
         this.bgpId = remoteOpen.getBgpIdentifier();
         this.sessionStats = new BGPSessionStats(remoteOpen, this.holdTimerValue, this.keepAlive, channel, Optional.<BGPSessionPreferences>absent(),
-                this.tableTypes);
+                this.tableTypes, this.addPathTypes);
     }
 
     @Override
     public synchronized void close() {
-        LOG.info("Closing session: {}", this);
-
-        if (this.state != State.IDLE) {
+        if (this.state != State.IDLE && this.channel.isActive()) {
             this.writeAndFlush(new NotifyBuilder().setErrorCode(BGPError.CEASE.getCode()).setErrorSubcode(
                     BGPError.CEASE.getSubcode()).build());
-            removePeerSession();
-            this.channel.close();
-            this.state = State.IDLE;
         }
+        this.closeWithoutMessage();
     }
 
     /**
@@ -192,21 +220,21 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
      *
      * @param msg incoming message
      */
-    public synchronized void handleMessage(final Notification msg) {
+    public synchronized void handleMessage(final Notification msg) throws BGPDocumentedException {
         // Update last reception time
         this.lastMessageReceivedAt = System.nanoTime();
         this.sessionStats.updateReceivedMsgTotal();
 
         if (msg instanceof Open) {
             // Open messages should not be present here
-            this.terminate(BGPError.FSM_ERROR);
+            this.terminate(new BGPDocumentedException(null, BGPError.FSM_ERROR));
         } else if (msg instanceof Notify) {
             // Notifications are handled internally
             LOG.info("Session closed because Notification message received: {} / {}", ((Notify) msg).getErrorCode(),
-                ((Notify) msg).getErrorSubcode());
+                    ((Notify) msg).getErrorSubcode());
             this.closeWithoutMessage();
-            this.listener.onSessionTerminated(this, new BGPTerminationReason(BGPError.forValue(((Notify) msg).getErrorCode(),
-                ((Notify) msg).getErrorSubcode())));
+            this.listener.onSessionTerminated(this, new BGPTerminationReason(
+                    BGPError.forValue(((Notify) msg).getErrorCode(), ((Notify) msg).getErrorSubcode())));
             this.sessionStats.updateReceivedMsgErr((Notify) msg);
         } else if (msg instanceof Keepalive) {
             // Keepalives are handled internally
@@ -216,33 +244,38 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
             if (this.kaCounter >= 2) {
                 this.sync.kaReceived();
             }
-        } else {
-            // All others are passed up
+        } else if (msg instanceof RouteRefresh) {
+            this.listener.onMessage(this, msg);
+            this.sessionStats.updateReceivedMsgRR();
+        } else if (msg instanceof Update) {
             this.listener.onMessage(this, msg);
             this.sync.updReceived((Update) msg);
             this.sessionStats.updateReceivedMsgUpd();
+        } else {
+            LOG.warn("Ignoring unhandled message: {}.", msg.getClass());
         }
     }
 
     public synchronized void endOfInput() {
         if (this.state == State.UP) {
-            this.listener.onSessionDown(this, new IOException("End of input detected. Close the session."));
+            LOG.info(END_OF_INPUT);
+            this.listener.onSessionDown(this, new IOException(END_OF_INPUT));
         }
     }
 
     @GuardedBy("this")
-    private void writeEpilogue(final ChannelFuture future, final Notification msg) {
+    private ChannelFuture writeEpilogue(final ChannelFuture future, final Notification msg) {
         future.addListener(
-            new ChannelFutureListener() {
-                @Override
-                public void operationComplete(final ChannelFuture f) {
-                    if (!f.isSuccess()) {
-                        LOG.warn("Failed to send message {} to socket {}", msg, f.cause(), BGPSessionImpl.this.channel);
-                    } else {
-                        LOG.trace("Message {} sent to socket {}", msg, BGPSessionImpl.this.channel);
+                new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(final ChannelFuture f) {
+                        if (!f.isSuccess()) {
+                            LOG.warn("Failed to send message {} to socket {}", msg, BGPSessionImpl.this.channel, f.cause());
+                        } else {
+                            LOG.trace("Message {} sent to socket {}", msg, BGPSessionImpl.this.channel);
+                        }
                     }
-                }
-            });
+                });
         this.lastMessageSentAt = System.nanoTime();
         this.sessionStats.updateSentMsgTotal();
         if (msg instanceof Update) {
@@ -250,6 +283,7 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
         } else if (msg instanceof Notify) {
             this.sessionStats.updateSentMsgErr((Notify) msg);
         }
+        return future;
     }
 
     void flush() {
@@ -264,25 +298,31 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
         }
     }
 
-    synchronized void writeAndFlush(final Notification msg) {
-        writeEpilogue(this.channel.writeAndFlush(msg), msg);
+    synchronized ChannelFuture writeAndFlush(final Notification msg) {
+        return writeEpilogue(this.channel.writeAndFlush(msg), msg);
     }
 
     private synchronized void closeWithoutMessage() {
-        LOG.debug("Closing session: {}", this);
+        LOG.info("Closing session: {}", this);
         removePeerSession();
         this.channel.close();
         this.state = State.IDLE;
     }
 
     /**
-     * Closes PCEP session from the parent with given reason. A message needs to be sent, but parent doesn't have to be
+     * Closes BGP session from the parent with given reason. A message needs to be sent, but parent doesn't have to be
      * modified, because he initiated the closing. (To prevent concurrent modification exception).
      *
-     * @param error
+     * @param e BGPDocumentedException
      */
-    private void terminate(final BGPError error) {
-        this.writeAndFlush(new NotifyBuilder().setErrorCode(error.getCode()).setErrorSubcode(error.getSubcode()).build());
+    private synchronized void terminate(final BGPDocumentedException e) {
+        final BGPError error = e.getError();
+        final byte[] data = e.getData();
+        final NotifyBuilder builder = new NotifyBuilder().setErrorCode(error.getCode()).setErrorSubcode(error.getSubcode());
+        if (data != null && data.length != 0) {
+            builder.setData(data);
+        }
+        this.writeAndFlush(builder.build());
         this.closeWithoutMessage();
 
         this.listener.onSessionTerminated(this, new BGPTerminationReason(error));
@@ -310,7 +350,7 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
 
         if (ct >= nextHold) {
             LOG.debug("HoldTimer expired. {}", new Date());
-            this.terminate(BGPError.HOLD_TIMER_EXPIRED);
+            this.terminate(new BGPDocumentedException(BGPError.HOLD_TIMER_EXPIRED));
         } else {
             this.channel.eventLoop().schedule(new Runnable() {
                 @Override
@@ -364,6 +404,11 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
     @Override
     public Set<BgpTableType> getAdvertisedTableTypes() {
         return this.tableTypes;
+    }
+
+    @Override
+    public List<AddressFamilies> getAdvertisedAddPathTableTypes() {
+        return this.addPathTypes;
     }
 
     protected synchronized void sessionUp() {
@@ -429,11 +474,25 @@ public class BGPSessionImpl extends SimpleChannelInboundHandler<Notification> im
     @Override
     protected final void channelRead0(final ChannelHandlerContext ctx, final Notification msg) {
         LOG.debug("Message was received: {}", msg);
-        this.handleMessage(msg);
+        try {
+            this.handleMessage(msg);
+        } catch (final BGPDocumentedException e) {
+            this.terminate(e);
+        }
     }
 
     @Override
     public final void handlerAdded(final ChannelHandlerContext ctx) {
         this.sessionUp();
+    }
+
+    @Override
+    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
+        LOG.warn("BGP session encountered error", cause);
+        if (cause.getCause() instanceof BGPDocumentedException) {
+            this.terminate((BGPDocumentedException) cause.getCause());
+        } else {
+            this.close();
+        }
     }
 }

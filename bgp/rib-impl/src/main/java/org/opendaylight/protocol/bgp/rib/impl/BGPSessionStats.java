@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.AdvertisedAddPathTableTypes;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.AdvertizedTableTypes;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.BgpSessionState;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.ErrorMsgs;
@@ -26,6 +28,7 @@ import org.opendaylight.controller.config.yang.bgp.rib.impl.KeepAliveMsgs;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.MessagesStats;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.PeerPreferences;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.Received;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.RouteRefreshMsgs;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.Sent;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.SpeakerPreferences;
 import org.opendaylight.controller.config.yang.bgp.rib.impl.TotalMsgs;
@@ -40,7 +43,8 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.message.bgp.parameters.optional.capabilities.CParameters;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.CParameters1;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCapability;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.MultiprotocolCapability;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.add.path.capability.AddressFamilies;
 
 final class BGPSessionStats {
     private final Stopwatch sessionStopwatch;
@@ -48,15 +52,16 @@ final class BGPSessionStats {
     private final TotalMsgs totalMsgs = new TotalMsgs();
     private final KeepAliveMsgs kaMsgs = new KeepAliveMsgs();
     private final UpdateMsgs updMsgs = new UpdateMsgs();
+    private final RouteRefreshMsgs rrMsgs = new RouteRefreshMsgs();
     private final ErrorMsgs errMsgs = new ErrorMsgs();
 
     public BGPSessionStats(final Open remoteOpen, final int holdTimerValue, final int keepAlive, final Channel channel,
-            final Optional<BGPSessionPreferences> localPreferences, final Collection<BgpTableType> tableTypes) {
+        final Optional<BGPSessionPreferences> localPreferences, final Collection<BgpTableType> tableTypes, final List<AddressFamilies> addPathTypes) {
         this.sessionStopwatch = Stopwatch.createUnstarted();
         this.stats = new BgpSessionState();
         this.stats.setHoldtimeCurrent(holdTimerValue);
         this.stats.setKeepaliveCurrent(keepAlive);
-        this.stats.setPeerPreferences(setPeerPref(remoteOpen, channel, tableTypes));
+        this.stats.setPeerPreferences(setPeerPref(remoteOpen, channel, tableTypes, addPathTypes));
         this.stats.setSpeakerPreferences(setSpeakerPref(channel, localPreferences));
         initMsgs();
     }
@@ -68,6 +73,8 @@ final class BGPSessionStats {
         this.kaMsgs.setSent(new Sent());
         this.updMsgs.setReceived(new Received());
         this.updMsgs.setSent(new Sent());
+        this.rrMsgs.setReceived(new Received());
+        this.rrMsgs.setSent(new Sent());
         this.errMsgs.setErrorReceived(new ErrorReceived());
         this.errMsgs.setErrorSent(new ErrorSent());
     }
@@ -100,6 +107,14 @@ final class BGPSessionStats {
         updateReceivedMsg(this.updMsgs.getReceived());
     }
 
+    public void updateSentMsgRR() {
+        updateSentMsg(this.rrMsgs.getSent());
+    }
+
+    public void updateReceivedMsgRR() {
+        updateReceivedMsg(this.rrMsgs.getReceived());
+    }
+
     public void updateReceivedMsgErr(final Notify error) {
         Preconditions.checkNotNull(error);
         final ErrorReceived received = this.errMsgs.getErrorReceived();
@@ -125,6 +140,7 @@ final class BGPSessionStats {
         msgs.setErrorMsgs(this.errMsgs);
         msgs.setKeepAliveMsgs(this.kaMsgs);
         msgs.setUpdateMsgs(this.updMsgs);
+        msgs.setRouteRefreshMsgs(this.rrMsgs);
         this.stats.setSessionDuration(StatisticsUtil.formatElapsedTime(this.sessionStopwatch.elapsed(TimeUnit.SECONDS)));
         this.stats.setSessionState(state.toString());
         this.stats.setMessagesStats(msgs);
@@ -155,6 +171,15 @@ final class BGPSessionStats {
         return att;
     }
 
+    private static AdvertisedAddPathTableTypes addAddPathTableType(final AddressFamilies addressFamilies) {
+        Preconditions.checkNotNull(addressFamilies);
+        final AdvertisedAddPathTableTypes att = new AdvertisedAddPathTableTypes();
+        att.setAfi(addressFamilies.getAfi().getSimpleName());
+        att.setSafi(addressFamilies.getSafi().getSimpleName());
+        att.setSendReceive(addressFamilies.getSendReceive().toString());
+        return att;
+    }
+
     private static SpeakerPreferences setSpeakerPref(final Channel channel, final Optional<BGPSessionPreferences> localPreferences) {
         Preconditions.checkNotNull(channel);
         final SpeakerPreferences pref = new SpeakerPreferences();
@@ -179,8 +204,24 @@ final class BGPSessionStats {
                                 att.setSafi(mc.getSafi().getSimpleName());
                                 tt.add(att);
                             }
-                            pref.setGrCapability(cParam.getAugmentation(CParameters1.class).getGracefulRestartCapability() != null);
-                            pref.setFourOctetAsCapability(cParam.getAs4BytesCapability() != null);
+                            if (cParam.getAs4BytesCapability() != null) {
+                                pref.setFourOctetAsCapability(true);
+                            }
+                            if (cParam.getAugmentation(CParameters1.class) != null &&
+                                    cParam.getAugmentation(CParameters1.class).getGracefulRestartCapability() != null) {
+                                pref.setGrCapability(true);
+                            }
+                            if (cParam.getAugmentation(CParameters1.class) != null &&
+                                    cParam.getAugmentation(CParameters1.class).getAddPathCapability() != null) {
+                                pref.setAddPathCapability(true);
+                            }
+                            if (cParam.getBgpExtendedMessageCapability() != null) {
+                                pref.setBgpExtendedMessageCapability(true);
+                            }
+                            if (cParam.getAugmentation(CParameters1.class) != null &&
+                                cParam.getAugmentation(CParameters1.class).getRouteRefreshCapability() != null) {
+                                pref.setRouteRefreshCapability(true);
+                            }
                         }
                     }
                 }
@@ -190,7 +231,8 @@ final class BGPSessionStats {
         return pref;
     }
 
-    private static PeerPreferences setPeerPref(final Open remoteOpen, final Channel channel, final Collection<BgpTableType> tableTypes) {
+    private static PeerPreferences setPeerPref(final Open remoteOpen, final Channel channel, final Collection<BgpTableType> tableTypes,
+        final List<AddressFamilies> addPathTypes) {
         Preconditions.checkNotNull(remoteOpen);
         Preconditions.checkNotNull(channel);
         final PeerPreferences pref = new PeerPreferences();
@@ -200,22 +242,39 @@ final class BGPSessionStats {
         pref.setBgpId(remoteOpen.getBgpIdentifier().getValue());
         pref.setAs(remoteOpen.getMyAsNumber().longValue());
         pref.setHoldtime(remoteOpen.getHoldTimer());
-        final List<AdvertizedTableTypes> tt = new ArrayList<>();
-        for (final BgpTableType t : tableTypes) {
-            tt.add(addTableType(t));
-        }
+
+        final List<AdvertizedTableTypes> tt = tableTypes.stream().map(BGPSessionStats::addTableType).collect(Collectors.toList());
+        final List<AdvertisedAddPathTableTypes> addPathTableTypeList = addPathTypes.stream().map(BGPSessionStats::addAddPathTableType)
+            .collect(Collectors.toList());
+
         if (remoteOpen.getBgpParameters() != null) {
             for (final BgpParameters param : remoteOpen.getBgpParameters()) {
                 for (final OptionalCapabilities capa : param.getOptionalCapabilities()) {
                     final CParameters cParam = capa.getCParameters();
-                    pref.setFourOctetAsCapability(cParam.getAs4BytesCapability() != null);
-                    pref.setGrCapability(cParam.getAugmentation(CParameters1.class) != null &&
-                        cParam.getAugmentation(CParameters1.class).getGracefulRestartCapability() != null);
+                    if (cParam.getAs4BytesCapability() != null) {
+                        pref.setFourOctetAsCapability(true);
+                    }
+                    if (cParam.getAugmentation(CParameters1.class) != null &&
+                            cParam.getAugmentation(CParameters1.class).getGracefulRestartCapability() != null) {
+                        pref.setGrCapability(true);
+                    }
+                    if (cParam.getAugmentation(CParameters1.class) != null &&
+                            cParam.getAugmentation(CParameters1.class).getAddPathCapability() != null) {
+                        pref.setAddPathCapability(true);
+                    }
+                    if (cParam.getAugmentation(CParameters1.class) != null &&
+                        cParam.getAugmentation(CParameters1.class).getRouteRefreshCapability() != null) {
+                        pref.setRouteRefreshCapability(true);
+                    }
+                    if (cParam.getBgpExtendedMessageCapability() != null) {
+                        pref.setBgpExtendedMessageCapability(true);
+                    }
                 }
 
             }
         }
         pref.setAdvertizedTableTypes(tt);
+        pref.setAdvertisedAddPathTableTypes(addPathTableTypeList);
         return pref;
     }
 }

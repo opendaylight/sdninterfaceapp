@@ -12,6 +12,8 @@ import com.google.common.base.Verify;
 import com.google.common.net.InetAddresses;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import org.opendaylight.controller.md.sal.common.api.data.AsyncTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionChain;
@@ -20,9 +22,12 @@ import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeChangeListener;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataWriteTransaction;
 import org.opendaylight.controller.md.sal.dom.api.DOMTransactionChain;
 import org.opendaylight.protocol.bgp.openconfig.spi.BGPConfigModuleTracker;
+import org.opendaylight.protocol.bgp.rib.spi.IdentifierUtils;
+import org.opendaylight.protocol.bgp.rib.spi.RouterIds;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.ApplicationRibId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.PeerRole;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.SimpleRoutingPolicy;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.Peer;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.peer.AdjRibIn;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables;
@@ -53,26 +58,29 @@ public class ApplicationPeer implements AutoCloseable, org.opendaylight.protocol
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationPeer.class);
 
     private final byte[] rawIdentifier;
-    private final RIBImpl targetRib;
     private final String name;
     private final YangInstanceIdentifier adjRibsInId;
     private final DOMTransactionChain chain;
     private final DOMTransactionChain writerChain;
     private final BGPConfigModuleTracker moduleTracker;
-
+    private final EffectiveRibInWriter effectiveRibInWriter;
     private AdjRibInWriter writer;
 
-    public ApplicationPeer(final ApplicationRibId applicationRibId, final Ipv4Address ipAddress, final RIBImpl targetRib, final BGPConfigModuleTracker moduleTracker) {
+    public ApplicationPeer(final ApplicationRibId applicationRibId, final Ipv4Address ipAddress, final RIBImpl rib, final BGPConfigModuleTracker
+        moduleTracker) {
         this.name = applicationRibId.getValue().toString();
-        this.targetRib = Preconditions.checkNotNull(targetRib);
+        final RIBImpl targetRib = Preconditions.checkNotNull(rib);
         this.rawIdentifier = InetAddresses.forString(ipAddress.getValue()).getAddress();
         final NodeIdentifierWithPredicates peerId = IdentifierUtils.domPeerId(RouterIds.createPeerId(ipAddress));
-        this.adjRibsInId = this.targetRib.getYangRibId().node(Peer.QNAME).node(peerId).node(AdjRibIn.QNAME).node(Tables.QNAME);
-        this.chain = this.targetRib.createPeerChain(this);
-        this.writerChain = this.targetRib.createPeerChain(this);
-        this.writer = AdjRibInWriter.create(this.targetRib.getYangRibId(), PeerRole.Internal, this.writerChain);
-        // FIXME: set to true, once it's fixed how to skip advertising routes back to AppPeer
-        this.writer = this.writer.transform(RouterIds.createPeerId(ipAddress), this.targetRib.getRibSupportContext(), this.targetRib.getLocalTablesKeys(), false);
+        final YangInstanceIdentifier peerIId = targetRib.getYangRibId().node(Peer.QNAME).node(peerId);
+        this.adjRibsInId = peerIId.node(AdjRibIn.QNAME).node(Tables.QNAME);
+        this.chain = targetRib.createPeerChain(this);
+        this.effectiveRibInWriter = EffectiveRibInWriter.create(targetRib.getService(), targetRib.createPeerChain(this), peerIId,
+            targetRib.getImportPolicyPeerTracker(), targetRib.getRibSupportContext(), PeerRole.Internal);
+        this.writerChain = targetRib.createPeerChain(this);
+        this.writer = AdjRibInWriter.create(targetRib.getYangRibId(), PeerRole.Internal, Optional.of(SimpleRoutingPolicy.AnnounceNone), this.writerChain);
+        this.writer = this.writer.transform(RouterIds.createPeerId(ipAddress), targetRib.getRibSupportContext(), targetRib.getLocalTablesKeys(),
+            Collections.emptyList());
         this.moduleTracker = moduleTracker;
         if (moduleTracker != null) {
             moduleTracker.onInstanceCreate();
@@ -178,7 +186,8 @@ public class ApplicationPeer implements AutoCloseable, org.opendaylight.protocol
 
     @Override
     public void close() {
-        this.writer.cleanTables(this.targetRib.getLocalTablesKeys());
+        this.effectiveRibInWriter.close();
+        this.writer.removePeer();
         this.chain.close();
         this.writerChain.close();
         if (this.moduleTracker != null) {

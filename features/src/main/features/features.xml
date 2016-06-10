@@ -38,9 +38,18 @@
   </feature>
 
 
+  <feature name='odl-sdni-ui' version="0.8.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: UI'>
+    <feature version='${mdsal.version}'>odl-mdsal-apidocs</feature>
+    <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
+    <feature>http</feature>
+    <feature>webconsole</feature>
+   </feature>
+
+
   <feature name='odl-sdninterfaceapp-all' version="1.7.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
 <feature version="0.8.0-SNAPSHOT">odl-sdni-aggregator</feature>
 <feature version="0.8.0-SNAPSHOT">odl-sdni-wrapper</feature>
+<feature version="0.8.0-SNAPSHOT">odl-sdni-ui</feature>
     <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
   </feature>
 

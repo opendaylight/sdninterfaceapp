@@ -15,11 +15,11 @@ module odl-bgp-rib-impl-cfg {
     import opendaylight-md-sal-dom {prefix sal; revision-date 2013-10-28; }
     import netty { prefix netty; revision-date 2013-11-19; }
     import config { prefix config; revision-date 2013-04-05; }
-    import protocol-framework { prefix pf; revision-date 2014-03-13; }
     import odl-tcpmd5-cfg { prefix tcpmd5; revision-date 2014-04-27; }
     import odl-tcpmd5-netty-cfg { prefix tcpmd5n; revision-date 2014-04-27; }
     import rpc-context { prefix rpcx; revision-date 2013-06-17; }
     import odl-bgp-openconfig-spi-cfg { prefix bgp-oc-spi; revision-date 2015-09-25; }
+    import odl-bgp-path-selection-mode { prefix bps; revision-date 2016-03-01;}
 
     organization "Cisco Systems, Inc.";
 
@@ -36,6 +36,10 @@ module odl-bgp-rib-impl-cfg {
         accompanies this distribution, and is available at
         http://www.eclipse.org/legal/epl-v10.html";
 
+    revision "2016-03-30" {
+        description
+            "Updated to simplify reconnection strategy.";
+    }
     revision "2013-04-09" {
         description
             "Initial revision";
@@ -156,7 +160,7 @@ module odl-bgp-rib-impl-cfg {
     }
 
 
-     augment "/config:modules/config:module/config:configuration" {
+    augment "/config:modules/config:module/config:configuration" {
         case strict-bgp-peer-registry {
             when "/config:modules/config:module/config:type = 'strict-bgp-peer-registry'";
         }
@@ -172,7 +176,7 @@ module odl-bgp-rib-impl-cfg {
 
     identity bgp-peer-acceptor {
         description
-            "BGP peer acceptor that handles incomming bgp connections. Uses BGP peer registry to accept or decline incomming connections";
+            "BGP peer acceptor that handles incoming bgp connections. Uses BGP peer registry to accept or decline incoming connections";
 
         base config:module-type;
         config:java-name-prefix BGPPeerAcceptor;
@@ -244,6 +248,17 @@ module odl-bgp-rib-impl-cfg {
                 }
             }
 
+            container bgp-peer-registry {
+                description "BGP peer registry where current instance of BGP peer will be registered.";
+                uses config:service-ref {
+                    refine type {
+                        // FIXME backwards compatibility. If not configured, GLOBAL instance is used
+                        mandatory false;
+                        config:required-identity bgp-peer-registry;
+                    }
+                }
+            }
+
             leaf application-rib-id {
                 type rib:application-rib-id;
                 mandatory true;
@@ -262,6 +277,17 @@ module odl-bgp-rib-impl-cfg {
 
         base "config:service-type";
         config:java-class "org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType";
+    }
+
+    identity add-path {
+        base "config:service-type";
+        config:java-class "org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.add.path.capability.AddressFamilies";
+    }
+
+    identity add-path-impl {
+        config:provided-service add-path;
+        base config:module-type;
+        config:java-name-prefix AddPathImpl;
     }
 
     identity bgp-table-type-impl {
@@ -293,6 +319,24 @@ module odl-bgp-rib-impl-cfg {
     }
 
     augment "/config:modules/config:module/config:configuration" {
+        case add-path-impl {
+            when "/config:modules/config:module/config:type = 'add-path-impl'";
+            container address-family {
+                uses config:service-ref {
+                    refine type {
+                        mandatory true;
+                        config:required-identity bgp-table-type;
+                    }
+                }
+            }
+            leaf send-receive {
+                type bgp-mp:send-receive;
+                mandatory true;
+            }
+        }
+    }
+
+    augment "/config:modules/config:module/config:configuration" {
         case bgp-peer {
             when "/config:modules/config:module/config:type = 'bgp-peer'";
 
@@ -313,9 +357,18 @@ module odl-bgp-rib-impl-cfg {
                 default 180;
             }
 
+            leaf retrytimer {
+                type int16;
+                default 10;
+            }
+
             leaf peer-role {
                 type rib:peer-role;
                 default ibgp;
+            }
+
+            leaf simple-routing-policy {
+                type rib:simple-routing-policy;
             }
 
             leaf initiate-connection {
@@ -333,6 +386,20 @@ module odl-bgp-rib-impl-cfg {
                         config:required-identity bgp-table-type;
                     }
                 }
+            }
+
+            list add-path {
+                key "type name";
+                uses config:service-ref {
+                    refine type {
+                        config:required-identity add-path;
+                    }
+                }
+            }
+
+            leaf route-refresh {
+                type boolean;
+                default "true";
             }
 
             leaf remote-as {
@@ -363,6 +430,14 @@ module odl-bgp-rib-impl-cfg {
                         // FIXME backwards compatibility. If not configured, GLOBAL instance is used
                         mandatory false;
                         config:required-identity bgp-peer-registry;
+                    }
+                }
+            }
+            container rpc-registry {
+                uses config:service-ref {
+                    refine type {
+                        mandatory false;
+                        config:required-identity mdsb:binding-rpc-registry;
                     }
                 }
             }
@@ -409,6 +484,19 @@ module odl-bgp-rib-impl-cfg {
         }
     }
 
+    grouping afi-safi {
+        leaf afi {
+            description "Address Family Identifier.";
+            type string;
+            default "";
+        }
+        leaf safi {
+            description "Subsequent Address Family Identifier.";
+            type string;
+            default "";
+        }
+    }
+
     grouping preferences {
         leaf bgp-id {
             description "The BGP Identifier.";
@@ -446,21 +534,39 @@ module odl-bgp-rib-impl-cfg {
             default "false";
         }
 
+        leaf bgp-extended-message-capability {
+            description "The bgp extended message support capability.";
+            type boolean;
+            default "false";
+        }
+
         leaf gr-capability {
             description "BGP graceful restart support capability.";
             type boolean;
             default "false";
         }
 
+        leaf add-path-capability {
+            type boolean;
+            default "false";
+        }
+
+        leaf route-refresh-capability {
+            reference "https://tools.ietf.org/html/rfc2918";
+            type boolean;
+            default "false";
+        }
+
         list advertized-table-types {
             description "The BGP Table-type capabilities advertized by the BGP peer.";
-            leaf afi {
-                description "Address Family Identifier.";
-                type string;
-                default "";
-            }
-            leaf safi {
-                description "Subsequent Address Family Identifier.";
+            uses afi-safi;
+        }
+
+        list advertised-add-path-table-types {
+            description "The BGP Table-type capabilities advertized by the BGP peer.";
+            uses afi-safi;
+            leaf send-receive {
+                description "Send Receive Add Path Configuration.";
                 type string;
                 default "";
             }
@@ -548,6 +654,11 @@ module odl-bgp-rib-impl-cfg {
                         uses message-stats;
                     }
 
+                    container route-refresh-msgs {
+                        description "The statistics for received/sent BGP Route Refresh messages.";
+                        uses message-stats;
+                    }
+
                     container error-msgs {
                         container error-received {
                             description "The received BGP Error (notification) messages statistics.";
@@ -588,6 +699,42 @@ module odl-bgp-rib-impl-cfg {
         }
      }
 
+    identity bgp-path-selection-mode {
+        description
+            "Service representing an address family + path selection mode.";
+
+        base "config:service-type";
+        config:java-class "org.opendaylight.protocol.bgp.rib.impl.spi.BGPBestPathSelection";
+    }
+
+    identity bgp-psm-impl {
+        base config:module-type;
+        config:provided-service bgp-path-selection-mode;
+        config:java-name-prefix BGPPSMImpl;
+    }
+
+    augment "/config:modules/config:module/config:configuration" {
+        case bgp-psm-impl {
+            when "/config:modules/config:module/config:type = 'bgp-psm-impl'";
+            container path-address-family {
+                uses config:service-ref {
+                    refine type {
+                        mandatory true;
+                        config:required-identity bgp-table-type;
+                    }
+                }
+            }
+            container path-selection-mode {
+                uses config:service-ref {
+                    refine type {
+                        mandatory true;
+                        config:required-identity bps:path-selection-mode-factory;
+                    }
+                }
+            }
+        }
+    }
+
     identity rib-impl {
         base config:module-type;
         config:provided-service bgprib:rib;
@@ -613,24 +760,6 @@ module odl-bgp-rib-impl-cfg {
                     refine type {
                         mandatory true;
                         config:required-identity bgp-dispatcher;
-                    }
-                }
-            }
-
-            container session-reconnect-strategy {
-                uses config:service-ref {
-                    refine type {
-                        mandatory true;
-                        config:required-identity pf:reconnect-strategy-factory;
-                    }
-                }
-            }
-
-            container tcp-reconnect-strategy {
-                uses config:service-ref {
-                    refine type {
-                        mandatory true;
-                        config:required-identity pf:reconnect-strategy-factory;
                     }
                 }
             }
@@ -702,6 +831,14 @@ module odl-bgp-rib-impl-cfg {
                 description "IBGP identifier. Needed by route reflection.";
                 reference "https://tools.ietf.org/html/rfc4456#section-7";
                 type inet:ipv4-address;
+            }
+
+            list rib-path-selection-mode {
+                uses config:service-ref {
+                    refine type {
+                        config:required-identity bgp-path-selection-mode;
+                    }
+                }
             }
         }
     }

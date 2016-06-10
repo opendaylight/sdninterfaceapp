@@ -20,6 +20,7 @@ import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeChangeService;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataTreeIdentifier;
 import org.opendaylight.protocol.bgp.rib.impl.spi.Codecs;
 import org.opendaylight.protocol.bgp.rib.impl.spi.CodecsRegistry;
+import org.opendaylight.protocol.bgp.rib.spi.IdentifierUtils;
 import org.opendaylight.protocol.bgp.rib.spi.RIBSupport;
 import org.opendaylight.protocol.bgp.rib.spi.RibSupportUtils;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Prefix;
@@ -84,34 +85,41 @@ final class AdjRibOutListener implements DOMDataTreeChangeListener {
         for (final DataTreeCandidate tc : changes) {
             LOG.trace("Change {} type {}", tc.getRootNode(), tc.getRootNode().getModificationType());
             for (final DataTreeCandidateNode child : tc.getRootNode().getChildNodes()) {
-                for (final DataTreeCandidateNode route : this.support.changedRoutes(child)) {
-                    final Update update;
-
-                    switch (route.getModificationType()) {
-                    case UNMODIFIED:
-                        LOG.debug("Skipping unmodified route {}", route.getIdentifier());
-                        continue;
-                    case DELETE:
-                    case DISAPPEARED:
-                        // FIXME: we can batch deletions into a single batch
-                        update = withdraw((MapEntryNode) route.getDataBefore().get());
-                        break;
-                    case APPEARED:
-                    case SUBTREE_MODIFIED:
-                    case WRITE:
-                        update = advertise((MapEntryNode) route.getDataAfter().get());
-                        break;
-                    default:
-                        LOG.warn("Ignoring unhandled modification type {}", route.getModificationType());
-                        continue;
-                    }
-
-                    LOG.debug("Writing update {}", update);
-                    this.session.write(update);
-                }
+                processSupportedFamilyRoutes(child);
             }
         }
         this.session.flush();
+    }
+
+    private void processSupportedFamilyRoutes(final DataTreeCandidateNode child) {
+        for (final DataTreeCandidateNode route : this.support.changedRoutes(child)) {
+            processRouteChange(route);
+        }
+    }
+
+    private void processRouteChange(final DataTreeCandidateNode route) {
+        final Update update;
+        switch (route.getModificationType()) {
+        case UNMODIFIED:
+            LOG.debug("Skipping unmodified route {}", route.getIdentifier());
+            return;
+        case DELETE:
+        case DISAPPEARED:
+            // FIXME: we can batch deletions into a single batch
+            update = withdraw((MapEntryNode) route.getDataBefore().get());
+            LOG.debug("Withdrawing routes {}", update);
+            break;
+        case APPEARED:
+        case SUBTREE_MODIFIED:
+        case WRITE:
+            update = advertise((MapEntryNode) route.getDataAfter().get());
+            LOG.debug("Advertising routes {}", update);
+            break;
+        default:
+            LOG.warn("Ignoring unhandled modification type {}", route.getModificationType());
+            return;
+        }
+        this.session.write(update);
     }
 
     private Attributes routeAttributes(final MapEntryNode route) {
@@ -155,5 +163,9 @@ final class AdjRibOutListener implements DOMDataTreeChangeListener {
 
     public void close() {
         this.registerDataTreeChangeListener.close();
+    }
+
+    boolean isMpSupported() {
+        return this.mpSupport;
     }
 }

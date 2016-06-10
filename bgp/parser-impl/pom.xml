@@ -11,6 +11,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <scm>
+        <connection>scm:git:ssh://git.opendaylight.org:29418/bgpcep.git</connection>
+        <developerConnection>scm:git:ssh://git.opendaylight.org:29418/bgpcep.git</developerConnection>
+        <url>https://wiki.opendaylight.org/view/BGP_LS_PCEP:Main</url>
+        <tag>HEAD</tag>
+    </scm>
     <parent>
         <groupId>org.opendaylight.bgpcep</groupId>
         <artifactId>bgp-parent</artifactId>
@@ -124,4 +130,20 @@
             </plugin>
         </plugins>
     </build>
+
+  <!--
+      Maven Site Configuration
+
+      The following configuration is necessary for maven-site-plugin to
+      correctly identify the correct deployment path for OpenDaylight Maven
+      sites.
+  -->
+  <url>${odl.site.url}/${project.groupId}/${stream}/${project.artifactId}/</url>
+
+  <distributionManagement>
+    <site>
+      <id>opendaylight-site</id>
+      <url>${nexus.site.url}/${project.artifactId}/</url>
+    </site>
+  </distributionManagement>
 </project>

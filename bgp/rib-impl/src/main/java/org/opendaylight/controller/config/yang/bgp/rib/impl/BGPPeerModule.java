@@ -23,13 +23,17 @@ import com.google.common.net.InetAddresses;
 import io.netty.util.concurrent.Future;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.opendaylight.controller.config.api.JmxAttributeValidationException;
 import org.opendaylight.protocol.bgp.openconfig.spi.BGPConfigModuleTracker;
 import org.opendaylight.protocol.bgp.openconfig.spi.BGPOpenConfigProvider;
 import org.opendaylight.protocol.bgp.openconfig.spi.BGPOpenconfigMapper;
 import org.opendaylight.protocol.bgp.openconfig.spi.InstanceConfigurationIdentifier;
 import org.opendaylight.protocol.bgp.openconfig.spi.pojo.BGPPeerInstanceConfiguration;
+import org.opendaylight.protocol.bgp.parser.BgpTableTypeImpl;
+import org.opendaylight.protocol.bgp.parser.spi.MultiprotocolCapabilitiesUtil;
 import org.opendaylight.protocol.bgp.rib.impl.BGPPeer;
 import org.opendaylight.protocol.bgp.rib.impl.StrictBGPPeerRegistry;
 import org.opendaylight.protocol.bgp.rib.impl.spi.BGPPeerRegistry;
@@ -48,8 +52,10 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.mess
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.BgpTableType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.CParameters1;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.CParameters1Builder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.GracefulRestartCapabilityBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.open.bgp.parameters.optional.capabilities.c.parameters.MultiprotocolCapabilityBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.AddPathCapabilityBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.GracefulRestartCapabilityBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.MultiprotocolCapabilityBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.multiprotocol.rev130919.mp.capabilities.add.path.capability.AddressFamilies;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.PeerRole;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.controller.tcpmd5.cfg.rev140427.Rfc2385Key;
 import org.slf4j.Logger;
@@ -128,9 +134,9 @@ public final class BGPPeerModule extends org.opendaylight.controller.config.yang
         final BGPPeer bgpClientPeer;
         final IpAddress host = getNormalizedHost();
         if (getPeerRole() != null) {
-            bgpClientPeer = new BGPPeer(peerName(host), r, getPeerRole());
+            bgpClientPeer = new BGPPeer(peerName(host), r, getPeerRole(), getSimpleRoutingPolicy(), getRpcRegistryDependency());
         } else {
-            bgpClientPeer = new BGPPeer(peerName(host), r, PeerRole.Ibgp);
+            bgpClientPeer = new BGPPeer(peerName(host), r, PeerRole.Ibgp, getSimpleRoutingPolicy(), getRpcRegistryDependency());
         }
 
         bgpClientPeer.registerRootRuntimeBean(getRootRuntimeBeanRegistratorWrapper());
@@ -188,6 +194,16 @@ public final class BGPPeerModule extends org.opendaylight.controller.config.yang
         caps.add(new OptionalCapabilitiesBuilder().setCParameters(new CParametersBuilder().addAugmentation(CParameters1.class,
             new CParameters1Builder().setGracefulRestartCapability(new GracefulRestartCapabilityBuilder().build()).build()).build()).build());
 
+        if (getRouteRefresh()) {
+            caps.add(new OptionalCapabilitiesBuilder().setCParameters(MultiprotocolCapabilitiesUtil.RR_CAPABILITY).build());
+        }
+
+        if (!getAddPathDependency().isEmpty()) {
+            final List<AddressFamilies> addPathFamilies = filterAddPathDependency(getAddPathDependency());
+            caps.add(new OptionalCapabilitiesBuilder().setCParameters(new CParametersBuilder().addAugmentation(CParameters1.class,
+                new CParameters1Builder().setAddPathCapability(new AddPathCapabilityBuilder().setAddressFamilies(addPathFamilies).build()).build()).build()).build());
+        }
+
         for (final BgpTableType t : getAdvertizedTableDependency()) {
             if (!r.getLocalTables().contains(t)) {
                 LOG.info("RIB instance does not list {} in its local tables. Incoming data will be dropped.", t);
@@ -198,6 +214,19 @@ public final class BGPPeerModule extends org.opendaylight.controller.config.yang
         }
         tlvs.add(new BgpParametersBuilder().setOptionalCapabilities(caps).build());
         return tlvs;
+    }
+
+    private List<AddressFamilies> filterAddPathDependency(final List<AddressFamilies> addPathDependency) {
+        final Map<BgpTableType, AddressFamilies> filteredFamilies = new HashMap<BgpTableType, AddressFamilies>();
+        for (final AddressFamilies family : addPathDependency) {
+            final BgpTableType key = new BgpTableTypeImpl(family.getAfi(), family.getSafi());
+            if (!filteredFamilies.containsKey(key)) {
+                filteredFamilies.put(key, family);
+            } else {
+                LOG.info("Ignoring Add-path dependency {}", family);
+            }
+        }
+        return new ArrayList<AddressFamilies>(filteredFamilies.values());
     }
 
     public IpAddress getNormalizedHost() {
@@ -217,7 +246,7 @@ public final class BGPPeerModule extends org.opendaylight.controller.config.yang
 
         final RIB rib = getRibDependency();
         final Optional<KeyMapping> optionalKey = Optional.fromNullable(keys);
-        return rib.getDispatcher().createReconnectingClient(address, registry, rib.getTcpStrategyFactory(), optionalKey);
+        return rib.getDispatcher().createReconnectingClient(address, registry, getRetrytimer(), optionalKey);
     }
 
     private BGPPeerRegistry getPeerRegistryBackwards() {
@@ -242,28 +271,28 @@ public final class BGPPeerModule extends org.opendaylight.controller.config.yang
 
         public BGPPeerModuleTracker(final Optional<BGPOpenConfigProvider> openconfigProvider) {
             if (openconfigProvider.isPresent()) {
-                neighborProvider = openconfigProvider.get().getOpenConfigMapper(BGPPeerInstanceConfiguration.class);
+                this.neighborProvider = openconfigProvider.get().getOpenConfigMapper(BGPPeerInstanceConfiguration.class);
             } else {
-                neighborProvider = null;
+                this.neighborProvider = null;
             }
             final InstanceConfigurationIdentifier identifier = new InstanceConfigurationIdentifier(getIdentifier().getInstanceName());
             this.bgpPeerInstanceConfiguration = new BGPPeerInstanceConfiguration(identifier, Rev130715Util.getIpvAddress(getNormalizedHost()),
                     Rev130715Util.getPort(getPort().getValue()), getHoldtimer(), getPeerRole(), getInitiateConnection(),
                         getAdvertizedTableDependency(), Rev130715Util.getASNumber(getAsOrDefault(getRibDependency()).getValue()),
-                        getOptionaPassword(getPassword()));
+                        getOptionaPassword(getPassword()), getAddPathDependency());
         }
 
         @Override
         public void onInstanceCreate() {
-            if (neighborProvider != null) {
-                neighborProvider.writeConfiguration(this.bgpPeerInstanceConfiguration);
+            if (this.neighborProvider != null) {
+                this.neighborProvider.writeConfiguration(this.bgpPeerInstanceConfiguration);
             }
         }
 
         @Override
         public void onInstanceClose() {
-            if (neighborProvider != null) {
-                neighborProvider.removeConfiguration(this.bgpPeerInstanceConfiguration);
+            if (this.neighborProvider != null) {
+                this.neighborProvider.removeConfiguration(this.bgpPeerInstanceConfiguration);
             }
         }
 
