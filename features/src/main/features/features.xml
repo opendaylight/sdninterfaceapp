@@ -20,7 +20,7 @@
 <bundle>wrap:mvn:com.google.guava/guava/18.0</bundle>
     <feature version="${restconf.version}">odl-restconf-all</feature>
     <feature version='${mdsal.version}'>odl-mdsal-all</feature>
-    <feature version="0.3.0-SNAPSHOT">odl-openflowplugin-all</feature>
+    <feature version="0.3.0-SNAPSHOT">odl-openflowplugin-flow-services-ui</feature>
 	<bundle>mvn:org.opendaylight.controller.model/model-inventory/1.4.0-SNAPSHOT</bundle>
     <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/0.8.0-SNAPSHOT</bundle>
   </feature>
