@@ -80,7 +80,7 @@ import org.opendaylight.controller.md.sal.dom.api.DOMNotificationService;
 import org.opendaylight.controller.md.sal.dom.api.DOMRpcProviderService;
 import org.opendaylight.controller.md.sal.dom.api.DOMRpcService;
 import org.opendaylight.controller.sal.dom.broker.GlobalBundleScanningSchemaServiceImpl;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.RibId;
 import org.opendaylight.yangtools.sal.binding.generator.api.ClassLoadingStrategy;
 import org.opendaylight.yangtools.sal.binding.generator.impl.GeneratedClassLoadingStrategy;

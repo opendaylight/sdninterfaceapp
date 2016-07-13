@@ -4,7 +4,7 @@ module sdni-topology {
     namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:topology:params";
     prefix sdntp;
 
-    import ietf-inet-types { prefix inet; revision-date 2010-09-24; }
+    import ietf-inet-types { prefix inet; revision-date 2013-07-15; }
     import network-topology { prefix nt; revision-date 2013-10-21; }
     import ietf-yang-types {prefix yang;}
 
