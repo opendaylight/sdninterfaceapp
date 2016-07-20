@@ -44,8 +44,8 @@ import org.opendaylight.protocol.bgp.rib.spi.AbstractRIBExtensionProviderActivat
 import org.opendaylight.protocol.bgp.rib.spi.RIBExtensionProviderContext;
 import org.opendaylight.protocol.bgp.rib.spi.SimpleRIBExtensionProviderContext;
 import org.opendaylight.protocol.bgp.util.HexDumpBGPFileParser;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.AsNumber;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.routes.ipv4.routes.Ipv4Route;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv6.routes.ipv6.routes.Ipv6Route;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.linkstate.rev150210.LinkstateAddressFamily;
@@ -60,6 +60,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.bgp.rib.rib.LocRib;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.Tables;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.rib.TablesKey;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.BgpId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.UnicastSubsequentAddressFamily;
 import org.opendaylight.yangtools.binding.data.codec.api.BindingCodecTreeFactory;
@@ -115,7 +116,7 @@ public class ParserToSalTest extends AbstractDataBrokerTest {
         this.ext1 = new SimpleRIBExtensionProviderContext();
         this.ext2 = new SimpleRIBExtensionProviderContext();
         this.baseact = new RIBActivator();
-        this.lsact = new org.opendaylight.protocol.bgp.linkstate.RIBActivator();
+        this.lsact = new org.opendaylight.protocol.bgp.linkstate.impl.RIBActivator();
 
         this.baseact.startRIBExtensionProvider(this.ext1);
         this.lsact.startRIBExtensionProvider(this.ext2);
@@ -131,8 +132,8 @@ public class ParserToSalTest extends AbstractDataBrokerTest {
     public void testWithLinkstate() throws InterruptedException, ExecutionException {
         final List<BgpTableType> tables = ImmutableList.of(
                 (BgpTableType) new BgpTableTypeImpl(LinkstateAddressFamily.class, LinkstateSubsequentAddressFamily.class));
-        final RIBImpl rib = new RIBImpl(new RibId(TEST_RIB_ID), new AsNumber(72L), new Ipv4Address("127.0.0.1"), null, this.ext2, this.dispatcher,
-            this.codecFactory, getDataBroker(), getDomBroker(), tables,
+        final RIBImpl rib = new RIBImpl(new RibId(TEST_RIB_ID), new AsNumber(72L), new BgpId("127.0.0.1"), null, this.ext2, this.dispatcher,
+            this.codecFactory, getDomBroker(), tables,
             Collections.singletonMap(new TablesKey(LinkstateAddressFamily.class, LinkstateSubsequentAddressFamily.class),
                 BasePathSelectionModeFactory.createBestPathSelectionStrategy()), GeneratedClassLoadingStrategy.getTCCLClassLoadingStrategy());
         assertTablesExists(tables, true);
@@ -146,8 +147,8 @@ public class ParserToSalTest extends AbstractDataBrokerTest {
     @Test
     public void testWithoutLinkstate() throws InterruptedException, ExecutionException {
         final List<BgpTableType> tables = ImmutableList.of((BgpTableType) new BgpTableTypeImpl(Ipv4AddressFamily.class, UnicastSubsequentAddressFamily.class));
-        final RIBImpl rib = new RIBImpl(new RibId(TEST_RIB_ID), new AsNumber(72L), new Ipv4Address("127.0.0.1"), null, this.ext1, this.dispatcher,
-            this.codecFactory, getDataBroker(), getDomBroker(), tables,
+        final RIBImpl rib = new RIBImpl(new RibId(TEST_RIB_ID), new AsNumber(72L), new BgpId("127.0.0.1"), null, this.ext1, this.dispatcher,
+            this.codecFactory, getDomBroker(), tables,
             Collections.singletonMap(new TablesKey(LinkstateAddressFamily.class, LinkstateSubsequentAddressFamily.class),
                 BasePathSelectionModeFactory.createBestPathSelectionStrategy()), GeneratedClassLoadingStrategy.getTCCLClassLoadingStrategy());
         rib.onGlobalContextUpdated(this.schemaService.getGlobalContext());

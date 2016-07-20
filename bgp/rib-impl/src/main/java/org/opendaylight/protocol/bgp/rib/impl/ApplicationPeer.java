@@ -24,7 +24,7 @@ import org.opendaylight.controller.md.sal.dom.api.DOMTransactionChain;
 import org.opendaylight.protocol.bgp.openconfig.spi.BGPConfigModuleTracker;
 import org.opendaylight.protocol.bgp.rib.spi.IdentifierUtils;
 import org.opendaylight.protocol.bgp.rib.spi.RouterIds;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.ApplicationRibId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.PeerRole;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.rib.rev130925.SimpleRoutingPolicy;
@@ -75,6 +75,7 @@ public class ApplicationPeer implements AutoCloseable, org.opendaylight.protocol
         final YangInstanceIdentifier peerIId = targetRib.getYangRibId().node(Peer.QNAME).node(peerId);
         this.adjRibsInId = peerIId.node(AdjRibIn.QNAME).node(Tables.QNAME);
         this.chain = targetRib.createPeerChain(this);
+        //TODO need to create effective rib in writer with route counter here
         this.effectiveRibInWriter = EffectiveRibInWriter.create(targetRib.getService(), targetRib.createPeerChain(this), peerIId,
             targetRib.getImportPolicyPeerTracker(), targetRib.getRibSupportContext(), PeerRole.Internal);
         this.writerChain = targetRib.createPeerChain(this);

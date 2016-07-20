@@ -28,7 +28,7 @@ import org.opendaylight.protocol.bgp.sdniwrapper.SdniWrapper;
 import org.opendaylight.protocol.util.ByteArray;
 import org.opendaylight.protocol.util.ByteBufWriteUtil;
 import org.opendaylight.protocol.util.Ipv4Util;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Prefix;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Prefix;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.Update;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.UpdateBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.path.attributes.Attributes;
@@ -139,10 +139,6 @@ public final class BGPUpdateMessageParser implements MessageParser, MessageSeria
         }
         final int totalPathAttrLength = buffer.readUnsignedShort();
 
-/*        if (withdrawnRoutesLength == 0 && totalPathAttrLength == 0) {
-            return builder.build();
-        }*/
-        
         if (withdrawnRoutesLength == 0 && totalPathAttrLength == 0) {
             //Retrieve and parse sdni message
             final byte[] sdniNlri = ByteArray.readAllBytes(buffer);

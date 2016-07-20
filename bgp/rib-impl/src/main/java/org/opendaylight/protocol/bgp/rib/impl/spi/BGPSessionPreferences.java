@@ -7,10 +7,11 @@
  */
 package org.opendaylight.protocol.bgp.rib.impl.spi;
 
+import com.google.common.base.Optional;
 import java.util.List;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.AsNumber;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.AsNumber;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.open.message.BgpParameters;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.BgpId;
 
 /**
  * DTO for BGP Session preferences, that contains BGP Open message.
@@ -21,11 +22,13 @@ public final class BGPSessionPreferences {
 
     private final int hold;
 
-    private final Ipv4Address bgpId;
+    private final BgpId bgpId;
 
     private final List<BgpParameters> params;
 
     private final AsNumber remoteAs;
+
+    private final Optional<byte[]> md5Password;
 
     /**
      * Creates a new DTO for Open message.
@@ -36,13 +39,14 @@ public final class BGPSessionPreferences {
      * @param remoteAs expected remote As Number
      * @param params list of advertised parameters
      */
-    public BGPSessionPreferences(final AsNumber as, final int hold, final Ipv4Address bgpId, final AsNumber remoteAs,
-        final List<BgpParameters> params) {
+    public BGPSessionPreferences(final AsNumber as, final int hold, final BgpId bgpId, final AsNumber remoteAs,
+            final List<BgpParameters> params, final Optional<byte[]> md5Password) {
         this.as = as;
         this.hold = hold;
-        this.bgpId = bgpId;
+        this.bgpId = (bgpId != null) ? new BgpId(bgpId) : null;
         this.remoteAs = remoteAs;
         this.params = params;
+        this.md5Password = md5Password;
     }
 
     /**
@@ -68,7 +72,7 @@ public final class BGPSessionPreferences {
      *
      * @return BGP identifier
      */
-    public Ipv4Address getBgpId() {
+    public BgpId getBgpId() {
         return this.bgpId;
     }
 
@@ -88,5 +92,13 @@ public final class BGPSessionPreferences {
      */
     public List<BgpParameters> getParams() {
         return this.params;
+    }
+
+    /**
+     * Optionally returns peer's MD5 password.
+     * @return Encoded MD5 password.
+     */
+    public Optional<byte[]> getMd5Password() {
+        return this.md5Password;
     }
 }

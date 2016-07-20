@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.swapper.rev151006.UntrustedControllerBuilder;
 
 
 
@@ -35,15 +36,24 @@ import java.util.concurrent.Future;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
+import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.OpendaylightSdniQosMsgService;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.NodeList;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.NodeList;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.OpendaylightSdniTopologyMsgService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.node.list.PortList;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.node.list.port.list.PortParams;
 
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.swapper.rev151006.NotificationSdniwrapperListener;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.swapper.rev151006.UntrustedController;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.swapper.rev151006.UntrustedControllerBuilder;
 
-public class SdniWrapper {
+
+public class SdniWrapper
+// implements  NotificationSdniwrapperListener
+{
 
     private static final Logger LOG = LoggerFactory.getLogger(SdniWrapper.class);
 
@@ -53,7 +63,9 @@ public class SdniWrapper {
     //   private static final String DB_URL = "jdbc:sqlite:/home/tcs/sdni/database/CONTROLLER_TOPOLOGY_DATABASE";
     //  private static final String QOS_DB_URL = "jdbc:sqlite:/home/tcs/sdni/database/CONTROLLER_QOS_DATABASE";
     private static SdniWrapper serviceObj = null;
-    private static RpcProviderRegistry rpcRegistryDependency;
+    private RpcProviderRegistry rpcRegistryDependency;
+    private NotificationProviderService notificationProvider;
+    
     private Set<String> aliveControllersList = new HashSet<String>();
 
     private Connection connection = null;
@@ -85,12 +97,15 @@ public class SdniWrapper {
         return serviceObj;
     }
 
-    public static void setRPCRegistry(RpcProviderRegistry rpcRegistry)
+    public void setRPCRegistry(RpcProviderRegistry rpcRegistry)
     {
         rpcRegistryDependency = rpcRegistry;
     }
 
-
+    public void setNotificationService(NotificationProviderService notificationProviderService)
+    {
+    	notificationProvider = notificationProviderService;
+    }
 
     public ByteBuf getSDNITopoMessage() {
         LOG.info("SdniWrapper  - getSDNITopoMessage -Start");
@@ -202,7 +217,24 @@ public class SdniWrapper {
                 if(token.contains("TOPOoutput")) {
                     JSONObject json = new JSONObject(token);
                     List<String> temp = new ArrayList<String>();
-                    network.setController(json.getJSONObject("TOPOoutput").get("controller").toString());
+                    
+                    String controller = json.getJSONObject("TOPOoutput").get("controller").toString();
+                    try {
+                        if (! isControllerTrusted(controller) )
+                        {
+                        //	send notification
+                            LOG.info("SdniWrapper  - publish notification -Start");
+                            notificationProvider.publish( new UntrustedControllerBuilder().setControllerip(controller).build() );
+                            LOG.info("SdniWrapper  - publish notification -end");
+                    	    break;
+                        }
+                    }
+                    catch (Exception e) {
+                        LOG.error("Notification Exception: {0}", e);
+                    }
+
+                    
+                    network.setController(controller);
                     JSONArray jArray = json.getJSONObject("TOPOoutput").getJSONArray("links");
                     for (int i = 0; i < jArray.length(); i++) {
                         temp.add(jArray.get(i).toString());
@@ -230,6 +262,11 @@ public class SdniWrapper {
         LOG.info("TOPO: inside updateControllerTopoTable PeerCount:0");
         String controllerIp = null;
 
+        if ( networkData == null || networkData.getController() == null || networkData.getController() == "")
+        {
+        	return;
+        }
+        
         try {
 
             controllerIp = networkData.getController().replace('.', '_');
@@ -287,83 +324,89 @@ public class SdniWrapper {
 
 
     public void updatePeerTopoTable(NetworkCapabilities networkData) {
-        LOG.info("Sdniwrapper : updatePeerTopoTable- Start");
-        //   String ipAddress = networkData.getController().toString().replace("[", "").replace("]", "");
-        String ipAddress = networkData.getController();
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        String sql = null;
-        String controllerIp = null;
+    	LOG.info("Sdniwrapper : updatePeerTopoTable- Start");
+    	//   String ipAddress = networkData.getController().toString().replace("[", "").replace("]", "");
+    	String ipAddress = networkData.getController();
+    	Connection conn = null;
+    	Statement stmt = null;
+    	ResultSet rs = null;
+    	String sql = null;
+    	String controllerIp = null;
 
 
-        //      boolean tableExist = false;
+    	//      boolean tableExist = false;
 
-        try {
+		try {
 
-            controllerIp = networkData.getController().replace('.', '_');
+	    	if ( networkData == null || networkData.getController() == null || networkData.getController() == "")
+	    	{
+	    		return;
+	    	} 
+	    	
+			controllerIp = networkData.getController().replace('.', '_');
 
-            conn = getConnection();
+			conn = getConnection();
 
-            stmt = conn.createStatement();
+			stmt = conn.createStatement();
 
-            LOG.info("sql connection established");
+			LOG.info("sql connection established");
 
-            try {
-                sql = "drop table if exists TOPOLOGY_DATABASE_PEER_" + controllerIp;
-                stmt.executeUpdate(sql);
-            } catch (Exception e)
-            {
-                LOG.warn("SQL: Warning {0}", e.getMessage());
-            }
+			try {
+				sql = "drop table if exists TOPOLOGY_DATABASE_PEER_" + controllerIp;
+				stmt.executeUpdate(sql);
+			} catch (Exception e)
+			{
+				LOG.warn("SQL: Warning {0}", e.getMessage());
+			}
 
-            if (networkData.getLink() == null && !networkData.getLink().isEmpty())
-            {
-                return;
-            }
+			if (networkData.getLink() == null && !networkData.getLink().isEmpty())
+			{
+				return;
+			}
 
-            LOG.info("TOPO: inside if, SQL query to delete topology peer table: {}", sql);
+			LOG.info("TOPO: inside if, SQL query to delete topology peer table: {}", sql);
 
-            sql = "create table IF NOT EXISTS TOPOLOGY_DATABASE_PEER_" + controllerIp
-                    + " (controller TEXT NOT NULL, links TEXT NOT NULL);";
-            LOG.info("TOPO: inside if SQL query to create topology peer table: {}", sql);
-            stmt.executeUpdate(sql);
+			sql = "create table IF NOT EXISTS TOPOLOGY_DATABASE_PEER_" + controllerIp
+					+ " (controller TEXT NOT NULL, links TEXT NOT NULL);";
+			LOG.info("TOPO: inside if SQL query to create topology peer table: {}", sql);
+			stmt.executeUpdate(sql);
 
-            aliveControllersList.add("TOPOLOGY_DATABASE_PEER_" + controllerIp);
+			aliveControllersList.add("TOPOLOGY_DATABASE_PEER_" + controllerIp);
 
-            String insertQueries = formTopoInsertQuery(networkData, true);
-            String[] insertQuery = insertQueries.split("--");
-            for (int j = 0; j < insertQuery.length; j++) {
-                stmt.executeUpdate(insertQuery[j]);
-            }
+			String insertQueries = formTopoInsertQuery(networkData, true);
+			String[] insertQuery = insertQueries.split("--");
+			for (int j = 0; j < insertQuery.length; j++) {
+				stmt.executeUpdate(insertQuery[j]);
+			}
 
-        } catch (SQLException se) {
-            LOG.error("SQLException: {0}", se);
-            return;
-        } catch (Exception e) {
-            LOG.error("Exception: {0}", e);
-            return;
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                LOG.error("SQLException2: {0}", se2);
-                return;
-            }
+		} catch (SQLException se) {
+			LOG.error("SQLException: {0}", se);
+			return;
+		} catch (Exception e) {
+			LOG.error("Exception: {0}", e);
+			return;
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				LOG.error("SQLException2: {0}", se2);
+				return;
+			}
 
-            try {
-                if (conn != null) {
-                    conn.close();
-                    connection = null;
-                }
-            } catch (SQLException se) {
-                LOG.error("SQLException3: {0}", se);
-                return;
-            }
-        }
-        LOG.info("Sdniwrapper : updatePeerTopoTable- End");
+			try {
+				if (conn != null) {
+					conn.close();
+					connection = null;
+				}
+			} catch (SQLException se) {
+				LOG.error("SQLException3: {0}", se);
+				return;
+			}
+		}
+	
+    	LOG.info("Sdniwrapper : updatePeerTopoTable- End");
     }
 
     public String formTopoInsertQuery(NetworkCapabilities networkData, boolean isPeer) {
@@ -410,7 +453,7 @@ public class SdniWrapper {
 
             org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.GetAllNodeConnectorsStatisticsOutput qosDetails = rpcObj
                     .getResult();
-            List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.NodeList> ndList = qosDetails.getNodeList();
+            List<NodeList> ndList = qosDetails.getNodeList();
             controller = qosDetails.getControllerIp();
 
             data.append("{\"QoSoutput\":{\"controller\":\"" + controller +"\",\"QoS\":[");
@@ -420,14 +463,14 @@ public class SdniWrapper {
                 //data.append("[");
                 for (NodeList nList : ndList) {
                     String nodeID = nList.getNodeId();
-                    List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.PortList> portlist = nList
+                    List<PortList> portlist = nList
                             .getPortList();
                     if ( portlist!= null && !portlist.isEmpty())
                     {
 
-                        for (org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.PortList Plist : portlist) {
+                        for (PortList Plist : portlist) {
                             String portID = Plist.getPortId();
-                            List<org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.port.list.PortParams> Pparamslist = Plist
+                            List<PortParams> Pparamslist = Plist
                                     .getPortParams();
 
                             if ( Pparamslist != null && !Pparamslist.isEmpty())
@@ -435,7 +478,7 @@ public class SdniWrapper {
                                 LOG.info("Pparamslist size: {}", Pparamslist.size());
                                 LOG.info("Pparamslist: {}", Pparamslist);
 
-                                org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.node.connectors.statistics.output.node.list.port.list.PortParams Pparams = Pparamslist.get(0);
+                                PortParams Pparams = Pparamslist.get(0);
                                 NetworkCapabilitiesQOS ncQoS = new NetworkCapabilitiesQOS();
 
                                 ncQoS.setController(controller);
@@ -445,9 +488,9 @@ public class SdniWrapper {
                                 ncQoS.setReceiveFrameError(Pparams.getReceiveFrameError().toString());
                                 ncQoS.setReceiveOverRunError(Pparams.getReceiveOverRunError().toString());
                                 ncQoS.setCollisionCount(Pparams.getCollisionCount().toString());
-                                ncQoS.setTransmitPackets(Pparams.getTransmitDrops().toString());
-                                ncQoS.setReceivePackets(Pparams.getReceiveDrops().toString());
-
+                                ncQoS.setTransmitPackets(Pparams.getPackets().getTransmitted().toString());
+                                ncQoS.setReceivePackets(Pparams.getPackets().getReceived().toString());
+                                ncQoS.setBridgePort(Pparams.getPortName());
                                 list_QoS.add(ncQoS);
 
                                 if(!flag) {
@@ -519,6 +562,22 @@ public class SdniWrapper {
                     LOG.info("sdni QOS Msg: {}", sdniQOSMsg);
 
                     controller = json.getJSONObject("QoSoutput").get("controller").toString();
+                    try {
+
+                        if (! isControllerTrusted(controller) )
+                        {
+                            LOG.info("SdniWrapper  - publish notification -Start");
+                    	    //notificationProvider.publish( new UntrustedControllerBuilder().build() );
+                            notificationProvider.publish( new UntrustedControllerBuilder().setControllerip(controller).build() );
+                            LOG.info("SdniWrapper  - publish notification -end");
+                    	    break;
+                        }
+                        }
+                    catch (Exception e) {
+                        LOG.error("Notification Exception: {0}", e);
+                    }
+
+                    
                     JSONArray jArray = json.getJSONObject("QoSoutput").getJSONArray("QoS");
 
                     for(int i=0;i<jArray.length();i++)
@@ -535,6 +594,8 @@ public class SdniWrapper {
                         qosData.setCollisionCount(subJson.get("collisionCount").toString());
                         qosData.setTransmitPackets(subJson.get("transmitPackets").toString());
                         qosData.setReceivePackets(subJson.get("receivePackets").toString());
+                        qosData.setBridgePort(subJson.get("bridgePort").toString());
+                        
                         list_QoS.add(qosData);
                     }
 
@@ -556,6 +617,11 @@ public class SdniWrapper {
         Statement stmt = null;
         String sql = null;
 
+        if ( controller == null || controller == "")
+        {
+        	return;
+        }
+        
         try {
             controller = controller.replace('.', '_');
             conn = getConnection();
@@ -579,7 +645,7 @@ public class SdniWrapper {
             //Create Table
             sql = "create table IF NOT EXISTS QOS_DATABASE_" + controller + " (controller TEXT NOT NULL, node TEXT NOT NULL, port TEXT NOT NULL,"
                     + " receiveFrameError TEXT NOT NULL, receiveOverRunError TEXT NOT NULL, receiveCrcError TEXT NOT NULL,"
-                    + " collisionCount TEXT NOT NULL, receivePackets TEXT NOT NULL, transmitPackets TEXT NOT NULL);";
+                    + " collisionCount TEXT NOT NULL, receivePackets TEXT NOT NULL, transmitPackets TEXT NOT NULL, bridge_port TEXT NOT NULL);";
             LOG.info("QoS: SQL query to create Controller QoS table: {}", sql);
             stmt.executeUpdate(sql);
             aliveControllersList.add("QOS_DATABASE_" + controller);
@@ -631,7 +697,7 @@ public class SdniWrapper {
         String controllerIp = null;
         try {
 
-            if ( ipAddress == null )
+            if ( ipAddress == null || ipAddress == "")
             {
                 return;
             }
@@ -655,7 +721,7 @@ public class SdniWrapper {
             sql = "create table IF NOT EXISTS QOS_DATABASE_PEER_" + controllerIp
                     + " (controller TEXT NOT NULL, node TEXT NOT NULL, port TEXT NOT NULL, receiveFrameError TEXT NOT NULL,"
                     + " receiveOverRunError TEXT NOT NULL, receiveCrcError TEXT NOT NULL, collisionCount TEXT NOT NULL,"
-                    + " receivePackets TEXT NOT NULL, transmitPackets TEXT NOT NULL);";
+                    + " receivePackets TEXT NOT NULL, transmitPackets TEXT NOT NULL, bridge_port TEXT NOT NULL);";
             LOG.info("QoS: SQL query to create QoS peer table: {}", sql);
             stmt.executeUpdate(sql);
 
@@ -706,18 +772,20 @@ public class SdniWrapper {
 
             String node = qosData.getNode();
             String port = qosData.getPort();
-            /*            String receiveFrameError = qosData.getReceiveFrameError();
+            String receiveFrameError = qosData.getReceiveFrameError();
             String receiveOverRunError = qosData.getReceiveOverRunError();
             String receiveCrcError = qosData.getReceiveCrcError();
             String collisionCount = qosData.getCollisionCount();
             String receivePackets = qosData.getReceivePackets();
-            String transmitPackets = qosData.getTransmitPackets();*/
-            String receiveFrameError = "" + getRandomNum();
+            String transmitPackets = qosData.getTransmitPackets();
+            String bridgePort = qosData.getBridgePort();
+/*            String receiveFrameError = "" + getRandomNum();
             String receiveOverRunError = "" + getRandomNum();
             String receiveCrcError = "" + getRandomNum();
             String collisionCount = "" + getRandomNum();
             String receivePackets = "" + getRandomNum();
             String transmitPackets = "" + getRandomNum();
+*/            
 
             String controllerIP = qosData.getController();
             if (node == null || port == null) {
@@ -733,13 +801,13 @@ public class SdniWrapper {
                             + node + "\",\""
                             + port + "\",\"" + receiveFrameError + "\",\""
                             + receiveOverRunError + "\",\"" + receiveCrcError + "\",\"" + collisionCount + "\",\"" + receivePackets
-                            + "\",\"" + transmitPackets + "\"); -- ";
+                            + "\",\"" + transmitPackets + "\",\"" + bridgePort + "\"); -- ";
                 } else {
                     insertQuery += "insert into QOS_DATABASE_PEER_" + controller + " values (\"" + controllerIP + "\",\""
                             + node + "\",\""
                             + port + "\",\"" + receiveFrameError + "\",\""
                             + receiveOverRunError + "\",\"" + receiveCrcError + "\",\"" + collisionCount + "\",\"" + receivePackets
-                            + "\",\"" + transmitPackets + "\"); -- ";
+                            + "\",\"" + transmitPackets + "\",\"" + bridgePort + "\"); -- ";
                 }
             }
         }
@@ -777,4 +845,76 @@ public class SdniWrapper {
     {
         return new Random().nextInt(10);
     }
+    
+    
+    private boolean isControllerTrusted(String controllerIp)
+    {
+        if ( controllerIp == null )
+        {
+            return false;
+        }
+        
+        List<String> controllersList = getTrustedControllers();
+        
+        return controllersList.contains(controllerIp);
+        
+    }
+    
+    private List<String> getTrustedControllers()
+    {
+    	Connection conn = null;
+    	Statement stmt = null;
+    	ResultSet rs = null;
+    	String sql = null;
+    	String controllerIp = null;
+    	List<String> controllersList = new ArrayList<String>();
+    	try {
+
+
+    		conn = getConnection();
+
+    		stmt = conn.createStatement();
+    		LOG.info("sql connection established");
+
+    		sql = "SELECT * FROM TRUSTED_CONTROLLERS";
+    				LOG.info("QoS: SQL query to fetch trusted controllers : {}", sql);
+    		rs = stmt.executeQuery(sql);
+    		while(rs.next())
+    		{
+    			controllerIp = rs.getString(1);
+    			controllersList.add(controllerIp);
+    		}
+
+    	} catch (SQLException se) {
+    		LOG.error("SQLException: {0}", se);
+    	} catch (Exception e) {
+    		LOG.error("Exception: {0}", e);
+    	} finally {
+    		try {
+    			if (rs != null ){
+    				rs.close();
+    			}
+    			if (stmt != null) {
+    				stmt.close();
+    			}
+
+    			if (conn != null) {
+    				conn.close();
+    				connection = null;
+    			}
+    		} catch (SQLException se) {
+    			LOG.error("SQLException3: {0}", se);
+    		}
+    	}
+    	return controllersList;
+    }
+
+/*   @Override
+   public void onUntrustedController(UntrustedController notification) {
+       LOG.info("notification subscription started");
+       LOG.info( "untrusted controller notification - controllerIp: {} ", notification.getControllerip() );
+       LOG.info("notification subscription ended");
+
+   }
+*/
 }

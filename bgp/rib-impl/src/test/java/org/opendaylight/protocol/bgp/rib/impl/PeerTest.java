@@ -30,13 +30,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.opendaylight.controller.config.api.IdentityAttributeRef;
+import org.opendaylight.controller.config.yang.bgp.rib.impl.RouteTable;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.protocol.bgp.parser.BGPDocumentedException;
 import org.opendaylight.protocol.bgp.parser.BGPError;
 import org.opendaylight.protocol.bgp.parser.impl.message.update.LocalPreferenceAttributeParser;
 import org.opendaylight.protocol.bgp.rib.spi.RibSupportUtils;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Address;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev100924.Ipv4Prefix;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Prefix;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.inet.rev150305.ipv4.routes.ipv4.routes.Ipv4Route;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.KeepaliveBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.message.rev130919.OpenBuilder;
@@ -139,6 +141,7 @@ public class PeerTest extends AbstractRIBTestSetup {
         this.mockSession();
         assertEquals("testPeer", this.classic.getName());
         this.classic.onSessionUp(this.session);
+        assertEquals(1, this.classic.getBgpPeerState().getSessionEstablishedCount().getValue().intValue());
         Assert.assertArrayEquals(new byte[] {1, 1, 1, 1}, this.classic.getRawIdentifier());
         assertEquals("BGPPeer{name=testPeer, tables=[TablesKey [_afi=class org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.Ipv4AddressFamily, _safi=class org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.bgp.types.rev130919.UnicastSubsequentAddressFamily]]}", this.classic.toString());
 
@@ -170,8 +173,12 @@ public class PeerTest extends AbstractRIBTestSetup {
         try (final BGPPeer testingPeer = new BGPPeer("testingPeer", getRib(), PeerRole.Ibgp, null)) {
             testingPeer.onSessionUp(this.session);
             assertEquals(3, this.routes.size());
-            assertEquals(1, testingPeer.getBgpPeerState().getSessionEstablishedCount().intValue());
-            assertEquals(1, testingPeer.getBgpPeerState().getRouteTable().size());
+            assertEquals(1, testingPeer.getBgpPeerState().getSessionEstablishedCount().getValue().intValue());
+            final List<RouteTable> routeTables = testingPeer.getBgpPeerState().getRouteTable();
+            assertEquals(1, routeTables.size());
+            final RouteTable routeTable = routeTables.get(0);
+            assertEquals(AFI_QNAME.toString(), routeTable.getAfi().getqNameOfIdentity());
+            assertEquals(SAFI_QNAME.toString(), routeTable.getSafi().getqNameOfIdentity());
             assertNotNull(testingPeer.getBgpSessionState());
         }
 

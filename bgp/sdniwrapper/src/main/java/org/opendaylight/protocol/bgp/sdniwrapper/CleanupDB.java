@@ -116,7 +116,7 @@ public class CleanupDB extends TimerTask{
             LOG.info("Controllers from DB: {}", controllers.size());
             LOG.info("Controllers alive : {}", aliveControllersList.size());
             controllers.removeAll(aliveControllersList);
-
+            controllers.remove("TRUSTED_CONTROLLERS");
             LOG.info("Controllers to be deleted from DB: {}", controllers.size());
 
             for ( String controllerName : controllers)

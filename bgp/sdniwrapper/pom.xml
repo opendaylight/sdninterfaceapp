@@ -70,6 +70,10 @@
        <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.opendaylight.mdsal.model</groupId>
+      <artifactId>ietf-yang-types</artifactId>
+    </dependency>
+    <dependency>
        <groupId>junit</groupId>
        <artifactId>junit</artifactId>
        <version>4.12</version>

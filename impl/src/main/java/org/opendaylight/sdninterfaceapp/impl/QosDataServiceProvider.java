@@ -29,6 +29,7 @@ public class QosDataServiceProvider implements BindingAwareProvider, AutoCloseab
     public void onSessionInitiated(ProviderContext session) {
         logger.info("Provider Session initialized");
         qosDataServiceRpcReg = session.addRpcImplementation(OpendaylightSdniQosMsgService.class, OpendaylightSdniQosMsgServiceImpl.getInstance());
+        SdniDataBase.create_trusted_controllers();
     }
     
     @Override

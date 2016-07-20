@@ -20,7 +20,7 @@
 <bundle>wrap:mvn:com.google.guava/guava/18.0</bundle>
     <feature version="${restconf.version}">odl-restconf-all</feature>
     <feature version='${mdsal.version}'>odl-mdsal-all</feature>
-    <feature version="0.3.0-SNAPSHOT">odl-openflowplugin-all</feature>
+    <feature version="0.3.0-SNAPSHOT">odl-openflowplugin-flow-services-ui</feature>
 	<bundle>mvn:org.opendaylight.controller.model/model-inventory/1.4.0-SNAPSHOT</bundle>
     <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/0.8.0-SNAPSHOT</bundle>
   </feature>
@@ -28,6 +28,7 @@
 
   <feature name='odl-sdni-aggregator' version="0.8.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: impl'>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
+    <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
     <feature version="0.8.0-SNAPSHOT">odl-sdni-api</feature>
     <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.8.0-SNAPSHOT</bundle>
     <configfile finalname="${configfile.directory}/sdninterfaceapp.xml">mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.8.0-SNAPSHOT/xml/config</configfile>
@@ -51,6 +52,7 @@
 <feature version="0.8.0-SNAPSHOT">odl-sdni-wrapper</feature>
 <feature version="0.8.0-SNAPSHOT">odl-sdni-ui</feature>
     <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
+    <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
   </feature>
 
 </features>
