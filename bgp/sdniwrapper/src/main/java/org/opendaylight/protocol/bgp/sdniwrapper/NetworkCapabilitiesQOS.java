@@ -35,6 +35,8 @@ public class NetworkCapabilitiesQOS {
     private String port;
     @XmlElement
     private String controller;
+    @XmlElement
+    private String bridgePort;
 
 
     public NetworkCapabilitiesQOS() {
@@ -48,6 +50,14 @@ public class NetworkCapabilitiesQOS {
         this.controller = controller;
     }
 
+    public String getBridgePort() {
+        return bridgePort;
+    }
+
+    public void setBridgePort(String bridgePort) {
+        this.bridgePort = bridgePort;
+    }
+    
     public String getReceivePackets() {
         return receivePackets;
     }
@@ -125,6 +135,7 @@ public class NetworkCapabilitiesQOS {
         sb.append(",\"receiveCrcError\":\""+receiveCrcError+"\"");
         sb.append(",\"receivePackets\":\""+receivePackets+"\"");
         sb.append(",\"transmitPackets\":\""+transmitPackets+"\"");
+        sb.append(",\"bridgePort\":\""+bridgePort+"\"");
         sb.append("}");
 
         return sb.toString();

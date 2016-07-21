@@ -13,8 +13,23 @@ module opendaylight-sdni-qos-msg {
     // RPC calls
     rpc get-all-node-connectors-statistics {
 
-        description "Get statistics for all node connectors from the node";
+        description "Get statistics for all node connectors from the node of own controller";
         output {
+		uses nodes;
+        }
+    }
+
+    rpc get-all-peer-node-connectors-statistics {
+
+        description "Get statistics for all node connectors from the node of peer controllers";
+        output {
+              list controllers {
+                  uses nodes;
+             }
+        }  
+    }
+
+    grouping nodes {
               leaf controller-ip {
                 type string;
                 description "
@@ -30,10 +45,13 @@ module opendaylight-sdni-qos-msg {
                                        type string;
                                    }
                                     list port-params {
+                             leaf port-name {
+                                type string;
+                              }
                                         uses stat-types:node-connector-statistics;
                                     }
                              }
                    }
-        }
+
     }
 }

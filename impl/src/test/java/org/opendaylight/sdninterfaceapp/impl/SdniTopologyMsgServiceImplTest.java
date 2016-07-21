@@ -30,7 +30,6 @@ import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyBuilder;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyKey;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.TopologyId;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Uri;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Link;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.LinkBuilder;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.LinkKey;
@@ -80,37 +79,37 @@ public class SdniTopologyMsgServiceImplTest  {
 		
 		topoBuilder = new org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyBuilder();
 		listTopo = new ArrayList<org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology>();
-		Uri uri_tid_tb = new Uri("host:00:00:00:00:00:01");
-		TopologyId tid_tb = new TopologyId(uri_tid_tb);
+		//Uri uri_tid_tb = new Uri("host:00:00:00:00:00:01");
+		TopologyId tid_tb = new TopologyId("host:00:00:00:00:00:01");
 		TopologyKey tkey_tb = new TopologyKey(tid_tb);
 		
 		topoBuilder.setKey(tkey_tb);
 		topoBuilder.setTopologyId(tid_tb);
 	
 		LinkBuilder linkBuilder = new LinkBuilder();
-		Uri uri_lid_l = new Uri("host:00:00:00:00:00:06");
-		LinkId lid_l = new LinkId(uri_lid_l);
+		//Uri uri_lid_l = new Uri("host:00:00:00:00:00:06");
+		LinkId lid_l = new LinkId("host:00:00:00:00:00:06");
 		LinkKey lkey_l = new LinkKey(lid_l);
 		
 		DestinationBuilder destBuilder = new DestinationBuilder();
-		Uri uri_dnid_l = new Uri("host:00:00:00:00:00:02");
-		NodeId d_nid_l = new NodeId(uri_dnid_l);
-		Uri uri_dtpid_l = new Uri("host:00:00:00:00:00:04");
-		TpId d_tpid_l = new TpId(uri_dtpid_l);
+		//Uri uri_dnid_l = new Uri("host:00:00:00:00:00:02");
+		NodeId d_nid_l = new NodeId("host:00:00:00:00:00:02");
+		//Uri uri_dtpid_l = new Uri("host:00:00:00:00:00:04");
+		TpId d_tpid_l = new TpId("host:00:00:00:00:00:04");
 		destBuilder.setDestNode(d_nid_l);
 		destBuilder.setDestTp(d_tpid_l);
 		
 		SourceBuilder souBuilder = new SourceBuilder();
-		Uri uri_snid_l = new Uri("host:00:00:00:00:00:03");
-		NodeId s_nid_l = new NodeId(uri_snid_l);
-		Uri uri_stpid_l = new Uri("host:00:00:00:00:00:05");
-		TpId s_tpid_l = new TpId(uri_stpid_l);
+		//Uri uri_snid_l = new Uri("host:00:00:00:00:00:03");
+		NodeId s_nid_l = new NodeId("host:00:00:00:00:00:03");
+		//Uri uri_stpid_l = new Uri("host:00:00:00:00:00:05");
+		TpId s_tpid_l = new TpId("host:00:00:00:00:00:05");
 		souBuilder.setSourceNode(s_nid_l);
 		souBuilder.setSourceTp(s_tpid_l);
 		
 		SupportingLinkBuilder slBuilder = new SupportingLinkBuilder();
-		Uri uri_slkey_l = new Uri("host:00:00:00:00:00:07");
-		LinkId lid_slkey_l = new LinkId(uri_slkey_l);
+		//Uri uri_slkey_l = new Uri("host:00:00:00:00:00:07");
+		LinkId lid_slkey_l = new LinkId("host:00:00:00:00:00:07");
 		SupportingLinkKey slkey_l = new SupportingLinkKey(lid_slkey_l);
 		slBuilder.setKey(slkey_l);
 		slBuilder.setLinkRef(lid_slkey_l);
@@ -130,15 +129,15 @@ public class SdniTopologyMsgServiceImplTest  {
 		topoBuilder.setLink(list_l);
 		
 		NodeBuilder nodeBuilder = new NodeBuilder();
-		Uri uri_nid_n = new Uri("openflow:8");
-		NodeId nid_n = new NodeId(uri_nid_n);
+		//Uri uri_nid_n = new Uri("openflow:8");
+		NodeId nid_n = new NodeId("openflow:8");
 		NodeKey nkey_n = new NodeKey(nid_n);
 		
 		SupportingNodeBuilder snBuilder = new SupportingNodeBuilder();
-		Uri uri_nid_snb = new Uri("host:00:00:00:00:00:09");
-		NodeId nid_snb = new NodeId(uri_nid_snb);
-		Uri uri_tid_snb = new Uri("host:00:00:00:00:00:10");
-		TopologyId tid_snb = new TopologyId(uri_tid_snb);
+		//Uri uri_nid_snb = new Uri("host:00:00:00:00:00:09");
+		NodeId nid_snb = new NodeId("host:00:00:00:00:00:09");
+		//Uri uri_tid_snb = new Uri("host:00:00:00:00:00:10");
+		TopologyId tid_snb = new TopologyId("host:00:00:00:00:00:10");
 		SupportingNodeKey snkey_snb = new SupportingNodeKey(nid_snb,tid_snb);
 		snBuilder.setKey(snkey_snb);
 		snBuilder.setNodeRef(nid_snb);
@@ -147,8 +146,8 @@ public class SdniTopologyMsgServiceImplTest  {
 		list_sn.add(snBuilder.build());
 		
 		TerminationPointBuilder tpBuilder = new TerminationPointBuilder();
-		Uri uri_tpid_tpb = new Uri("host:00:00:00:00:00:11");
-		TpId tpid_tpb = new TpId(uri_tpid_tpb);
+		//Uri uri_tpid_tpb = new Uri("host:00:00:00:00:00:11");
+		TpId tpid_tpb = new TpId("host:00:00:00:00:00:11");
 		TerminationPointKey tpkey_tpb = new TerminationPointKey(tpid_tpb);
 		List<TpId> list_tpid_tpb = new ArrayList<TpId>();
 		list_tpid_tpb.add(tpid_tpb);
@@ -172,8 +171,8 @@ public class SdniTopologyMsgServiceImplTest  {
 		
 		
 		UnderlayTopologyBuilder utBuilder = new UnderlayTopologyBuilder();
-		Uri uri_tid_utb = new Uri("host:00:00:00:00:00:12");
-		TopologyId tid_utb = new TopologyId(uri_tid_utb);
+		//Uri uri_tid_utb = new Uri("host:00:00:00:00:00:12");
+		TopologyId tid_utb = new TopologyId("host:00:00:00:00:00:12");
 		UnderlayTopologyKey utk_utb = new UnderlayTopologyKey(tid_utb);
 		utBuilder.setKey(utk_utb);
 		utBuilder.setTopologyRef(tid_utb);

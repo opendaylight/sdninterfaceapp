@@ -9,7 +9,7 @@ module sdniwrapper{
     description
         "Service definition for sdninterfaceapp wrapper project";
 
-    revision "2015-10-06" {
+    revision "2015-10-07" {
         description
             "Initial revision";
     }
@@ -23,6 +23,7 @@ module sdniwrapper{
         case sdniwrapper {
             when "/config:modules/config:module/config:type = 'sdniwrapper'";
 
+
             container rpc-registry {
                 uses config:service-ref {
                     refine type {
@@ -31,6 +32,20 @@ module sdniwrapper{
                     }
                 }
             }
+
+           container notification-service {
+               uses config:service-ref {
+                   refine type {
+                       mandatory true;
+                       config:required-identity md-sal-binding:binding-notification-service;
+                   }
+               }
+           } 
+
         }
+
+
+
+
     }
 }

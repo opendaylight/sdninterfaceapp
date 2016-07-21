@@ -60,14 +60,15 @@ public class BGPApplicationPeerModule extends org.opendaylight.controller.config
 
         final YangInstanceIdentifier id = YangInstanceIdentifier.builder().node(ApplicationRib.QNAME).nodeWithKey(ApplicationRib.QNAME, APP_ID_QNAME, getApplicationRibId().getValue()).node(Tables.QNAME).node(Tables.QNAME).build();
         final DOMDataTreeChangeService service = (DOMDataTreeChangeService) getDataBrokerDependency().getSupportedExtensions().get(DOMDataTreeChangeService.class);
-        final ListenerRegistration<ApplicationPeer> listenerRegistration = service.registerDataTreeChangeListener(new DOMDataTreeIdentifier(LogicalDatastoreType.CONFIGURATION, id), new ApplicationPeer(getApplicationRibId(), getBgpPeerId(), (RIBImpl) getTargetRibDependency(), new AppPeerModuleTracker(getTargetRibDependency().getOpenConfigProvider())));
+        final AppPeerModuleTracker appPeerMT = new AppPeerModuleTracker(getTargetRibDependency().getOpenConfigProvider());
+        final ApplicationPeer appPeer = new ApplicationPeer(getApplicationRibId(), getBgpPeerId(), (RIBImpl) getTargetRibDependency(), appPeerMT);
+        final ListenerRegistration<ApplicationPeer> listenerRegistration = service.registerDataTreeChangeListener(
+                new DOMDataTreeIdentifier(LogicalDatastoreType.CONFIGURATION, id), appPeer);
 
-        return new CloseableNoEx() {
-            @Override
-            public void close() {
-                listenerRegistration.close();
-                removeFromPeerRegistry();
-            }
+        return () -> {
+            listenerRegistration.close();
+            appPeer.close();
+            removeFromPeerRegistry();
         };
     }
 
@@ -83,7 +84,7 @@ public class BGPApplicationPeerModule extends org.opendaylight.controller.config
         final BGPPeer bgpClientPeer = new BGPPeer(bgpPeerId.getIpv4Address().getValue(), r, PeerRole.Internal, SimpleRoutingPolicy.AnnounceNone, null);
 
         final BGPSessionPreferences prefs = new BGPSessionPreferences(r.getLocalAs(), 0, r.getBgpIdentifier(),
-            r.getLocalAs(), Collections.emptyList());
+                r.getLocalAs(), Collections.emptyList(), Optional.absent());
 
         final BGPPeerRegistry peerRegistry = getPeerRegistryBackwards();
         peerRegistry.addPeer(bgpPeerId, bgpClientPeer, prefs);
@@ -104,7 +105,7 @@ public class BGPApplicationPeerModule extends org.opendaylight.controller.config
         private final BGPOpenconfigMapper<BGPAppPeerInstanceConfiguration> appProvider;
         private final BGPAppPeerInstanceConfiguration bgpAppPeerInstanceConfiguration;
 
-        public AppPeerModuleTracker(final Optional<BGPOpenConfigProvider> openConfigProvider) {
+        AppPeerModuleTracker(final Optional<BGPOpenConfigProvider> openConfigProvider) {
             if (openConfigProvider.isPresent()) {
                 this.appProvider = openConfigProvider.get().getOpenConfigMapper(BGPAppPeerInstanceConfiguration.class);
             } else {
@@ -112,7 +113,7 @@ public class BGPApplicationPeerModule extends org.opendaylight.controller.config
             }
             final InstanceConfigurationIdentifier identifier = new InstanceConfigurationIdentifier(getIdentifier().getInstanceName());
             this.bgpAppPeerInstanceConfiguration = new BGPAppPeerInstanceConfiguration(identifier, getApplicationRibId().getValue(),
-                    Rev130715Util.getIpv4Address(getBgpPeerId()));
+                    getBgpPeerId());
         }
 
         @Override

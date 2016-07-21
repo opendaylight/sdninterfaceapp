@@ -139,10 +139,6 @@ public final class BGPUpdateMessageParser implements MessageParser, MessageSeria
         }
         final int totalPathAttrLength = buffer.readUnsignedShort();
 
-/*        if (withdrawnRoutesLength == 0 && totalPathAttrLength == 0) {
-            return builder.build();
-        }*/
-        
         if (withdrawnRoutesLength == 0 && totalPathAttrLength == 0) {
             //Retrieve and parse sdni message
             final byte[] sdniNlri = ByteArray.readAllBytes(buffer);

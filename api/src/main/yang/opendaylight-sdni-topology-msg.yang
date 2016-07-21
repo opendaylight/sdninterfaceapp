@@ -5,6 +5,7 @@ module opendaylight-sdni-topology-msg {
     prefix sdntm;
 
     import sdni-topology { prefix sdntp; revision-date 2015-10-06; }
+    import network-topology { prefix nt; revision-date 2013-10-21; }
 
     organization "TATA CONSULTANCY SERVICES";
 
@@ -21,6 +22,48 @@ module opendaylight-sdni-topology-msg {
     rpc getTopology {
         output {          
             uses sdntp:sdn-topology;
+        }
+    }
+
+    rpc getAllPeerTopology {
+        output {          
+            list controllers {
+                leaf controller-ip {
+		    type string;
+                    description "
+                        It gives the IP Address of contoller.";
+                }
+                list link {
+                    description "
+                        A Network Link connects a by Local (Source) node and
+                        a Remote (Destination) Network Nodes via a set of the
+                        nodes' termination points.
+                        As it is possible to have several links between the same
+                        source and destination nodes, and as a link could potentially
+                        be re-homed between termination points, to ensure that we
+                        would always know to distinguish between links, every link
+                        is identified by a dedicated link identifier.
+                        Note that a link models a point-to-point link, not a multipoint
+                        link.
+                        Layering dependencies on links in underlay topologies are
+                        not represented as the layering information of nodes and of
+                        termination points is sufficient.
+                    ";
+                    key "link-id";
+                    uses nt:link-attributes;
+                    must "boolean(../underlay-topology/link[./supporting-link])";
+                        // Constraint: any supporting link must be part of an underlay topology
+                    must "boolean(../node[./source/source-node])";
+                        // Constraint: A link must have as source a node of the same topology
+                    must "boolean(../node[./destination/dest-node])";
+                        // Constraint: A link must have as source a destination of the same topology
+                    must "boolean(../node/termination-point[./source/source-tp])";
+                        // Constraint: The source termination point must be contained in the source node
+                    must "boolean(../node/termination-point[./destination/dest-tp])";
+                        // Constraint: The destination termination point must be contained
+                        // in the destination node
+                }
+            }
         }
     }   
 }
