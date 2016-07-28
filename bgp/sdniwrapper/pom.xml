@@ -48,11 +48,6 @@
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
     </dependency>
-   <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-client</artifactId>
-      <version>1.17</version>
-    </dependency>
     <dependency>
        <groupId>io.netty</groupId>
        <artifactId>netty-codec</artifactId>
