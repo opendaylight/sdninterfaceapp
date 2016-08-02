@@ -14,32 +14,32 @@
   <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.netconf/features-restconf/${restconf.version}/xml/features</repository>
    <repository>mvn:org.opendaylight.openflowjava/features-openflowjava/${openflowjava.version}/xml/features</repository>
-<repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/0.3.0-SNAPSHOT/xml/features</repository>
+<repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/${openflow.plugin.version}/xml/features</repository>
 
-  <feature name='odl-sdni-api' version="0.8.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: api'>
+  <feature name='odl-sdni-api' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: api'>
 <bundle>wrap:mvn:com.google.guava/guava/18.0</bundle>
     <feature version="${restconf.version}">odl-restconf-all</feature>
     <feature version='${mdsal.version}'>odl-mdsal-all</feature>
-    <feature version="0.3.0-SNAPSHOT">odl-openflowplugin-flow-services-ui</feature>
-	<bundle>mvn:org.opendaylight.controller.model/model-inventory/1.4.0-SNAPSHOT</bundle>
-    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/0.8.0-SNAPSHOT</bundle>
+    <feature version='${openflow.plugin.version}'>odl-openflowplugin-flow-services-ui</feature>
+	<bundle>mvn:org.opendaylight.controller.model/model-inventory/${controller-model-version}</bundle>
+    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/${sdninterfaceapp.version}</bundle>
   </feature>
 
 
-  <feature name='odl-sdni-aggregator' version="0.8.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: impl'>
+  <feature name='odl-sdni-aggregator' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: impl'>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
     <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
-    <feature version="0.8.0-SNAPSHOT">odl-sdni-api</feature>
-    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.8.0-SNAPSHOT</bundle>
-    <configfile finalname="${configfile.directory}/sdninterfaceapp.xml">mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.8.0-SNAPSHOT/xml/config</configfile>
+    <feature version='${sdninterfaceapp.version}'>odl-sdni-api</feature>
+    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/${sdninterfaceapp.version}</bundle>
+    <configfile finalname="${configfile.directory}/sdninterfaceapp.xml">mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/${sdninterfaceapp.version}/xml/config</configfile>
   </feature>
 
-  <feature name='odl-sdni-wrapper' version="0.8.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: wrapper'>
-    <feature version="0.8.0-SNAPSHOT">odl-sdni-api</feature>
+  <feature name='odl-sdni-wrapper' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: wrapper'>
+    <feature version='${sdninterfaceapp.version}'>odl-sdni-api</feature>
   </feature>
 
 
-  <feature name='odl-sdni-ui' version="0.8.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: UI'>
+  <feature name='odl-sdni-ui' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: UI'>
     <feature version='${mdsal.version}'>odl-mdsal-apidocs</feature>
     <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
     <feature>http</feature>
@@ -48,9 +48,9 @@
 
 
   <feature name='odl-sdninterfaceapp-all' version="1.7.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
-<feature version="0.8.0-SNAPSHOT">odl-sdni-aggregator</feature>
-<feature version="0.8.0-SNAPSHOT">odl-sdni-wrapper</feature>
-<feature version="0.8.0-SNAPSHOT">odl-sdni-ui</feature>
+<feature version='${sdninterfaceapp.version}'>odl-sdni-aggregator</feature>
+<feature version='${sdninterfaceapp.version}'>odl-sdni-wrapper</feature>
+<feature version='${sdninterfaceapp.version}'>odl-sdni-ui</feature>
     <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
     <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
   </feature>
