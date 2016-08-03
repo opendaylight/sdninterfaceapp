@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a6b29fe_874aa681",
+        "filename": "features/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 2046
+      },
+      "writtenOn": "2016-08-03T16:56:27Z",
+      "side": 0,
+      "message": "This is .jar with implementation classes, the next one is .xml with config file. You need to depend on both.\n\nMerge job SingleFeatureTest would pass, as the jar is present in local repository, but independent distribution-check would fail as they would not locate the jar.",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 17
+      },
+      "revId": "f389e1ae396da306c38d2a44228cde26fb1ef60b",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
