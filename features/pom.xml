@@ -78,6 +78,11 @@
 			<type>xml</type>
 			<scope>runtime</scope>
 		</dependency>
+   <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>sdninterfaceapp-impl</artifactId>
+      <version>${sdninterfaceapp.version}</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>sdninterfaceapp-impl</artifactId>
