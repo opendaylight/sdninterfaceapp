@@ -14,6 +14,7 @@
   <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.netconf/features-restconf/${restconf.version}/xml/features</repository>
    <repository>mvn:org.opendaylight.openflowjava/features-openflowjava/${openflowjava.version}/xml/features</repository>
+<repository>mvn:org.opendaylight.dlux/features-dlux/${dlux.version}/xml/features</repository>
 <repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/${openflow.plugin.version}/xml/features</repository>
 
   <feature name='odl-sdni-api' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: api'>
@@ -40,17 +41,19 @@
 
 
   <feature name='odl-sdni-ui' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: UI'>
+    <feature version="${dlux.version}">odl-dlux-all</feature>
     <feature version='${mdsal.version}'>odl-mdsal-apidocs</feature>
-    <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
+   <feature version='${sdninterfaceapp.version}'>odl-sdni-aggregator</feature>
     <feature>http</feature>
     <feature>webconsole</feature>
+    <bundle>mvn:org.opendaylight.sdninterfaceapp/ui-bundle/0.0.1-SNAPSHOT</bundle>
    </feature>
 
 
   <feature name='odl-sdninterfaceapp-all' version="1.7.0-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
-<feature version='${sdninterfaceapp.version}'>odl-sdni-aggregator</feature>
-<feature version='${sdninterfaceapp.version}'>odl-sdni-wrapper</feature>
-<feature version='${sdninterfaceapp.version}'>odl-sdni-ui</feature>
+
+    <feature version='${sdninterfaceapp.version}'>odl-sdni-wrapper</feature>
+    <feature version='${sdninterfaceapp.version}'>odl-sdni-ui</feature>
     <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
     <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
   </feature>
