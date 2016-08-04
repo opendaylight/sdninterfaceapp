@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.math.BigInteger;
 
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
+
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
@@ -56,7 +59,9 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninter
 import org.opendaylight.sdninterfaceapp.impl.PortStatistics;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNode;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNodeConnector;
-
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllersBuilder;
+//import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.sdn.controllers.SdnControllerBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,8 +72,9 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 
 	private static OpendaylightSdniQosMsgServiceImpl serviceObj = null;
 	private final Logger logger = LoggerFactory.getLogger(OpendaylightSdniQosMsgServiceImpl.class);
-
-
+    private List<String> sdnControllers = new ArrayList<String>();
+    private InstanceIdentifier<SdnControllers> instanceIdentifier = InstanceIdentifier.builder(SdnControllers.class).build();
+    
 	private OpendaylightSdniQosMsgServiceImpl(){
 		//getAllNodeConnectorsStatistics();
 	}
@@ -136,6 +142,23 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		builder.setNodeList(outputNodesList);
 		builder.setControllerIp(controller);
 
+		
+		if ( !sdnControllers.contains(controller) ) {
+			sdnControllers.add(controller);
+		}
+		
+		SdnControllersBuilder scb = new SdnControllersBuilder();
+		scb.setSdnController(sdnControllers);
+		
+		
+		
+		
+		final WriteTransaction writeTx = OFSessionUtil.getSessionManager().getDataBroker().newWriteOnlyTransaction();
+		
+		
+	    
+		writeTx.merge(LogicalDatastoreType.OPERATIONAL, instanceIdentifier, scb.build());
+		 writeTx.commit();
 /*		
         SdniDataBase sdb = new SdniDataBase();
         
@@ -194,7 +217,6 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		    	        .augmentation(FlowCapableNodeConnector.class);
 		      FlowCapableNodeConnector nodeConnector = getDataObject(readTx, connectorRef);
 		      logger.info("In getAllPortStats nodeConnector.getName() :{} ", nodeConnector.getName());
-                      logger.info("NodeConnectorssssss :{} ", nodeConnector);
 		      final InstanceIdentifier<NodeConnector> nodeConnectorII = InstanceIdentifier.create(Nodes.class)
 		    		  .child(Node.class, nodeKey).child(NodeConnector.class, nc.getKey());
 			final Optional<FlowCapableNodeConnectorStatisticsData> flowCapableNodeConnectorStatisticsDataOptional =
@@ -362,6 +384,12 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 						crtlBuilder.setNodeList(nodeList);
 
 						controllers.add(crtlBuilder.build());
+
+
+						if ( !sdnControllers.contains(controllerIp) ) {
+							sdnControllers.add(controllerIp);
+						}
+						
 					}
 				}
 
@@ -374,6 +402,20 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		outputBuilder.setControllers(controllers);
 
 		
+
+		
+		SdnControllersBuilder scb = new SdnControllersBuilder();
+		scb.setSdnController(sdnControllers);
+		
+		
+		
+		
+		final WriteTransaction writeTx = OFSessionUtil.getSessionManager().getDataBroker().newWriteOnlyTransaction();
+		
+		
+	    
+		writeTx.merge(LogicalDatastoreType.OPERATIONAL, instanceIdentifier, scb.build());
+		 writeTx.commit();
 		return RpcResultBuilder.success(outputBuilder.build()).buildFuture();
 	}
 	

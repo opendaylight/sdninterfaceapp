@@ -30,6 +30,7 @@ import com.google.common.util.concurrent.CheckedFuture;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
+import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
 import org.opendaylight.openflowplugin.api.openflow.device.DeviceContext;
@@ -68,11 +69,12 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.No
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.NodeConnectorId;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNodeConnector;
-
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllersBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.node.connector.statistics.and.port.number.map.NodeConnectorStatisticsAndPortNumberMapBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllers;
 
 public class OpendaylightSdniQosMsgServiceImplTest {
-	private OpendaylightSdniQosMsgServiceImpl serviceImpl=null;
+	private OpendaylightSdniQosMsgServiceImpl serviceImpl = OpendaylightSdniQosMsgServiceImpl.getInstance();;
 	List<NodeConnectorStatisticsAndPortNumberMap> listOfMap;
 	private final Logger logger = LoggerFactory.getLogger(OpendaylightSdniQosMsgServiceImpl.class);
 	org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.FlowCapableNodeConnectorStatisticsDataBuilder flowcapabledata;
@@ -149,7 +151,6 @@ public class OpendaylightSdniQosMsgServiceImplTest {
 
 	
 			RpcProviderRegistry rpcRegisrty = Mockito.mock(RpcProviderRegistry.class);
-			serviceImpl= OpendaylightSdniQosMsgServiceImpl.getInstance();
 			GetAllNodeConnectorsStatisticsInputBuilder input = new GetAllNodeConnectorsStatisticsInputBuilder() ;
 			OpendaylightPortStatisticsService openPortStatsServiceTest=Mockito.mock(OpendaylightPortStatisticsService.class);
 			Mockito.when(rpcRegisrty.getRpcService(OpendaylightPortStatisticsService.class)).thenReturn(openPortStatsServiceTest);
@@ -158,12 +159,14 @@ public class OpendaylightSdniQosMsgServiceImplTest {
 			DeviceContext deviceContext=Mockito.mock(DeviceContext.class);
 			DataBroker  dataBroker= Mockito.mock(DataBroker.class);
 			ReadOnlyTransaction readOnlyTrans=Mockito.mock(ReadOnlyTransaction.class);
+			WriteTransaction writeTx = Mockito.mock(WriteTransaction.class);
 
 			InstanceIdentifier<Nodes> NODES_IDENTIFIER = InstanceIdentifier.create(Nodes.class);
 			input.setNode(new NodeRef(NODES_IDENTIFIER));
 			OFSessionUtil.getSessionManager().setDataBroker(dataBroker);
 			Mockito.when(dataBroker.newReadOnlyTransaction()).thenReturn(readOnlyTrans);
-
+			Mockito.when(dataBroker.newWriteOnlyTransaction()).thenReturn(writeTx);
+			
 			Optional optionalData = Mockito.mock(Optional.class);
 			CheckedFuture checkedFuture = Mockito.mock(CheckedFuture.class);
 			FlowCapableNodeConnectorStatisticsData flowcapablenodeconnectorstatisticsdata=Mockito.mock(FlowCapableNodeConnectorStatisticsData.class);

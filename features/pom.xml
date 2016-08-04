@@ -82,6 +82,11 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>sdninterfaceapp-impl</artifactId>
       <version>${sdninterfaceapp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>sdninterfaceapp-impl</artifactId>
+      <version>${sdninterfaceapp.version}</version>
       <type>xml</type>
       <classifier>config</classifier>
     </dependency>

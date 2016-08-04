@@ -29,6 +29,14 @@ module opendaylight-sdni-qos-msg {
         }  
     }
 
+        container sdn-controllers {
+        status deprecated;
+
+        leaf-list sdnController {
+             type string;
+
+        }
+    } 
     grouping nodes {
               leaf controller-ip {
                 type string;
