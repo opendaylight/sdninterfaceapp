@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.opendaylight.bgpcep</groupId>
         <artifactId>bgp-parent</artifactId>
-        <version>0.5.3-SNAPSHOT</version>
+        <version>0.5.4-SNAPSHOT</version>
         <relativePath>../../../bgpcep/parent</relativePath>
     </parent>
 
@@ -22,7 +22,7 @@
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
     <description>BGP SDNiWrapper</description>
     <packaging>bundle</packaging>
-    <version>0.5.3-SNAPSHOT</version>
+    <version>0.5.4-SNAPSHOT</version>
     <prerequisites>
     <maven>3.0.4</maven>
     </prerequisites>
@@ -38,7 +38,7 @@
     <dependency>
         <groupId>org.opendaylight.sdninterfaceapp</groupId>
         <artifactId>sdninterfaceapp-impl</artifactId>
-        <version>0.7.3-SNAPSHOT</version>
+        <version>0.7.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
