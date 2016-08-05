@@ -1,0 +1,13 @@
+<link rel="stylesheet" type="text/css" href="/src/app/sdniUI/sdniUI-custom.css">
+
+<div class="menu ng-scope">
+    <ul class="nav nav-pills">
+<li ng-class="{ active: isState('main.sdniUI.sdnController')}"><a href="#/sdniUI/sdnController" class="ng-binding">{{ 'SDN_CONTROLLERS' | translate }}</a></li>
+       
+    </ul>
+    <!-- uiView: submenu --><div ui-view="submenu" class="ng-scope"></div>
+</div>
+
+
+ <!-- uiView:sdni main content page container -->
+<div class="main" ui-view="sdniContent"></div>

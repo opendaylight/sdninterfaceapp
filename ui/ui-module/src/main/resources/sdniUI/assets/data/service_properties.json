@@ -1,0 +1,4 @@
+{
+"GET_SDN_CONTROLLERS_IP": "operational/opendaylight-sdni-qos-msg:sdn-controllers",
+"":""
+}

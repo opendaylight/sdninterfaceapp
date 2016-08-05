@@ -1,0 +1,605 @@
+ /**
+ * Copyright (c) 2015 Tata Consultancy services and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * @author Himanshu Yadav
+ * description : this css corresponds to all classes in SdniUI this also overrides some of the classes of Dlux
+ */
+ 
+ 
+ /** line chart css */
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+ 
+ 
+ /** streaming data template css */
+
+ .autocomplete-holder {
+    position: relative;
+}
+
+.autocomplete-dropdown {
+    border-color: #ececec;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    width: 250px;
+    padding: 6px;
+    cursor: pointer;
+    z-index: 9999;
+    position: absolute;
+    /*top: 32px;
+    left: 0px;
+    */
+    margin-top: -6px;
+    background-color: #5F5F5F;
+}
+
+.autocomplete-searching {
+    color: #acacac;
+    font-size: 14px;
+}
+
+.autocomplete-description {
+    font-size: 14px;
+}
+
+.autocomplete-row {
+    padding: 5px;
+    color: #E8D9D9;
+    margin-bottom: 4px;
+
+}
+
+.autocomplete-selected-row, .autocomplete-row:hover {
+    background-color: orange;
+    color: #ffffff;
+}
+
+.autocomplete-image-holder {
+    padding-top: 2px;
+    float: left;
+    height: 34px;
+    width: 34px;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.autocomplete-image {
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+    border-color: #ececec;
+    border-style: solid;
+    border-width: 1px;
+}
+ 
+ 
+ 
+ /** streaming data template css
+ 
+*/
+
+.field-Select-container {
+	border:2px solid #ccc;
+	 width:962px; 
+	 height: 160px; 
+	 overflow-y: scroll; 
+	 }
+	 
+.checkbox-grid li {
+    display: block;
+    float: left;
+    width: 33.3%;
+}
+
+
+
+		.submittingForm{
+		    background: transparent url('/src/app/sdniUI/assets/images/submitting.gif') no-repeat center top;
+		}
+
+
+
+
+ /** alert table template css*/
+
+		.div-table{
+		  display:table;         
+		  width:auto;         
+		  background-color:#5f5f5f;
+		} 
+		
+		.div-table-row{
+		  display:table-row;
+		  width:auto;
+		  clear:both;
+		}
+		
+		.div-table-col{
+		  text-align:center;
+		  float:left;/*fix for  buggy browsers*/
+		  display:table-column;         
+		  height:28px;     
+		  background-color:#403E3E;  
+		}
+		
+		.stream-tbl-button{
+			    height: 28px;
+			    width: 111px;
+			    padding-bottom: 3px;
+			    padding-top: 3px;
+			    background-color: #FFA500;
+			    display: inline-block;
+			    margin-bottom: 0;
+			    font-weight: normal;
+			    text-align: center;
+			    vertical-align: middle;
+			    cursor: pointer;
+			    background-image: none;
+			    border: 1px solid transparent;
+			    white-space: nowrap;
+			    padding: 6px 12px;
+			    font-size: 14px;
+			    line-height: 1.428571429;
+			    border-radius: 4px;
+			    -webkit-user-select: none;
+		}
+
+
+		
+		button.alertButton
+		{
+		    cursor: pointer;
+		    position: relative;
+		    width: 24px;
+		    height: 24px;
+		    border: 0;
+		    margin: 2px;
+		    display: -moz-inline-stack;
+		    display: inline-block;
+		    vertical-align: top;
+		    zoom: 1;
+		    *display: inline;
+
+		}
+		
+		button.iconStop {
+			opacity: 1;
+		    width: 24px;
+		    float : right;
+		    background: transparent url('/src/app/sdniUI/assets/images/icon-stop.png') no-repeat center top;
+		}
+		
+		button.iconRun {
+			opacity: 1;
+		    width: 24px;
+		    float : right;
+		    background: transparent url('/src/app/sdniUI/assets/images/icon-run.png') no-repeat center top;
+		}
+		
+		button.iconCloseForm {
+			opacity: 1;
+		    width: 24px;
+		    float : right;
+		    background: transparent url('/src/app/sdniUI/assets/images/icon-close.png') no-repeat center top;
+		}
+		
+		button.alertButton.iconSubscribe{
+		    opacity: 1;
+		    width: 24px;
+		    background: transparent url('/src/app/sdniUI/assets/images/email_subscribe.png') no-repeat center top;
+		}
+		
+		button.alertButton.iconClose{
+		    opacity: 1;
+		    width: 24px;
+		    background: transparent url('/src/app/sdniUI/assets/images/icon-close.png') no-repeat center top;
+		}
+		
+		button.alertButton.iconDetails{
+		    opacity: 1;
+		    width: 24px;
+		    background: transparent url('/src/app/sdniUI/assets/images/icon-details.png') no-repeat center top;
+		}
+		
+		button.alertButton.iconClose:hover,button.alertButton.iconEdit:hover{
+  		  background-position: 0 -24px !important;
+		}
+
+		button.alertButton.iconEdit{
+			opacity: 1;
+		    width: 24px;
+    		background: transparent url('/src/app/sdniUI/assets/images/icon-edit.png') no-repeat center top;
+		}
+
+		input.alert-Name-Form{
+		    width: 157px;
+		    height: 32px;
+				
+		}
+		.alert-info {		
+			background-color: #5F5F5F;
+		    border-color: #EDEFF3;
+		    color: #F7FAFB;
+		}
+		
+		.alert {
+		    padding: 15px;
+		    margin-bottom: 20px;
+		    border: 1px solid transparent;
+		    border-radius: 4px;
+		}
+
+      .custom-table-style {
+        width: 100%;
+      }
+
+      .custom-table-style td, .custom-table-style th {
+        color: white;
+        background-color: black;
+
+        border: solid;
+        border-color: red;
+
+        text-align: center;
+      }
+      
+      .tableContainer{
+      	margin-top: 30px;
+      }
+      
+      .alerts-list{
+      	background-color: #5f5f5f;
+		border: 1px solid #2F2C2C;
+	    }
+      
+     .sort-icon {
+	    font-size: 9px;
+	    margin-left: 5px;
+		}
+
+		th {
+		    cursor:pointer;
+		}
+		
+		.pagination {
+    		margin: 20px 0;
+		}
+		
+		.pagination ul {
+		    display: inline-block;
+		    *display: inline;
+		    *zoom:1;margin-left: 0;
+		    margin-bottom: 0;
+		    -webkit-border-radius: 4px;
+		    -moz-border-radius: 4px;
+		    border-radius: 4px;
+		    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+		    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+		    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+		}
+		
+		.pagination ul>li {
+		    display: inline;
+		}
+		
+		.pagination ul>li>a,.pagination ul>li>span {
+		    float: left;
+		    padding: 4px 12px;
+		    line-height: 20px;
+		    text-decoration: none;
+		    background-color: #ffffff;
+		    border: 1px solid #dddddd;
+		    border-left-width: 0;
+		}
+		
+		.pagination ul>li>a:hover,.pagination ul>li>a:focus,.pagination ul>.active>a,.pagination ul>.active>span {
+		    background-color: #f5f5f5;
+		}
+		
+		.pagination ul>.active>a,.pagination ul>.active>span {
+		    color: #999999;
+		    cursor: default;
+		}
+		.pagination ul>.disabled>span,.pagination ul>.disabled>a,.pagination ul>.disabled>a:hover,.pagination ul>.disabled>a:focus {
+		    color: #999999;
+		    background-color: transparent;
+		    cursor: default;
+		}
+		
+		.pagination ul>li:first-child>a,.pagination ul>li:first-child>span {
+		    border-left-width: 1px;
+		    -webkit-border-top-left-radius: 4px;
+		    -moz-border-radius-topleft: 4px;
+		    border-top-left-radius: 4px;
+		    -webkit-border-bottom-left-radius: 4px;
+		    -moz-border-radius-bottomleft: 4px;
+		    border-bottom-left-radius: 4px;
+		}
+		
+		.pagination ul>li:last-child>a,.pagination ul>li:last-child>span {
+		    -webkit-border-top-right-radius: 4px;
+		    -moz-border-radius-topright: 4px;
+		    border-top-right-radius: 4px;
+		    -webkit-border-bottom-right-radius: 4px;
+		    -moz-border-radius-bottomright: 4px;
+		    border-bottom-right-radius: 4px;
+		}
+		
+		.pagination-centered {
+		    text-align: center;
+		}
+		
+		.pagination-right {
+		    text-align: right;
+		}
+		
+		.pagination-large ul>li>a,.pagination-large ul>li>span {
+		    padding: 11px 19px;
+		    font-size: 17.5px;
+		}
+		
+		.pagination-large ul>li:first-child>a,.pagination-large ul>li:first-child>span {
+		    -webkit-border-top-left-radius: 6px;
+		    -moz-border-radius-topleft: 6px;
+		    border-top-left-radius: 6px;
+		    -webkit-border-bottom-left-radius: 6px;
+		    -moz-border-radius-bottomleft: 6px;
+		    border-bottom-left-radius: 6px;
+		}
+		.pagination-large ul>li:last-child>a,.pagination-large ul>li:last-child>span {
+		    -webkit-border-top-right-radius: 6px;
+		    -moz-border-radius-topright: 6px;
+		    border-top-right-radius: 6px;
+		    -webkit-border-bottom-right-radius: 6px;
+		    -moz-border-radius-bottomright: 6px;
+		    border-bottom-right-radius: 6px;
+		}
+		.pagination-mini ul>li:first-child>a,.pagination-small ul>li:first-child>a,.pagination-mini ul>li:first-child>span,.pagination-small ul>li:first-child>span {
+		    -webkit-border-top-left-radius: 3px;
+		    -moz-border-radius-topleft: 3px;
+		    border-top-left-radius: 3px;
+		    -webkit-border-bottom-left-radius: 3px;
+		    -moz-border-radius-bottomleft: 3px;
+		    border-bottom-left-radius: 3px;
+		}
+		.pagination-mini ul>li:last-child>a,.pagination-small ul>li:last-child>a,.pagination-mini ul>li:last-child>span,.pagination-small ul>li:last-child>span {
+		    -webkit-border-top-right-radius: 3px;
+		    -moz-border-radius-topright: 3px;
+		    border-top-right-radius: 3px;
+		    -webkit-border-bottom-right-radius: 3px;
+		    -moz-border-radius-bottomright: 3px;
+		    border-bottom-right-radius: 3px;
+		}
+		
+		.pagination-small ul>li>a,.pagination-small ul>li>span {
+		    padding: 2px 10px;
+		    font-size: 11.9px;
+		}
+		
+		.pagination-mini ul>li>a,.pagination-mini ul>li>span {
+		    padding: 0 6px;
+		    font-size: 10.5px;
+		}
+		 
+		 /*   alert template css end*/
+		
+		.fade.in {
+		    opacity: 1;
+		}
+		
+		.tab-content > .active {
+		    display: block;
+		}		
+		
+		.smart-green {
+		    max-width: 1000px;
+		    background: #BFD091;
+		    padding: 30px 30px 20px 30px;
+		    font: 16px Arial, Helvetica, sans-serif;
+		    color: #666;
+		    border-radius: 5px;
+		    -webkit-border-radius: 5px;
+		    -moz-border-radius: 5px;
+		}
+		
+		.smart-red {
+		    max-width: 1000px;
+		    background: #D06B5F;
+		    padding: 30px 30px 20px 30px;
+		    font: 16px Arial, Helvetica, sans-serif;
+		    color: red;
+		    border-radius: 5px;
+		    -webkit-border-radius: 5px;
+		    -moz-border-radius: 5px;
+		}
+		
+		/**
+		overrided opendaylight css
+		 */
+		 
+		 .well {
+		  min-height: 20px;
+		  padding: 19px;
+		  margin-bottom: 20px;
+		  background-color: #5f5f5f;
+		  border: 1px solid #2F2C2C;
+		  border-radius: 4px;
+		  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+		  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+		  color: white;
+		}
+		
+		.well blockquote {
+		  border-color: #ddd;
+		  border-color: rgba(0, 0, 0, 0.15);
+		}
+		
+		.well-lg {
+		  padding: 24px;
+		  border-radius: 6px;
+		}
+		
+		.well-sm {
+		  padding: 9px;
+		  border-radius: 3px;
+		}
+		
+		.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
+		    color: #000;
+		    background-color: orange;
+		    border-color: orange;
+		}
+		
+		.btn-success {
+		    color: #ffffff;
+		    background-color: #FFA500;
+		    border-color: #5D5A55;
+		}
+
+		 .alert-type-form input[type=number], .alert-type-form input[type=text], .alert-type-form select {
+		    padding: 0 0 0 5px;
+		    height: 20px;
+		    width: 50px;
+		}
+		
+		form.alert-type-form {
+		    line-height: 26px;
+		}
+		
+		.alert-type-form {
+		    display: none;
+		    font-size: 14px;
+		    margin-top: 15px;
+		}
+		
+		form.alert-type-form div.well {
+		    margin-bottom: 0;
+		}
+		
+		.threshold-type .grace-descr {
+		    margin-left: 5px;
+		     color : white;
+		}
+		
+		.time-descr{
+			 color : white;
+		}
+		
+		.grace-descr .backlog-descr{
+			color : white;
+		}
+		
+		/**
+		 * dashboard related css here
+		 */
+
+td{
+  padding: 7px;
+}
+label{
+	color: white;
+	font-weight: normal;
+}
+
+.hyperlink {
+	color: white !important;
+}
+.chart {
+   background: #eee;
+    padding: 3px;
+}
+
+.chart rect {
+  width: 0;
+  transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -webkit-transition: all 1s ease-out;
+}
+
+.chart rect {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 5px;
+  color: white;
+  box-shadow: 2px 2px 2px #666;
+}
+
+        .axis path, .axis line
+        {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+        
+        .axis text
+        {
+            font-family: 'Arial';
+            font-size: 13px;
+        }
+        .tick
+        {
+            stroke-dasharray: 1, 2;
+        }
+        .bar
+        {
+            fill: FireBrick;
+        }
+ .split{
+      border-right: none ; 
+     /* border-left: none ;*/
+    width:30px;
+    text-align: center; 
+    border-radius: 0px;
+    float:left;
+}
+  .splitfirst{
+    
+     border-right: none; 
+    text-align: center; 
+    border-radius: 0px;
+    width:30px;
+    float:left;
+}
+  .splitlast{
+    /*border-left: none ;*/ 
+    text-align: center;
+    border-radius: 0px; 
+    width:30px;
+    float:left;
+}
+
+  rect {
+   -moz-transition: all 0.3s;
+   -o-transition: all 0.3s;
+   -webkit-transition: all 0.8s;
+   transition: all 0.8s;
+}
+  svg {
+   -moz-transition: all 0.3s;
+   -o-transition: all 0.3s;
+   -webkit-transition: all 0.8s;
+   transition: all 0.8s;
+}
+  

@@ -42,11 +42,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <classifier>features</classifier>
         <type>xml</type>
       </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>sdninterfaceapp-ui</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>

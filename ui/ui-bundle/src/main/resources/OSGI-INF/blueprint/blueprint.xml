@@ -1,0 +1,19 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+    <reference id="httpService" availability="mandatory" activation="eager" interface="org.osgi.service.http.HttpService"/>
+    <reference id="loader" availability="mandatory" activation="eager" interface="org.opendaylight.dlux.loader.DluxModuleLoader"/>
+
+    <bean id="bundle" init-method="initialize" destroy-method="clean" class="org.opendaylight.dlux.loader.DluxModule">
+        <property name="httpService" ref="httpService"/>
+        <property name="loader" ref="loader"/>
+        <property name="moduleName" value="sdniUI"/>
+        <property name="url" value="/src/app/sdniUI"/>
+        <property name="directory" value="/sdniUI"/>
+        <property name="requireJs" value="app/sdniUI/sdniUI.module"/>
+        <property name="angularJs" value="app.sdniUI"/>
+        <property name="cssDependencies">
+            <list>
+                <value>src/app/sdniUI/sdniUI-custom.css</value>
+            </list>
+        </property>
+    </bean>
+</blueprint>
