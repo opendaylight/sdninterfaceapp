@@ -52,7 +52,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <dependency>
       <groupId>org.opendaylight.mdsal.model</groupId>
       <artifactId>ietf-topology</artifactId>
-      <version>2013.10.21.7-SNAPSHOT</version>
+      <version>2013.10.21.10-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
