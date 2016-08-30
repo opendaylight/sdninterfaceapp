@@ -19,7 +19,7 @@ public class SdninterfaceappModule extends org.opendaylight.yang.gen.v1.urn.open
 
     @Override
     public java.lang.AutoCloseable createInstance() {
-        QosDataServiceProvider provider = new QosDataServiceProvider();
+        QosDataServiceProvider provider = new QosDataServiceProvider(getDataBrokerDependency());
         getBrokerDependency().registerProvider(provider);
         return provider;
     }
