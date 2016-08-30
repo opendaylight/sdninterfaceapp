@@ -9,34 +9,35 @@
 package org.opendaylight.sdninterfaceapp.impl;
 
 import com.google.common.base.Optional;
-
-
-import java.lang.Exception;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
-import java.net.InetAddress;
+import java.math.BigInteger;
 import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.math.BigInteger;
-
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
-
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
+import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
-import org.opendaylight.openflowplugin.openflow.md.core.session.OFSessionUtil;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.NodeKey;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.Nodes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.NodeKey;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.GetAllPeerNodeConnectorsStatisticsOutputBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.OpendaylightSdniQosMsgService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllers;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllersBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.peer.node.connectors.statistics.output.Controllers;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.peer.node.connectors.statistics.output.ControllersBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.NodeList;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.NodeListBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.NodeListKey;
@@ -45,25 +46,14 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninter
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.node.list.port.list.PortParams;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.nodes.node.list.port.list.PortParamsBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.FlowCapableNodeConnectorStatisticsData;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.NodeConnectorStatisticsUpdate;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.port.statistics.rev131214.OpendaylightPortStatisticsListener;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.OpendaylightSdniQosMsgService;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.peer.node.connectors.statistics.output.Controllers;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.get.all.peer.node.connectors.statistics.output.ControllersBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.GetAllPeerNodeConnectorsStatisticsOutputBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.GetAllPeerNodeConnectorsStatisticsOutput;
-import org.opendaylight.sdninterfaceapp.impl.PortStatistics;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNode;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNodeConnector;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllersBuilder;
-//import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.sdn.controllers.SdnControllerBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.SdnControllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+//import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.qos.msg.rev151006.sdn.controllers.SdnControllerBuilder;
 
 
 
@@ -73,8 +63,9 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 	private static OpendaylightSdniQosMsgServiceImpl serviceObj = null;
 	private final Logger logger = LoggerFactory.getLogger(OpendaylightSdniQosMsgServiceImpl.class);
     private List<String> sdnControllers = new ArrayList<String>();
-    private InstanceIdentifier<SdnControllers> instanceIdentifier = InstanceIdentifier.builder(SdnControllers.class).build();
-    
+	private InstanceIdentifier<SdnControllers> instanceIdentifier = InstanceIdentifier.builder(SdnControllers.class).build();
+	private DataBroker dataBroker;
+
 	private OpendaylightSdniQosMsgServiceImpl(){
 		//getAllNodeConnectorsStatistics();
 	}
@@ -107,7 +98,7 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		try {
 
 			controller = findIpAddress();
-			final ReadOnlyTransaction readTx = OFSessionUtil.getSessionManager().getDataBroker().newReadOnlyTransaction();
+			final ReadOnlyTransaction readTx = dataBroker.newReadOnlyTransaction();
 
 			InstanceIdentifier<Nodes> NODES_IDENTIFIER = InstanceIdentifier.create(Nodes.class);
 			Nodes nodes = getDataObject(readTx, NODES_IDENTIFIER);
@@ -153,7 +144,7 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		
 		
 		
-		final WriteTransaction writeTx = OFSessionUtil.getSessionManager().getDataBroker().newWriteOnlyTransaction();
+		final WriteTransaction writeTx = dataBroker.newWriteOnlyTransaction();
 		
 		
 	    
@@ -410,7 +401,7 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		
 		
 		
-		final WriteTransaction writeTx = OFSessionUtil.getSessionManager().getDataBroker().newWriteOnlyTransaction();
+		final WriteTransaction writeTx = dataBroker.newWriteOnlyTransaction();
 		
 		
 	    
@@ -418,6 +409,8 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		 writeTx.commit();
 		return RpcResultBuilder.success(outputBuilder.build()).buildFuture();
 	}
-	
 
+	public void setDataBroker(final DataBroker dataBroker) {
+		this.dataBroker = dataBroker;
+	}
 }
