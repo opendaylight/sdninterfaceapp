@@ -85,13 +85,6 @@
       <version>${sdninterfaceapp.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>sdninterfaceapp-impl</artifactId>
-      <version>${sdninterfaceapp.version}</version>
-      <type>xml</type>
-      <classifier>config</classifier>
-    </dependency>
-    <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>ui-bundle</artifactId>
         <version>0.1.0-SNAPSHOT</version>
