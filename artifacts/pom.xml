@@ -14,13 +14,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
  <parent>
     <groupId>org.opendaylight.odlparent</groupId>
     <artifactId>odlparent-lite</artifactId>
-    <version>1.6.4-SNAPSHOT</version>
+    <version>1.6.5-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <artifactId>sdninterfaceapp-artifacts</artifactId>
-  <version>0.7.4-SNAPSHOT</version>
+  <version>0.7.5-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <dependencyManagement>
@@ -38,7 +38,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>features-sdninterfaceapp</artifactId>
-        <version>1.6.4-SNAPSHOT</version>
+        <version>1.6.5-SNAPSHOT</version>
         <classifier>features</classifier>
         <type>xml</type>
       </dependency>

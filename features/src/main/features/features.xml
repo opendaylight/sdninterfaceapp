@@ -14,33 +14,33 @@
   <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.netconf/features-restconf/${restconf.version}/xml/features</repository>
    <repository>mvn:org.opendaylight.openflowjava/features-openflowjava/${openflowjava.version}/xml/features</repository>
-<repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/0.2.4-SNAPSHOT/xml/features</repository>
+<repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/0.2.5-SNAPSHOT/xml/features</repository>
 
-  <feature name='odl-sdni-api' version="0.7.4-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: api'>
+  <feature name='odl-sdni-api' version="0.7.5-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: api'>
 <bundle>wrap:mvn:com.google.guava/guava/18.0</bundle>
     <feature version="${restconf.version}">odl-restconf-all</feature>
     <feature version='${mdsal.version}'>odl-mdsal-all</feature>
-    <feature version="0.2.4-SNAPSHOT">odl-openflowplugin-all</feature>
-	<bundle>mvn:org.opendaylight.controller.model/model-inventory/1.3.4-SNAPSHOT</bundle>
-    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/0.7.4-SNAPSHOT</bundle>
+    <feature version="0.2.5-SNAPSHOT">odl-openflowplugin-all</feature>
+	<bundle>mvn:org.opendaylight.controller.model/model-inventory/1.3.5-SNAPSHOT</bundle>
+    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/0.7.5-SNAPSHOT</bundle>
   </feature>
 
 
-  <feature name='odl-sdni-aggregator' version="0.7.4-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: impl'>
+  <feature name='odl-sdni-aggregator' version="0.7.5-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: impl'>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
-    <feature version="0.7.4-SNAPSHOT">odl-sdni-api</feature>
-    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.7.4-SNAPSHOT</bundle>
-    <configfile finalname="${configfile.directory}/sdninterfaceapp.xml">mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.7.4-SNAPSHOT/xml/config</configfile>
+    <feature version="0.7.5-SNAPSHOT">odl-sdni-api</feature>
+    <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.7.5-SNAPSHOT</bundle>
+    <configfile finalname="${configfile.directory}/sdninterfaceapp.xml">mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/0.7.5-SNAPSHOT/xml/config</configfile>
   </feature>
 
-  <feature name='odl-sdni-wrapper' version="0.7.4-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: wrapper'>
-    <feature version="0.7.4-SNAPSHOT">odl-sdni-api</feature>
+  <feature name='odl-sdni-wrapper' version="0.7.5-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: wrapper'>
+    <feature version="0.7.5-SNAPSHOT">odl-sdni-api</feature>
   </feature>
 
 
-  <feature name='odl-sdninterfaceapp-all' version="1.6.4-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
-<feature version="0.7.4-SNAPSHOT">odl-sdni-aggregator</feature>
-<feature version="0.7.4-SNAPSHOT">odl-sdni-wrapper</feature>
+  <feature name='odl-sdninterfaceapp-all' version="1.6.5-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
+<feature version="0.7.5-SNAPSHOT">odl-sdni-aggregator</feature>
+<feature version="0.7.5-SNAPSHOT">odl-sdni-wrapper</feature>
     <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
   </feature>
 
