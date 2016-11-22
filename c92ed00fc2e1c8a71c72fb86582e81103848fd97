@@ -1,0 +1,8 @@
+Verified+1: jenkins-releng <jenkins-releng@opendaylight.org>
+Code-Review+1: Sirisha Sangam <sirisha.sangam@tcs.com>
+Code-Review+2: Rafat Jahan <rafat.jahan@tcs.com>
+Submitted-by: Rafat Jahan <rafat.jahan@tcs.com>
+Submitted-at: Tue, 22 Nov 2016 04:54:35 +0000
+Reviewed-on: https://git.opendaylight.org/gerrit/47698
+Project: sdninterfaceapp
+Branch: refs/heads/stable/boron
