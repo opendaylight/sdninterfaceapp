@@ -28,7 +28,7 @@
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <openflowjava.version>0.9.0-SNAPSHOT</openflowjava.version>
     <sdninterfaceapp.version>0.9.0-SNAPSHOT</sdninterfaceapp.version>
-    <dlux.version>0.5.0-SNAPSHOT</dlux.version>
+    <dluxapps.version>0.5.0-SNAPSHOT</dluxapps.version>
   </properties>
 
   <build>
@@ -107,10 +107,10 @@
       <version>${sdninterfaceapp.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.opendaylight.dlux</groupId>
-      <artifactId>features-dlux</artifactId>
+      <groupId>org.opendaylight.dluxapps</groupId>
+      <artifactId>features-dluxapps</artifactId>
       <classifier>features</classifier>
-      <version>${dlux.version}</version>
+      <version>${dluxapps.version}</version>
       <type>xml</type>
       <scope>runtime</scope>
     </dependency>
