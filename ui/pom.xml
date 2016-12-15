@@ -10,14 +10,14 @@
   <parent>
     <groupId>org.opendaylight.odlparent</groupId>
     <artifactId>odlparent</artifactId>
-    <version>1.7.2-SNAPSHOT</version>
+    <version>1.7.2-Boron-SR2</version>
     <relativePath/>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <artifactId>sdniUI</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.3-Boron-SR2</version>
 
   <prerequisites>
     <maven>3.1</maven>
