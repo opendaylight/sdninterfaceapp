@@ -27,7 +27,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
-				<version>2.3.6</version>
 				<configuration>
 	<instructions>
         <Import-Package>com.sun.jersey.api.client.*, javax.ws.rs.core.*,</Import-Package>
