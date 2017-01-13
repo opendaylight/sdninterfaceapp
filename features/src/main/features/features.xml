@@ -29,7 +29,6 @@
 
   <feature name='odl-sdni-aggregator' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: impl'>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
-    <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
     <feature version='${sdninterfaceapp.version}'>odl-sdni-api</feature>
     <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/${sdninterfaceapp.version}</bundle>
     <configfile finalname="${configfile.directory}/sdninterfaceapp.xml">mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-impl/${sdninterfaceapp.version}/xml/config</configfile>
@@ -55,7 +54,6 @@
     <feature version='${sdninterfaceapp.version}'>odl-sdni-wrapper</feature>
     <feature version='${sdninterfaceapp.version}'>odl-sdni-ui</feature>
     <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
-    <feature version='${mdsal.version}'>odl-mdsal-xsql</feature>
   </feature>
 
 </features>
