@@ -13,9 +13,9 @@
   <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.netconf/features-restconf/${restconf.version}/xml/features</repository>
-   <repository>mvn:org.opendaylight.openflowjava/features-openflowjava/${openflowjava.version}/xml/features</repository>
-<repository>mvn:org.opendaylight.dlux/features-dlux/${dlux.version}/xml/features</repository>
-<repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/${openflow.plugin.version}/xml/features</repository>
+  <repository>mvn:org.opendaylight.openflowjava/features-openflowjava/${openflowjava.version}/xml/features</repository>
+  <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/${dluxapps.version}/xml/features</repository>
+  <repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/${openflow.plugin.version}/xml/features</repository>
 
   <feature name='odl-sdni-api' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: api'>
 <bundle>wrap:mvn:com.google.guava/guava/18.0</bundle>
@@ -40,7 +40,7 @@
 
 
   <feature name='odl-sdni-ui' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: UI'>
-    <feature version="${dlux.version}">odl-dlux-all</feature>
+    <feature version="${dluxapps.version}">odl-dluxapps-applications</feature>
     <feature version='${mdsal.version}'>odl-mdsal-apidocs</feature>
    <feature version='${sdninterfaceapp.version}'>odl-sdni-aggregator</feature>
     <feature>http</feature>
