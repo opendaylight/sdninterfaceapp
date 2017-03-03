@@ -14,4 +14,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     </parent>
     <artifactId>ui-module</artifactId>
     <packaging>jar</packaging>
+    <!-- <name> formatting is used by autorelease to parse and notify projects on
+         build failure. Please do not modify this unless you have a good reason. -->
+    <name>ODL :: sdninterfaceapp :: ${project.artifactId}</name>
+
 </project>

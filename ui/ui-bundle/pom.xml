@@ -9,6 +9,9 @@
 
     <artifactId>ui-bundle</artifactId>
     <packaging>bundle</packaging>
+    <!-- <name> formatting is used by autorelease to parse and notify projects on
+         build failure. Please do not modify this unless you have a good reason. -->
+    <name>ODL :: sdninterfaceapp :: ${project.artifactId}</name>
 
     <properties>
       <apache.felix.compendium>1.4.0</apache.felix.compendium>

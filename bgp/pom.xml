@@ -28,7 +28,9 @@
     <artifactId>sdninteraceapp-bgp-parent</artifactId>
     <description>BGP-related components</description>
     <packaging>pom</packaging>
-    <name>${project.artifactId}</name>
+    <!-- <name> formatting is used by autorelease to parse and notify projects on
+         build failure. Please do not modify this unless you have a good reason. -->
+    <name>ODL :: sdninterfaceapp :: ${project.artifactId}</name>
 
     <modules>
         <module>sdniwrapper</module>
