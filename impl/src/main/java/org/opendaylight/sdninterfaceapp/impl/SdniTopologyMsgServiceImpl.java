@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
 import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
-
+import org.opendaylight.sdninterfaceapp.impl.database.SdniDataBase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.getallpeertopology.output.Controllers;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.getallpeertopology.output.ControllersBuilder;
 //import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sdninterfaceapp.topology.msg.rev151006.getallpeertopology.output.controllers.Link;
@@ -275,7 +275,7 @@ return result;
                //Class.forName("org.sqlite.JDBC", true, Thread.currentThread().getContextClassLoader());
                //Connection conn = DriverManager.getConnection(URL); 
 			
-               SdniDataBase sdb = new SdniDataBase();
+               SdniDataBase sdb = SdniDataBase.getInstance();
                 //Connection conn = sdb.getConnection();
 
 			Map<String, List<String>> topologyData=sdb.getAllPeerTopology();

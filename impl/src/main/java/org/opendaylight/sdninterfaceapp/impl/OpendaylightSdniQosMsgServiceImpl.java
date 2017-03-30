@@ -27,6 +27,7 @@ import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
+import org.opendaylight.sdninterfaceapp.impl.database.SdniDataBase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.Nodes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
@@ -89,7 +90,6 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		.GetAllNodeConnectorsStatisticsOutputBuilder builder = null;
 		NodeList nodeList = null;
 		List<NodeList> outputNodesList = new ArrayList<NodeList>();
-	//	List<PortStatistics> list_QoS = new ArrayList<PortStatistics>();
 		try {
 
 			controller = findIpAddress();
@@ -128,7 +128,6 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		builder.setNodeList(outputNodesList);
 		builder.setControllerIp(controller);
 
-		
 		if ( !sdnControllers.contains(controller) ) {
 			sdnControllers.add(controller);
 		}
@@ -145,11 +144,6 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 
 		writeTx.merge(LogicalDatastoreType.OPERATIONAL, instanceIdentifier, scb.build());
 		 writeTx.commit();
-/*
-        SdniDataBase sdb = new SdniDataBase();
-
-
-        sdb.insertQosData(list_QoS, controller);*/
 		
 		output = builder.build();
 
@@ -294,7 +288,7 @@ public class OpendaylightSdniQosMsgServiceImpl implements OpendaylightSdniQosMsg
 		List<Controllers> controllers = new ArrayList<Controllers>();
 
 		try {
-			SdniDataBase sdb = new SdniDataBase();
+			SdniDataBase sdb = SdniDataBase.getInstance();
 
 			Map<String,Map<String,Map<String, PortStatistics>>> qosData = sdb.getAllQoSPeerData();
 			if ( qosData != null && !qosData.isEmpty() )

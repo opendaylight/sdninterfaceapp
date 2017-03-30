@@ -1,0 +1,19 @@
+module notification-sdniwrapper {
+    namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:wrapper";
+    prefix wrapper;
+    
+    description "Sdni QoS Data structures.";
+
+    revision "2015-10-06" {
+        description "Initial revision of port statistics model";
+    }
+
+   notification untrustedController {
+     description
+       "Indicates the untrusted controller.";
+     leaf controllerip {
+         type string;
+     }
+   }
+
+}

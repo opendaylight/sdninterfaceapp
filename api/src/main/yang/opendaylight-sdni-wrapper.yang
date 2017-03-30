@@ -1,0 +1,48 @@
+module opendaylight-sdni-wrapper {
+    namespace "urn:opendaylight:params:xml:ns:yang:sdninterfaceapp:sdniwrapper:msg";
+    prefix sdni-wrapper;
+    
+    description "Sdni wrapper messages";
+
+    revision "2017-03-27" {
+        description "Initial revision of sdniwrapper messages";
+    }
+
+    // RPC calls
+    rpc add-trusted-controllers {
+
+        description "Adds to the trusted controllers list to SDNi for message synchronization";
+        input {
+		   uses controllers-list;
+        }
+    }
+
+    rpc add-peer-controllers {
+        description "Enables SDNi communication with the peers";
+        input {
+		uses controllers-list;
+        }
+    }
+
+    rpc remove-peer-controllers {
+        description "Disables the SDNi communication with peers";
+        input {
+		uses controllers-list;
+        }
+    }
+
+    rpc get-configured-sdni-peers {
+        description "Fetches the list of configured peers";
+        output {
+		uses controllers-list;
+        }
+    }
+
+    grouping controllers-list {
+        leaf-list controllers {
+         type string;
+        }
+    }
+
+
+}
