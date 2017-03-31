@@ -20,7 +20,7 @@
   <feature name='odl-sdni-api' version='${sdninterfaceapp.version}' description='OpenDaylight :: sdninterfaceapp :: api'>
 <bundle>wrap:mvn:com.google.guava/guava/18.0</bundle>
     <feature version="${restconf.version}">odl-restconf-all</feature>
-    <feature version='${mdsal.version}'>odl-mdsal-all</feature>
+    <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
     <feature version='${openflow.plugin.version}'>odl-openflowplugin-flow-services-ui</feature>
 	<bundle>mvn:org.opendaylight.controller.model/model-inventory/${controller-model-version}</bundle>
     <bundle>mvn:org.opendaylight.sdninterfaceapp/sdninterfaceapp-api/${sdninterfaceapp.version}</bundle>
