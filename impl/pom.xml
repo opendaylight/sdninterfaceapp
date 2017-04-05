@@ -11,14 +11,14 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <parent>
     <groupId>org.opendaylight.controller</groupId>
     <artifactId>config-parent</artifactId>
-    <version>0.5.3-SNAPSHOT</version>
+    <version>0.5.3-Boron-SR3</version>
     <relativePath/>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <artifactId>sdninterfaceapp-impl</artifactId>
-  <version>0.8.3-SNAPSHOT</version>
+  <version>0.8.3-Boron-SR3</version>
   <packaging>bundle</packaging>
 
 	<build>
@@ -48,7 +48,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <dependency>
             <groupId>org.opendaylight.controller.model</groupId>
             <artifactId>model-inventory</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
+            <version>1.4.3-Boron-SR3</version>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.controller</groupId>
@@ -61,12 +61,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <dependency>
 	    <groupId>org.opendaylight.controller</groupId>
 	    <artifactId>config-api</artifactId>
-	    <version>0.5.3-SNAPSHOT</version>
+	    <version>0.5.3-Boron-SR3</version>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.controller</groupId>
             <artifactId>sal-binding-config</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
+            <version>1.4.3-Boron-SR3</version>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.mdsal.model</groupId>
