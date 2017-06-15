@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1af78d9a_5cad1288",
+        "filename": "impl/src/main/java/org/opendaylight/sdninterfaceapp/impl/SdniTopologyProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 5056
+      },
+      "writtenOn": "2017-06-15T09:10:09Z",
+      "side": 0,
+      "message": "The code is not ported properly, Line 17: import statement should be removed not Line 18. Removal of Line 18 caused the build failure.",
+      "revId": "35032589298388fd64942b18c4162107e3c989f7",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
