@@ -45,11 +45,11 @@
    <feature version='${sdninterfaceapp.version}'>odl-sdni-aggregator</feature>
     <feature>http</feature>
     <feature>webconsole</feature>
-    <bundle>mvn:org.opendaylight.sdninterfaceapp/ui-bundle/0.0.5-SNAPSHOT</bundle>
+    <bundle>mvn:org.opendaylight.sdninterfaceapp/ui-bundle/0.0.6-SNAPSHOT</bundle>
    </feature>
 
 
-  <feature name='odl-sdninterfaceapp-all' version="1.7.4-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
+  <feature name='odl-sdninterfaceapp-all' version="1.7.5-SNAPSHOT" description='OpenDaylight :: sdninterfaceapp :: all'>
 
     <feature version='${sdninterfaceapp.version}'>odl-sdni-wrapper</feature>
     <feature version='${sdninterfaceapp.version}'>odl-sdni-ui</feature>

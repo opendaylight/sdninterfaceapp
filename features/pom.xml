@@ -7,28 +7,28 @@
   <parent>
     <groupId>org.opendaylight.odlparent</groupId>
     <artifactId>features-parent</artifactId>
-    <version>1.7.4-SNAPSHOT</version>
+    <version>1.7.5-SNAPSHOT</version>
     <relativePath/>
   </parent>
   <groupId>org.opendaylight.sdninterfaceapp</groupId>
   <artifactId>features-sdninterfaceapp</artifactId>
-  <version>1.7.4-SNAPSHOT</version>
+  <version>1.7.5-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <modelVersion>4.0.0</modelVersion>
   <prerequisites>
     <maven>3.1.1</maven>
   </prerequisites>
   <properties>
-    <mdsal.version>1.4.4-SNAPSHOT</mdsal.version>
-    <restconf.version>1.4.4-SNAPSHOT</restconf.version>
-    <controller-model-version>1.4.4-SNAPSHOT</controller-model-version>
-    <openflow.plugin.version>0.3.4-SNAPSHOT</openflow.plugin.version>
-    <yangtools.version>1.0.4-SNAPSHOT</yangtools.version>
-    <l2switch.version>0.4.4-SNAPSHOT</l2switch.version>
+    <mdsal.version>1.4.5-SNAPSHOT</mdsal.version>
+    <restconf.version>1.4.5-SNAPSHOT</restconf.version>
+    <controller-model-version>1.4.5-SNAPSHOT</controller-model-version>
+    <openflow.plugin.version>0.3.5-SNAPSHOT</openflow.plugin.version>
+    <yangtools.version>1.0.5-SNAPSHOT</yangtools.version>
+    <l2switch.version>0.4.5-SNAPSHOT</l2switch.version>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
-    <openflowjava.version>0.8.4-SNAPSHOT</openflowjava.version>
-    <sdninterfaceapp.version>0.8.4-SNAPSHOT</sdninterfaceapp.version>
-    <dlux.version>0.4.4-SNAPSHOT</dlux.version>
+    <openflowjava.version>0.8.5-SNAPSHOT</openflowjava.version>
+    <sdninterfaceapp.version>0.8.5-SNAPSHOT</sdninterfaceapp.version>
+    <dlux.version>0.4.5-SNAPSHOT</dlux.version>
   </properties>
 
   <build>
@@ -94,12 +94,12 @@
     <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>ui-bundle</artifactId>
-        <version>0.0.5-SNAPSHOT</version>
+        <version>0.0.6-SNAPSHOT</version>
       </dependency>
     <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>ui-module</artifactId>
-        <version>0.0.5-SNAPSHOT</version>
+        <version>0.0.6-SNAPSHOT</version>
       </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
