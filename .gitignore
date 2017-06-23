@@ -1,5 +1,10 @@
 *~
 target/
+target-ide/
 *.jar
 .idea/
 *.iml
+.project
+.classpath
+.settings/
+.checkstyle
