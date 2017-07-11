@@ -14,13 +14,13 @@
     <parent>
         <groupId>org.opendaylight.odlparent</groupId>
         <artifactId>single-feature-parent</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.1-Carbon</version>
         <relativePath/>
     </parent>
 
     <groupId>org.opendaylight.sdninterfaceapp</groupId>
     <artifactId>odl-sdni-ui</artifactId>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.1-Carbon</version>
     <packaging>feature</packaging>
 
     <name>OpenDaylight :: sdninterfaceapp :: UI</name>
@@ -29,14 +29,14 @@
         <dependency>
             <groupId>org.opendaylight.netconf</groupId>
             <artifactId>odl-mdsal-apidocs</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
+            <version>1.5.1-Carbon</version>
             <type>xml</type>
             <classifier>features</classifier>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.dluxapps</groupId>
             <artifactId>odl-dluxapps-applications</artifactId>
-            <version>0.5.1-SNAPSHOT</version>
+            <version>0.5.1-Carbon</version>
             <classifier>features</classifier>
             <type>xml</type>
             <scope>runtime</scope>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ui-bundle</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1-Carbon</version>
         </dependency>
     </dependencies>
 </project>
