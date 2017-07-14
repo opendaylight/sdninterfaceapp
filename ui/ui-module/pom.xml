@@ -10,7 +10,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <parent>
         <artifactId>sdniUI</artifactId>
         <groupId>org.opendaylight.sdninterfaceapp</groupId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.2-SNAPSHOT</version>
     </parent>
     <artifactId>ui-module</artifactId>
     <packaging>jar</packaging>
