@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sdniUI</artifactId>
         <groupId>org.opendaylight.sdninterfaceapp</groupId>
-        <version>0.1.3-SNAPSHOT</version>
+        <version>0.1.3-Carbon</version>
     </parent>
 
     <artifactId>ui-bundle</artifactId>
@@ -12,7 +12,7 @@
 
     <properties>
       <apache.felix.compendium>1.4.0</apache.felix.compendium>
-      <dlux.loader.version>0.5.3-SNAPSHOT</dlux.loader.version>
+      <dlux.loader.version>0.5.3-Carbon</dlux.loader.version>
     </properties>
 
     <dependencies>
